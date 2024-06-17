@@ -37,6 +37,17 @@ class MeetupCard extends StatelessWidget {
             children: [
               if (meetup.photoUrl != null)
                 CachedNetworkImage(
+                  errorWidget: (context, e, _) {
+                    return Center(
+                      child: Icon(
+                        Icons.error_outline,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  },
+                  errorListener: (error) {
+                    dog("meetup card error, please check this CachedNetwork Image: $error");
+                  },
                   imageUrl: meetup.photoUrl!,
                   width: double.infinity,
                   height: 200,

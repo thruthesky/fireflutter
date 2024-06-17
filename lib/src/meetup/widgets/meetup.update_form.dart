@@ -69,8 +69,10 @@ class _MeetupUpdateFormState extends State<MeetupUpdateForm> {
                       : CachedNetworkImage(
                           imageUrl: meetup.photoUrl ?? '',
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(),
+                          placeholder: (context, url) => Center(
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.onSecondary,
+                            ),
                           ),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),

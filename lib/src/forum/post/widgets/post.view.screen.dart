@@ -95,19 +95,9 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 child: Blocked(
                   otherUserUid: widget.post.uid,
                   yes: () => SizedBox.fromSize(),
-                  no: () => GestureDetector(
-                    onTap: () {
-                      showGeneralDialog(
-                        context: context,
-                        pageBuilder: (_, __, ___) => PhotoViewerScreen(
-                          urls: urls,
-                        ),
-                      );
-                    },
-                    child: DisplayDatabasePhotos(
-                      initialData: widget.post.urls,
-                      ref: widget.post.urlsRef,
-                    ),
+                  no: () => DisplayDatabasePhotos(
+                    initialData: widget.post.urls,
+                    ref: widget.post.urlsRef,
                   ),
                 ),
               ),
