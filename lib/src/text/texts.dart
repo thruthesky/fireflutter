@@ -269,6 +269,36 @@ class T {
     'ko': '게시판 종류',
   };
 
+  static Json searchByCategories = {
+    'en': 'Search by categories',
+    'ko': '카테고리로 검색',
+  };
+
+  static Json searchByGroup = {
+    'en': 'Search by group',
+    'ko': '그룹으로 검색',
+  };
+
+  
+  static Json searchByField = {
+    'en': 'Search by field',
+    'ko': '필드로 검색',
+  };
+
+  
+  static Json searchByForumType = {
+    'en': 'Search by forum type',
+    'ko': '게시판 종류로 검색',
+  };
+
+  
+  static Json reset = {
+    'en': 'Reset',
+    'ko': '초기화',
+  };
+
+
+
   static Json info = {
     'en': 'Info',
     'ko': '정보',
@@ -291,6 +321,16 @@ class T {
   static Json host = {
     'en': 'Host',
     'ko': '운영자',
+  };
+
+  static Json field = {
+    'en': 'Field',
+    'ko': '필드',
+  };
+
+  static Json group = {
+    'en': 'Group',
+    'ko': '그룹',
   };
 
   static Json members = {
@@ -777,6 +817,11 @@ class T {
   static Json forumSearch = {
     'en': 'Forum Search',
     'ko': '검색',
+  };
+
+  static Json searchFilter = {
+    'en': 'Search Filter',
+    'ko': '검색 필터',
   };
 
   static Json searchKeywordHint = {
