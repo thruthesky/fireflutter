@@ -123,7 +123,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                                             color: Colors.red);
                                       },
                                       errorListener: (value) => dog(
-                                          'Image not exist in storage: $value'),
+                                          'chat.message_input_box: Image load error: $value'),
                                     ),
                                   ),
                                 ),

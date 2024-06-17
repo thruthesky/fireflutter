@@ -88,6 +88,14 @@ class _ForumChatInputState extends State<ForumChatInput> {
                           alignment: Alignment.center,
                           child: CachedNetworkImage(
                             imageUrl: url,
+                            errorWidget: (context, url, error) {
+                              return const Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                              );
+                            },
+                            errorListener: (value) => dog(
+                                'forum.chat.inpput: Image url has problem: $value'),
                           ),
                         ),
                         Align(

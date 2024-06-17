@@ -112,6 +112,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                             width: 100,
                             height: 100,
                             fit: BoxFit.cover,
+                            errorWidget: (context, url, error) {
+                              return const Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                              );
+                            },
+                            errorListener: (value) => dog(
+                                'default_chat_room.edit.dialog.dart: Image has problem: $value'),
                           ),
                         );
                 },
