@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -45,9 +46,18 @@ class UrlPreview extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (imageUrl != null) CachedNetworkImage(imageUrl: imageUrl!),
-            if (title != null) ...[
+            if (imageUrl != null) ...[
+              CachedNetworkImage(
+                imageUrl: imageUrl!,
+                // Don't show
+                errorWidget: (context, url, error) {
+                  dog("Not showing an image preview because there's a problem with the url: $imageUrl");
+                  return const SizedBox.shrink();
+                },
+              ),
               const SizedBox(height: 8),
+            ],
+            if (title != null) ...[
               Text(
                 title!,
                 style:

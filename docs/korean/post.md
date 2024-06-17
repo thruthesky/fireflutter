@@ -92,6 +92,8 @@ class PostListScreen extends StatelessWidget {
 ```
 
 
+
+
 #### 글 쓰기 UI 변경
 
 디자인 작업은 하기 나름이다. FireFlutter 에서는 기본적인 디자인만 추가하며 Flutter 의 theme 작업 방식으로 모든 디자인 작업을 변경 할 수 있다.
@@ -154,6 +156,33 @@ PostListView.gridView(
   emptyBuilder: () => const Center(child: Text('사진을 등록 해 주세요.')),
 ),
 ```
+
+
+## 글 읽기
+
+아래와 같이 글 읽기 화면을 열면 된다.
+
+```dart
+ForumService.instance.showPostviewScreen(context: context, post: post)
+```
+
+
+참고로 글 읽기 화면에서 코멘트 목록과 코멘트 입력을 없애고, 오직 글 정보만 보여주고 싶다면 아래와 같이 commentable 옵션을 false 로 하면 된다. 그러면 해당 글에는 코멘트도 볼 수 없으며, 코멘트를 쓸 수도 없다. 코멘트가 필요없는 경우 사용을 하면 된다.
+
+참고로 `commentable: false` 옵션은 채팅형 게시판에서 사용된다. 참고, 본 문서의 채팅형 게시판
+
+```dart
+ForumService.instance.showPostViewScreen(
+    context: context,
+    post: post,
+    commentable: false,
+  ),
+```
+
+
+
+
+
 
 
 
@@ -284,3 +313,41 @@ class ForumScreen extends StatelessWidget {
 }
 ```
 
+
+
+
+## 채팅형 게시판
+
+게시판인데 채팅방 처럼 보이게 디자인을 할 수 있다. 아래와 같이 하면 마치 채팅방 처럼 보이고 채팅방 처럼 동작한다.
+
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:philov/etc/functions.dart';
+import 'package:philov/etc/translations/app.translations.dart';
+
+class ForumChatScreen extends StatelessWidget {
+  static const String routeName = "/forum-chat-screen";
+  const ForumChatScreen({super.key});
+
+  String get category => isDebugMode() ? 'test-buyandsell' : 'buyandsell';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(At.forum.buyandsell.tr)),
+      resizeToAvoidBottomInset: false,
+      body: PostListView(
+        reverse: true,
+        category: category,
+        itemBuilder: (post, index) => PostBubble(post: post),
+      ),
+      bottomNavigationBar: Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: ForumChatInput(category: category),
+      ),
+    );
+  }
+}
+```

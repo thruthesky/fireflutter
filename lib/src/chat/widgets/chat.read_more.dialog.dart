@@ -56,7 +56,7 @@ class ChatReadMoreDialog extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (message.text != null) Text(message.text!),
+            if (message.text != null) LinkifyText(message.text!),
             if (message.url != null)
               ClipRRect(
                 borderRadius: const BorderRadius.all(

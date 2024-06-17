@@ -45,19 +45,22 @@ class PostListTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        // mainAxisAlignment: MainAxisAlignment.end,
         children: [
           post.noOfComments > 0
               ? Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
+                  padding: const EdgeInsets.only(top: 8, right: 8),
                   child: Badge.count(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
                     count: post.noOfComments,
                     textColor: Theme.of(context).colorScheme.onSecondary,
                     backgroundColor:
-                        Theme.of(context).colorScheme.secondary.tone(50),
+                        Theme.of(context).colorScheme.secondary.tone(60),
                   ),
                 )
               : const SizedBox.shrink(),
+          const Spacer(),
           Text(
             post.createdAt.millisecondsSinceEpoch.toHis,
           ),

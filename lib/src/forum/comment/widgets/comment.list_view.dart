@@ -32,8 +32,9 @@ class _CommentListViewState extends State<CommentListView> {
   init() async {
     // Getting all the comments first
     comments = await Comment.getAll(postId: widget.post.id);
-
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
 
     // print('path: ${widget.post.commentsRef.path}');
 
@@ -109,14 +110,21 @@ class _CommentListViewState extends State<CommentListView> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final comment = comments![index];
           return CommentView(
             post: widget.post,
-            comment: comment,
+            comment: comments![index],
+            comments: comments!,
+            index: index,
           );
         },
         childCount: comments!.length,
       ),
     );
+    // return SliverToBoxAdapter(
+    //   child: NewCommentView(
+    //     comments: comments!,
+    //     post: widget.post,
+    //   ),
+    // );
   }
 }

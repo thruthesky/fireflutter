@@ -2,6 +2,16 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatCustomize {
+  const ChatCustomize({
+    this.chatRoomMenu,
+    this.chatRoomInviteButton,
+    this.chatBubbleBuilder,
+    this.chatRoomEditDialogBuilder,
+    this.messageInputBoxPrefixIconBuilder,
+    this.chatRoomUserListScreen,
+    this.chatRoomBlockedUserListScreen,
+  });
+
   /// Customization for chat room menu inside DefaultChatRoomScreen
   final Widget Function(ChatModel chat)? chatRoomMenu;
 
@@ -16,18 +26,20 @@ class ChatCustomize {
 
   final Widget Function(ChatModel chat)? messageInputBoxPrefixIconBuilder;
 
+  /// Customization for chat room user list screen inside DefaultChatRoomScreen
+  final Widget Function({
+    required ChatRoom room,
+  })? chatRoomUserListScreen;
+
+  /// Customization for chat room blocked user list screen inside DefaultChatRoomScreen
+  final Widget Function({
+    required ChatRoom room,
+  })? chatRoomBlockedUserListScreen;
+
   /// Customization for chat bubble inside DefaultChatRoomScreen
   final Widget Function({
     required BuildContext context,
     required ChatMessage message,
     required Function onChange,
   })? chatBubbleBuilder;
-
-  const ChatCustomize({
-    this.chatRoomMenu,
-    this.chatRoomInviteButton,
-    this.chatBubbleBuilder,
-    this.chatRoomEditDialogBuilder,
-    this.messageInputBoxPrefixIconBuilder,
-  });
 }

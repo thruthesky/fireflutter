@@ -176,7 +176,9 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                       if (widget.chat.room.uploadVerifiedUserOnly &&
                           iam.notVerified) {
                         return error(
-                            context: context, message: T.notVerifiedMessage.tr);
+                          context: context,
+                          message: T.notVerifiedMessage.tr,
+                        );
                       }
                       final url = await StorageService.instance.upload(
                         context: context,
@@ -218,7 +220,9 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                           widget.chat.room.urlVerifiedUserOnly &&
                           iam.notVerified) {
                         return error(
-                            context: context, message: T.notVerifiedMessage.tr);
+                          context: context,
+                          message: T.notVerifiedMessage.tr,
+                        );
                       }
 
                       inputController.clear();
