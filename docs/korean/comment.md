@@ -88,11 +88,14 @@ return CommentListView(post: post);
 
 ```dart
 Timer(const Duration(microseconds: 500), () async {
-    final comments = await Comment.getAll(postId: '-O-KUmXcPgcYhHDkPmLF');
+    final comments = await Comment.getAll(postId: '-O-Owip5oZ_z5aGsFo76');
     for (final comment in comments) {
     print(
-        ': comment: ${comment.content} -> hasChild:${comment.hasChild}, hasSibiling:${comment.hasSiblings}, isLastChild:${comment.isLastChild}',
+        ': comment: ${comment.content} -> id:${comment.id} , hasChild:${comment.hasChild}, isLastChild:${comment.isLastChild}, hasMoreSibiling:${comment.hasMoreSibiling}',
     );
     }
+    final post = await Post.getAllSummary('-O-Owip5oZ_z5aGsFo76');
+    ForumService.instance
+        .showPostViewScreen(context: globalContext, post: post!);
 });
 ```

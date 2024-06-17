@@ -344,7 +344,7 @@ class Post {
     final snapshot = await ref.get();
     final updated = Post.fromSnapshot(snapshot);
 
-    ForumService.instance.onPostCreate?.call(updated);
+    ForumService.instance.onPostUpdate?.call(updated);
     return updated;
   }
 
