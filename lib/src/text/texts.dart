@@ -957,6 +957,11 @@ class T {
     'ko': '채팅방이 없습니다.',
   };
 
+  static const Json chatBlockedUsersList = {
+    'en': 'Blocked Users',
+    'ko': '차단된 사용자',
+  };
+
   static const Json chatMessageDeleted = {
     'en': 'This message is deleted.',
     'ko': '이 메시지는 삭제되었습니다.',
