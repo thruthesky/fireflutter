@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:example/screens/forum/forum.screen.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
   int page = 1;
   int limit = 10;
   bool hasMore = true;
+  bool noResultFound = false;
+  bool isloading = false;
 
   final searchOptions = {
     Code.category: Code.all,
@@ -75,6 +78,10 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
   @override
   void dispose() {
     searchController.dispose();
+    searchCategoryController.dispose();
+    searchGroupController.dispose();
+    searchFieldController.dispose();
+    searchDataTypeController.dispose();
     super.dispose();
   }
 
@@ -83,7 +90,7 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
   Widget build(BuildContext _) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forum Search'),
+        title: Text(T.forumSearch.tr),
         toolbarHeight: 120,
         actions: const [SizedBox.shrink()],
         bottom: PreferredSize(
@@ -130,66 +137,134 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 24, top: 8, right: 8),
+                padding: const EdgeInsets.only(left: 16, top: 8, right: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Category',
-                          style: Theme.of(context).textTheme.labelSmall,
+                    PopupMenuButton(
+                      initialValue: searchOptions['category'],
+                      position: PopupMenuPosition.under,
+                      onSelected: (v) {
+                        searchOptions['category'] = v;
+                        onSearch();
+                      },
+                      itemBuilder: (c) => categories.entries
+                          .map((v) => PopupMenuItem(
+                                value: v.key,
+                                child: Text(v.value),
+                              ))
+                          .toList(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              T.category.tr,
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                            Text(
+                              categories[searchOptions['category']]!,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            )
+                          ],
                         ),
-                        Text(
-                          categories[searchOptions['category']]!,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        )
-                      ],
+                      ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Group',
-                          style: Theme.of(context).textTheme.labelSmall,
+                    PopupMenuButton(
+                      initialValue: searchOptions['group'],
+                      position: PopupMenuPosition.under,
+                      onSelected: (v) {
+                        searchOptions['group'] = v;
+                        onSearch();
+                      },
+                      itemBuilder: (c) => groups.entries
+                          .map((v) => PopupMenuItem(
+                                value: v.key,
+                                child: Text(v.value),
+                              ))
+                          .toList(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              T.group.tr,
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                            Text(
+                              groups[searchOptions['group']]!,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
                         ),
-                        Text(
-                          groups[searchOptions['group']]!,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
+                      ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Field',
-                          style: Theme.of(context).textTheme.labelSmall,
+                    PopupMenuButton(
+                      initialValue: searchOptions['field'],
+                      position: PopupMenuPosition.under,
+                      onSelected: (v) {
+                        searchOptions['field'] = v;
+                        onSearch();
+                      },
+                      itemBuilder: (c) => fields.entries
+                          .map((v) => PopupMenuItem(
+                                value: v.key,
+                                child: Text(v.value),
+                              ))
+                          .toList(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              T.field.tr,
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                            Text(
+                              fields[searchOptions['field']]!,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
                         ),
-                        Text(
-                          fields[searchOptions['field']]!,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
+                      ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Data',
-                          style: Theme.of(context).textTheme.labelSmall,
+                    PopupMenuButton(
+                      initialValue: searchOptions['dataType'],
+                      position: PopupMenuPosition.under,
+                      onSelected: (v) {
+                        searchOptions['dataType'] = v;
+                        onSearch();
+                      },
+                      itemBuilder: (c) => dataTypes.entries
+                          .map((v) => PopupMenuItem(
+                                value: v.key,
+                                child: Text(v.value),
+                              ))
+                          .toList(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              T.forumType.tr,
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                            Text(
+                              dataTypes[searchOptions['dataType']]!,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
                         ),
-                        Text(
-                          dataTypes[searchOptions['dataType']]!,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
+                      ),
                     ),
                     Builder(
-                      builder: (_) => IconButton(
+                      builder: (context) => IconButton(
                         onPressed: () {
-                          Scaffold.of(_).openEndDrawer();
+                          Scaffold.of(context).openEndDrawer();
                           FocusScope.of(context).unfocus();
                         },
                         icon: const Icon(Icons.filter_list_outlined),
@@ -210,13 +285,13 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Search Filter',
+                Text(T.searchFilter.tr,
                     style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 16),
                 TextField(
                   controller: searchController,
                   decoration: InputDecoration(
-                    hintText: '검색어를 입력하세요',
+                    hintText: T.searchKeywordHint.tr,
                     prefixIcon: IconButton(
                       icon: ValueListenableBuilder(
                         valueListenable: searchChanges,
@@ -356,191 +431,246 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
           ),
         ),
       ),
-      body: ListView.separated(
-        separatorBuilder: (context, index) => const SizedBox(height: 16),
-        padding: const EdgeInsets.all(16),
-        itemCount: forumData.length,
-        itemBuilder: (c, i) {
-          if (hasMore && i + 1 == forumData.length) {
-            /// get more data
-            fetchMore();
-          }
-
-          final json = forumData[i];
-          if (json['commentId'] != null) {
-            return InkWell(
-              onTap: () async {
-                Post? post = await Post.get(
-                    category: json['category'], id: json['postId']);
-                if (post != null && mounted) {
-                  ForumService.instance
-                      .showPostViewScreen(context: context, post: post);
-                }
-              },
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+      body: isloading
+          ? const Center(child: CircularProgressIndicator())
+          : noResultFound
+              ? SizedBox(
+                  width: double.infinity,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
-                        children: [
-                          const SizedBox(width: 16),
-                          Text(
-                            '${T.forum.tr}:',
-                            style: Theme.of(context).textTheme.labelLarge,
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            children: [
+                              const Icon(Icons.search, size: 64),
+                              Text(T.noResultFound.tr),
+                            ],
                           ),
-                          Text(
-                            json['collection'] == 'posts'
-                                ? T.post.tr
-                                : T.comment.tr,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${T.category.tr}:',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          Text(
-                            Categories.name(json['category']),
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      FutureBuilder<Post?>(
-                        future: Post.get(
-                            category: json['category'], id: json['postId']),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const SizedBox(height: 40);
-                          }
-                          final post = snapshot.data!;
-                          return ListTile(
-                            leading: UserAvatar(
-                              uid: post.uid,
-                              size: 40,
-                            ),
-                            title: Text(post.title),
-                            subtitle: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                UserDoc.field(
-                                  uid: post.uid,
-                                  field: 'displayName',
-                                  builder: (name) => Text(name ?? ''),
-                                ),
-                                Text(' ${post.createdAt.toYmd}'),
-                              ],
-                            ),
-                            onTap: () =>
-                                ForumService.instance.showPostViewScreen(
-                              context: context,
-                              post: post,
-                            ),
-                          );
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 24),
-                        child: CommentListTile(
-                          comment: Comment.fromJson(json, json['commentId'],
-                              postId: json['postId']),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-            );
-          } else {
-            Post post = Post.fromJson(
-              json,
-              id: json['postId'],
-              category: json['category'],
-            );
-            return InkWell(
-              onTap: () async {
-                if (mounted) {
-                  ForumService.instance
-                      .showPostViewScreen(context: context, post: post);
-                }
-              },
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const SizedBox(width: 16),
-                          Text(
-                            '${T.forum.tr}:',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          Text(
-                            json['collection'] == 'posts'
-                                ? T.post.tr
-                                : T.comment.tr,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${T.category.tr}:',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          Text(
-                            Categories.name(json['category']),
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      PostListTile(
-                        post: post,
-                      ),
-                      if (post.urls.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: InkWell(
-                            onTap: () {
-                              showGeneralDialog(
-                                context: context,
-                                pageBuilder: (_, __, ___) => PhotoViewerScreen(
-                                  urls: post.urls,
+                )
+              : ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 16),
+                  padding: const EdgeInsets.all(16),
+                  itemCount: forumData.length,
+                  itemBuilder: (c, i) {
+                    if (hasMore && i + 1 == forumData.length) {
+                      /// get more data
+                      fetchMore();
+                    }
+
+                    final json = forumData[i];
+                    if (json['commentId'] != null) {
+                      return InkWell(
+                        onTap: () async {
+                          Post? post = await Post.get(
+                              category: json['category'], id: json['postId']);
+                          if (post != null && mounted) {
+                            ForumService.instance.showPostViewScreen(
+                                context: context, post: post);
+                          }
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      '${T.forum.tr}:',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge,
+                                    ),
+                                    Text(
+                                      json['collection'] == 'posts'
+                                          ? T.post.tr
+                                          : T.comment.tr,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '${T.category.tr}:',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge,
+                                    ),
+                                    Text(
+                                      Categories.name(json['category']),
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                            child: DisplayDatabasePhotos(
-                                initialData: post.urls, ref: post.urlsRef),
+                                const SizedBox(height: 4),
+                                FutureBuilder<Post?>(
+                                  future: Post.get(
+                                      category: json['category'],
+                                      id: json['postId']),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const SizedBox(height: 40);
+                                    }
+                                    Post? post = snapshot.data;
+
+                                    if (post == null) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16, right: 16, bottom: 16),
+                                        child: ListTile(
+                                            title: Text(
+                                                T.postDeletedOrNotFound.tr)),
+                                      );
+                                    }
+
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16.0, right: 16.0, bottom: 16),
+                                      child: PostCard(
+                                        post: post,
+                                        displayAvatar: true,
+                                        displaySubtitle: true,
+                                      ),
+                                    );
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 24),
+                                  child: CommentListTile(
+                                    comment: Comment.fromJson(
+                                        json, json['commentId'],
+                                        postId: json['postId']),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        )
-                    ],
-                  ),
+                        ),
+                      );
+                    } else {
+                      Post post = Post.fromJson(
+                        json,
+                        id: json['postId'],
+                        category: json['category'],
+                      );
+                      return InkWell(
+                        onTap: () async {
+                          if (mounted) {
+                            ForumService.instance.showPostViewScreen(
+                                context: context, post: post);
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          }
+                        },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      '${T.forum.tr}:',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge,
+                                    ),
+                                    Text(
+                                      json['collection'] == 'posts'
+                                          ? T.post.tr
+                                          : T.comment.tr,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '${T.category.tr}:',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge,
+                                    ),
+                                    Text(
+                                      Categories.name(json['category']),
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                ListTileTheme(
+                                  child: PostListTile(
+                                    post: post,
+                                  ),
+                                ),
+                                if (post.urls.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    child: InkWell(
+                                      onTap: () {
+                                        showGeneralDialog(
+                                          context: context,
+                                          pageBuilder: (_, __, ___) =>
+                                              PhotoViewerScreen(
+                                            urls: post.urls,
+                                          ),
+                                        );
+
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                      },
+                                      child: Column(
+                                        children: [
+                                          ...post.urls.map((v) =>
+                                              CachedNetworkImage(imageUrl: v)),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
-              ),
-            );
-          }
-        },
-      ),
     );
   }
 
+  // get next page by increasing the page number and search again.
+  // without resetting current data.
   fetchMore() {
     page = page + 1;
     onSearch(reset: false);
   }
 
+  // search data from typesense base on the search parameters
+  // `reset` is set by default to true. it reset the forumData to display new list.
+  // To add new data to forumData set `reset` to false so it will not clear forumData.
   onSearch({bool reset = true}) async {
+    // clear forumData, reset page, and set noResults to false
     if (reset) {
       forumData.clear();
       page = 1;
       hasMore = true;
+      noResultFound = false;
+      isloading = true;
       setState(() {});
     }
-
     searchParameters = {
       'q': getSearchString(),
       'query_by': getQueryBy(),
@@ -555,13 +685,20 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
         .documents
         .search(searchParameters);
     final hits = res['hits'];
+
+    // if the hit is less than the limit no more data to fetch
     if (hits.isEmpty || hits.length < limit) {
       hasMore = false;
     }
 
+    // display no result message if no results found and forumData is empty
+    if (hits.isEmpty && forumData.isEmpty) {
+      noResultFound = true;
+    }
     for (var documents in hits) {
       forumData.add(documents["document"]);
     }
+    isloading = false;
     setState(() {});
   }
 
