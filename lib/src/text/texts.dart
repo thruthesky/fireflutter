@@ -279,25 +279,20 @@ class T {
     'ko': '그룹으로 검색',
   };
 
-  
   static Json searchByField = {
     'en': 'Search by field',
     'ko': '필드로 검색',
   };
 
-  
   static Json searchByForumType = {
     'en': 'Search by forum type',
     'ko': '게시판 종류로 검색',
   };
 
-  
   static Json reset = {
     'en': 'Reset',
     'ko': '초기화',
   };
-
-
 
   static Json info = {
     'en': 'Info',
@@ -313,19 +308,15 @@ class T {
     'ko': '게시판',
   };
 
-
   static Json menu = {
     'en': 'Menu',
     'ko': '메뉴',
   };
 
-
   static Json friend = {
     'en': 'Friend',
     'ko': '친구',
   };
-
-
 
   static Json gallery = {
     'en': 'Gallery',
@@ -1081,7 +1072,7 @@ class T {
         "Are you sure you want to delete this message? This action cannot be undone.",
     'ko': '메시지를 삭제하시겠습니까? 이 행동은 취소할 수 없습니다.',
   };
-  static const Json bloc6kUser = {
+  static const Json blockUser = {
     'en': 'Block User',
     'ko': '사용자 차단',
   };
