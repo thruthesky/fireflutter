@@ -74,10 +74,13 @@ class ChatReadMoreDialog extends StatelessWidget {
                     ),
                     // if thumbnail is not available, show original image
                     errorWidget: (context, url, error) {
-                      return const Icon(Icons.error_outline, color: Colors.red);
+                      return const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                      );
                     },
-                    errorListener: (value) =>
-                        dog('Image not exist in storage: $value'),
+                    errorListener: (value) => dog(
+                        'chat.read_more.dialog.dart: Image has problem:  $value'),
                   ),
                 ),
               ),

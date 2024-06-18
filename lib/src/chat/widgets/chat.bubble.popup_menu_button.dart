@@ -1,5 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/chat/widgets/chat.read_more.dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// This is a Popup Menu designed specifically for Chat Bubble.
 class ChatBubblePopupMenuButton extends StatelessWidget {
@@ -13,6 +15,8 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
     this.onUnblockUser,
     this.onDeleteMessage,
     this.onReplyMessage,
+    this.onCopy,
+    this.onReadMore,
   });
 
   final ChatMessage message;
@@ -25,6 +29,13 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
       onDeleteMessage;
   final void Function(BuildContext context, ChatMessage message)?
       onReplyMessage;
+  final void Function(BuildContext context, ChatMessage message)? onCopy;
+  final void Function(BuildContext context, ChatMessage message)? onReadMore;
+
+  bool get isLongText =>
+      message.text != null &&
+      (message.text!.length > 360 ||
+          '\n'.allMatches(message.text!).length > 10);
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +55,17 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
             value: Code.reply,
             height: 40,
             child: Text(T.reply.tr),
+          ),
+        if (!message.deleted && isLongText)
+          PopupMenuItem(
+            value: Code.readMore,
+            height: 40,
+            child: Text(T.readMore.tr),
+          ),
+        if (!message.text.isNullOrEmpty && !message.deleted)
+          PopupMenuItem(
+            value: Code.copy,
+            child: Text(T.copy.tr),
           ),
         if ((message.mine || (room.isGroupChat && room.isMaster)) &&
             !message.deleted) ...[
@@ -82,7 +104,9 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
     );
 
     if (value != null) {
-      if (value == Code.reply) {
+      if (value == Code.readMore) {
+        (onReadMore ?? _onReadMore).call(context, message);
+      } else if (value == Code.reply) {
         (onReplyMessage ?? _onReplyMessage).call(context, message);
       } else if (value == Code.delete) {
         (onDeleteMessage ?? _onDeleteMessage).call(context, message);
@@ -92,6 +116,8 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
         (onBlockUser ?? _onBlockUser).call(context, message.uid!);
       } else if (value == Code.unblock) {
         (onUnblockUser ?? _onUnblockUser).call(context, message.uid!);
+      } else if (value == Code.copy) {
+        (onCopy ?? _onCopy).call(context, message);
       }
     }
   }
@@ -138,5 +164,21 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
     if (unblockConfirmation ?? false) {
       await room.unblock(message.uid!);
     }
+  }
+
+  void _onCopy(BuildContext context, ChatMessage message) async {
+    await Clipboard.setData(ClipboardData(text: message.text!));
+    toast(context: context, message: T.messageWasCopiedToClipboard.tr);
+  }
+
+  void _onReadMore(BuildContext context, ChatMessage message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ChatReadMoreDialog(
+          message: message,
+        );
+      },
+    );
   }
 }

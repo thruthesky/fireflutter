@@ -29,6 +29,15 @@ class MeetupDetails extends StatelessWidget {
                       width: double.infinity,
                       height: 200,
                       fit: BoxFit.cover,
+                      errorWidget: (context, url, error) {
+                        dog('meetup.details.card: Image url has problem: $error');
+                        return const Center(
+                          child: Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
