@@ -313,6 +313,20 @@ class T {
     'ko': '게시판',
   };
 
+
+  static Json menu = {
+    'en': 'Menu',
+    'ko': '메뉴',
+  };
+
+
+  static Json friend = {
+    'en': 'Friend',
+    'ko': '친구',
+  };
+
+
+
   static Json gallery = {
     'en': 'Gallery',
     'ko': '사진첩',
@@ -1040,7 +1054,7 @@ class T {
         "Are you sure you want to delete this message? This action cannot be undone.",
     'ko': '메시지를 삭제하시겠습니까? 이 행동은 취소할 수 없습니다.',
   };
-  static const Json blockUser = {
+  static const Json bloc6kUser = {
     'en': 'Block User',
     'ko': '사용자 차단',
   };
