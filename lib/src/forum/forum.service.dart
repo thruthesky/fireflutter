@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ForumService {
   static ForumService? _instance;
@@ -40,6 +41,17 @@ class ForumService {
     this.onCommentCreate = onCommentCreate;
     this.onCommentUpdate = onCommentUpdate;
     this.onCommentDelete = onCommentDelete;
+  }
+
+  showForumChatScreen(
+      {required BuildContext context,
+      required String category,
+      required String title}) async {
+    await showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) =>
+          ForumChatViewScreen(title: title, category: category),
+    );
   }
 
   /// Show post create screen when the user taps on the post creation button

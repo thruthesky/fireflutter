@@ -21,9 +21,7 @@ class _PostBubbleState extends State<PostBubble> {
   bool get isLongText => (widget.post.content.length > 100 ||
       '\n'.allMatches(widget.post.content).length > 5);
 
-  String get text {
-    dog('isLongText: $isLongText');
-    dog('post.content: ${widget.post.content}');
+  String get content {
     if (isLongText) {
       String t = widget.post.content;
       final splits = t.split('\n');
@@ -37,11 +35,15 @@ class _PostBubbleState extends State<PostBubble> {
     }
   }
 
-  final List<String> urls = [];
-
+  List<String> urls = [];
+  bool get hasLink => widget.post.content.hasUrl;
   @override
   void initState() {
     super.initState();
+
+    if (widget.post.urls.isNotEmpty) {
+      urls.addAll(widget.post.urls);
+    }
 
     widget.post.urlsRef.once().then((DatabaseEvent event) {
       final value = event.snapshot.value as List<dynamic>?;
@@ -60,10 +62,14 @@ class _PostBubbleState extends State<PostBubble> {
 
   @override
   Widget build(BuildContext context) {
+    // To hide the [PostBubble] when the post is deleted
     if (widget.post.deleted) {
       return const SizedBox.shrink();
     }
 
+    // if (widget.post.id == '-O-dlO3rKHY3DwFNHwye') {
+    //   debugger();
+    // }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -79,20 +85,20 @@ class _PostBubbleState extends State<PostBubble> {
           ],
           const SizedBox(width: 14),
           Expanded(
-            child: Column(
-              crossAxisAlignment:
-                  isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                ImageDisplay(urls: urls),
-                const SizedBox(height: 8),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => ForumService.instance.showPostViewScreen(
-                    context: context,
-                    post: widget.post,
-                    commentable: false,
-                  ),
-                  child: Container(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => ForumService.instance.showPostViewScreen(
+                context: context,
+                post: widget.post,
+                commentable: false,
+              ),
+              child: Column(
+                crossAxisAlignment:
+                    isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  ImageDisplay(urls: urls),
+                  const SizedBox(height: 8),
+                  Container(
                     clipBehavior: Clip.antiAlias,
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * .7,
@@ -113,29 +119,42 @@ class _PostBubbleState extends State<PostBubble> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                          child: Text(
-                            text.orBlocked(
+                          child: LinkifyText(
+                            content.orBlocked(
                               widget.post.uid,
                               T.blockedContentMessage.tr,
                             ),
+                            selectable: false,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
                                 .copyWith(
-                                  color: isMine ? Colors.white : Colors.black,
+                                  color: isMine
+                                      ? Theme.of(context).colorScheme.onPrimary
+                                      : Theme.of(context).colorScheme.onSurface,
                                   fontWeight: isMine
                                       ? FontWeight.w500
                                       : FontWeight.normal,
+                                ),
+                            linkStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: isMine
+                                      ? Colors.blue.withGreen(200)
+                                      : Colors.blue,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
                                 ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                dateAndName(context: context, post: widget.post),
-              ],
+                  const SizedBox(height: 4),
+                  dateAndName(context: context, post: widget.post),
+                ],
+              ),
             ),
           ),
         ],
@@ -197,6 +216,7 @@ class ImageDisplay extends StatelessWidget {
   });
 
   final List<String> urls;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
