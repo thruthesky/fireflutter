@@ -52,7 +52,11 @@ class ReportMyListView extends StatelessWidget {
 
           if (snapshot.docs.isEmpty) {
             return emptyBuilder?.call(context) ??
-                const Center(child: Text("No reports"));
+                Center(
+                  child: Text(
+                    T.noReport.tr,
+                  ),
+                );
           }
           return ListView.separated(
               padding: padding ?? const EdgeInsets.all(8),
@@ -72,8 +76,8 @@ class ReportMyListView extends StatelessWidget {
                 func() async {
                   final re = await confirm(
                       context: context,
-                      title: 'Delete report',
-                      message: 'Do you want to delete this report?');
+                      title: T.deleteReport.tr,
+                      message: T.doYouWantToDeleteReport.tr);
                   if (re != true) return;
                   await report.ref.remove();
                 }
@@ -131,7 +135,7 @@ class ReportMyListView extends StatelessWidget {
                             title: Text(report.reason),
                             subtitle: Row(
                               children: [
-                                const Text('[COMMNET] '),
+                                Text('[${T.comment.tr.toUpperCase()}] '),
                                 UserDoc.field(
                                   uid: comment.uid,
                                   field: 'displayName',
@@ -158,7 +162,7 @@ class ReportMyListView extends StatelessWidget {
                         subtitle: Row(
                           children: [
                             if (room.isSingleChat) ...{
-                              const Text('[CHAT] '),
+                              Text('[${T.chat.tr.toUpperCase()}] '),
                               Value.once(
                                   // path: ChatRoom.chatRoomName(report.chatRoomId),
                                   ref: ChatJoin.nameRef(report.chatRoomId!),
@@ -167,10 +171,10 @@ class ReportMyListView extends StatelessWidget {
                                     // Explanation: Name is null because chat room can be a single
                                     //              Chat Room, which doesn't usually have Chat
                                     //              Room Name.
-                                    return Text(v ?? 'No Chat Room Name');
+                                    return Text(v ?? T.noChatRoomName.tr);
                                   }),
                             } else ...{
-                              const Text('[GROUP CHAT] '),
+                              Text('[${T.groupChat.tr.toUpperCase()}] '),
                               Value.once(
                                   // path: ChatRoom.chatRoomName(report.chatRoomId),
                                   ref: ChatRoom.nameRef(report.chatRoomId!),
@@ -179,7 +183,7 @@ class ReportMyListView extends StatelessWidget {
                                     // Explanation: Name is null because chat room can be a single
                                     //              Chat Room, which doesn't usually have Chat
                                     //              Room Name.
-                                    return Text(v ?? 'No Chat Room Name');
+                                    return Text(v ?? T.noChatRoomName.tr);
                                   }),
                             },
                             Text(' ${report.createdAt.toShortDate}'),

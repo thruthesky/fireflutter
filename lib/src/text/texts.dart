@@ -108,6 +108,16 @@ class T {
     'ko': '채팅',
   };
 
+  static Json groupChat = {
+    'en': 'Group chat',
+    'ko': '그룹 채팅',
+  };
+
+  static Json noChatRoomName = {
+    'en': 'No chat room name',
+    'ko': '채팅방 이름 없음',
+  };
+
   static Json edit = {
     'en': 'Edit',
     'ko': '수정',
@@ -170,6 +180,27 @@ class T {
     'vi': 'Báo cáo',
     'th': 'รายงาน',
     'lo': 'ລາຍງານ'
+  };
+
+  static Json noReport = {
+    'en': 'No report',
+    'ko': '신고 없음',
+    'vi': 'Không báo cáo',
+    'th': 'ไม่มีรายงาน',
+    'lo': 'ບໍ່ພາດລາຍງານ'
+  };
+
+  static Json deleteReport = {
+    'en': 'Delete report',
+    'ko': '신고 삭제',
+    'vi': 'Xóa báo cáo',
+    'th': 'ลบรายงาน',
+    'lo': 'ລາຍງານ'
+  };
+
+  static Json doYouWantToDeleteReport = {
+    'en': 'Do you want to delete the report?',
+    'ko': '신고를 삭제하시겠습니까?',
   };
 
   static Json reportReceived = {
@@ -1229,6 +1260,11 @@ class T {
     'ko': '내용을 입력해주세요.',
   };
 
+  static const Json inputContentHere = {
+    'en': 'Input content Here...',
+    'ko': '내용을 입력해주세요.',
+  };
+
   // User Settings
 
   static const Json getNotifiedWhenSomeoneCommentOnYourPost = {
@@ -1243,126 +1279,446 @@ class T {
 
   ///////////////////////////////////////////////////////////////////
 
-  static const String stateMessageInProfileUpdate = 'STATE MESSAGE';
-  static const String hintInputStateMessage = 'Please input your state message';
-  static const String stateMessageDescription = 'State Message Description';
+  // static const String stateMessageInProfileUpdate = 'STATE MESSAGE';
+  static const Json stateMessageInProfileUpdate = {
+    'en': 'STATE MESSAGE',
+    'ko': '상태 메시지',
+  };
 
-  static const String blockConfirmTitle = 'Block this user?';
-  static const String blockConfirmMessage =
-      'Do you want to block this user?\nYou will not be able to see the contents of this user.';
-  static const String unblockConfirmTitle = 'Unblock this user?';
-  static const String unblockConfirmMessage =
-      'If you unblock this user, you will be able to see the contents of this user.';
-  static const String writeYourMessage = 'Write your message';
-  static const String visitedYourProfileTitle = 'Your profile was visited.';
-  static const String visitedYourProfileBody = '#name visited your profile';
-  // static const String cannotBlockYourself = 'You cannot block yourself.';
+  // static const String hintInputStateMessage = 'Please input your state message';
+  static const Json hintInputStateMessage = {
+    'en': 'Please input your state message',
+    'ko': '상태 메시지를 입력해주세요.',
+  };
+
+  // static const String stateMessageDescription = 'State Message Description';
+  static const Json stateMessageDescription = {
+    'en': 'State Message Description',
+    'ko': '상태 메시지 설명',
+  };
+
+  // static const String blockConfirmTitle = 'Block this user?';
+  static const Json blockConfirmTitle = {
+    'en': 'Block this user?',
+    'ko': '사용자를 차단할까요?',
+  };
+
+  // static const String blockConfirmMessage =
+  //     'Do you want to block this user?\nYou will not be able to see the contents of this user.';
+  static const Json blockConfirmMessage = {
+    'en':
+        'Do you want to block this user?\nYou will not be able to see the contents of this user.',
+    'ko': '사용자를 차단할까요?\n사용자의 내용을 볼 수 없습니다.',
+  };
+
+  // static const String unblockConfirmTitle = 'Unblock this user?';
+  static const Json unblockConfirmTitle = {
+    'en': 'Unblock this user?',
+    'ko': '사용자를 차단해제할까요?',
+  };
+
+  // static const String unblockConfirmMessage =
+  //     'If you unblock this user, you will be able to see the contents of this user.';
+  static const Json unblockConfirmMessage = {
+    'en':
+        'If you unblock this user, you will be able to see the contents of this user.',
+    'ko': '사용자를 차단해제할까요?\n사용자의 내용을 볼 수 없습니다.',
+  };
+
+  // static const String writeYourMessage = 'Write your message';
+  static const Json writeYourMessage = {
+    'en': 'Write your message',
+    'ko': '메시지를 입력해주세요.',
+  };
+
+  // static const String visitedYourProfileTitle = 'Your profile was visited.';
+  static const Json visitedYourProfileTitle = {
+    'en': 'Your profile was visited.',
+    'ko': '사용자의 프로필을 방문했습니다.',
+  };
+
+  // static const String visitedYourProfileBody = '#name visited your profile';
+  static const Json visitedYourProfileBody = {
+    'en': '#name visited your profile',
+    'ko': '#name 사용자의 프로필을 방문했습니다.',
+  };
 
   /// User and Profile
   static const String recentLoginRequiredForResign =
       'recentLoginRequiredForResign';
 
-  static const String backgroundImage = 'Background Image';
-  // static const String profileUpdate = 'Profile Update';
-  static const String profilePhoto = 'Profile Photo';
-  static const String takePhotoClosely = 'Take a photo closely';
+  // static const String backgroundImage = 'Background Image';
+  static const Json backgroundImage = {
+    'en': 'Background Image',
+    'ko': '배경 이미지',
+  };
 
-  static const String birthdateLabel = 'Birthdate';
-  static const String birthdateSelectDescription = 'birthdateSelectDescription';
-  static const String birthdateTapToSelect = 'Tap to select';
-  static const String birthdate = 'birthdate';
-  static const String selectBirthDate = 'Select Birth';
+  // static const String profilePhoto = 'Profile Photo';
+  static const Json profilePhoto = {
+    'en': 'Profile Photo',
+    'ko': '프로필 사진',
+  };
 
-  static const String yearInBirthdatePicker = 'Year';
-  static const String monthInBirthdatePicker = 'Month';
-  static const String dayInBirthdatePicker = 'Day';
-  static const String descriptionInBirthdatePicker =
-      'Please select your birthdate.';
+  // static const String takePhotoClosely = 'Take a photo closely';
+  static const Json takePhotoClosely = {
+    'en': 'Take a photo closely',
+    'ko': '사진을 찍어주세요.',
+  };
+
+  // static const String birthdateLabel = 'Birthdate';
+  static const Json birthdateLabel = {
+    'en': 'Birthdate',
+    'ko': '생년월일',
+  };
+
+  // static const String birthdateSelectDescription = 'birthdateSelectDescription';
+  static const Json birthdateSelectDescription = {
+    'en': 'birthdateSelectDescription',
+    'ko': '생년월일을 선택해주세요.',
+  };
+
+  // static const String birthdateTapToSelect = 'Tap to select';
+  static const Json birthdateTapToSelect = {
+    'en': 'Tap to select',
+    'ko': '선택하기',
+  };
+
+  // static const String birthdate = 'birthdate';
+  static const Json birthdate = {
+    'en': 'birthdate',
+    'ko': '생년월일',
+  };
+
+  // static const String selectBirthDate = 'Select Birth';
+  static const Json selectBirthDate = {
+    'en': 'Select Birth',
+    'ko': '생년월일 선택',
+  };
+
+  // static const String yearInBirthdatePicker = 'Year';
+  static const Json yearInBirthdatePicker = {
+    'en': 'Year',
+    'ko': '년',
+  };
+
+  // static const String monthInBirthdatePicker = 'Month';
+  static const Json monthInBirthdatePicker = {
+    'en': 'Month',
+    'ko': '월',
+  };
+
+  // static const String dayInBirthdatePicker = 'Day';
+  static const Json dayInBirthdatePicker = {
+    'en': 'Day',
+    'ko': '일',
+  };
+
+  // static const String descriptionInBirthdatePicker =
+  //     'Please select your birthdate.';
+  static const Json descriptionInBirthdatePicker = {
+    'en': 'Please select your birthdate.',
+    'ko': '생년월일을 선택해주세요.',
+  };
 
   // profile update labels and error messages
-  static const String gender = 'Gender';
-  static const String genderInProfileUpdate = 'GENDER';
-  static const String male = 'Male';
-  static const String female = 'Female';
-  static const String nationality = 'Nationality';
-  static const String region = 'Region';
-  static const String pleaseInputBirthday = 'Please input your birthday';
-  static const String pleaseSelectGender = 'Please select your gender';
-  static const String addYourPhoto = 'Add your photo. (Minimum 2, Maximum 4)';
-  static const String pleaseSelectNationality =
-      'Please select your nationality';
-  static const String pleaseSelectRegion = 'Please select your region';
-  static const String pleaseInputOccupation = 'Please input your occupation';
-  static const String pleaseAddMorePhotos =
-      'Please add more photos (minimum 2 of photos and maximum 2 of photos)';
-  static const String pleaseInputStateMessage =
-      'Please input your state/introduction message';
+  // static const String gender = 'Gender';
+  static const Json gender = {
+    'en': 'Gender',
+    'ko': '성별',
+  };
+
+  // static const String genderInProfileUpdate = 'GENDER';
+  static const Json genderInProfileUpdate = {
+    'en': 'GENDER',
+    'ko': '성별',
+  };
+
+  // static const String male = 'Male';
+  static const Json male = {
+    'en': 'Male',
+    'ko': '남자',
+  };
+
+  // static const String female = 'Female';
+  static const Json female = {
+    'en': 'Female',
+    'ko': '여자',
+  };
+
+  // static const String nationality = 'Nationality';
+  static const Json nationality = {
+    'en': 'Nationality',
+    'ko': '국적',
+  };
+
+  // static const String region = 'Region';
+  static const Json region = {
+    'en': 'Region',
+    'ko': '지역',
+  };
+
+  // static const String pleaseInputBirthday = 'Please input your birthday';
+  static const Json pleaseInputBirthday = {
+    'en': 'Please input your birthday',
+    'ko': '생년월일을 입력해주세요.',
+  };
+
+  // static const String pleaseSelectGender = 'Please select your gender';
+  static const Json pleaseSelectGender = {
+    'en': 'Please select your gender',
+    'ko': '성별을 선택해주세요.',
+  };
+
+  // static const String addYourPhoto = 'Add your photo. (Minimum 2, Maximum 4)';
+  static const Json addYourPhoto = {
+    'en': 'Add your photo. (Minimum 2, Maximum 4)',
+    'ko': '사진을 추가해주세요. (최소 2, 최대 4)',
+  };
+
+  // static const String pleaseSelectNationality =
+  //     'Please select your nationality';
+  static const Json pleaseSelectNationality = {
+    'en': 'Please select your nationality',
+    'ko': '국적을 선택해주세요.',
+  };
+
+  // static const String pleaseSelectRegion = 'Please select your region';
+  static const Json pleaseSelectRegion = {
+    'en': 'Please select your region',
+    'ko': '지역을 선택해주세요.',
+  };
+
+  // static const String pleaseInputOccupation = 'Please input your occupation';
+  static const Json pleaseInputOccupation = {
+    'en': 'Please input your occupation',
+    'ko': '직업을 입력해주세요.',
+  };
+
+  // static const String pleaseAddMorePhotos =
+  //     'Please add more photos (minimum 2 of photos and maximum 2 of photos)';
+  static const Json pleaseAddMorePhotos = {
+    'en':
+        'Please add more photos (minimum 2 of photos and maximum 2 of photos)',
+    'ko': '사진을 추가해주세요. (최소 2개의 사진, 최대 2개의 사진)',
+  };
+
+  // static const String pleaseInputStateMessage =
+  //     'Please input your state/introduction message';
+  static const Json pleaseInputStateMessage = {
+    'en': 'Please input your state/introduction message',
+    'ko': '상태메세지를 입력해주세요.',
+  };
 
   /// Forum Post Comment
-  static const String deletePostConfirmTitle = 'Delete this post?';
-  static const String deletePostConfirmMessage =
-      'Are you sure you want to delete post?\nYou will not be able to recover this post.';
+  // static const String deletePostConfirmTitle = 'Delete this post?';
+  static const Json deletePostConfirmTitle = {
+    'en': 'Delete this post?',
+    'ko': '이 글을 삭제하시겠습니까?',
+  };
 
-  static const String deleteCommentConfirmTitle = 'Delete this comment?';
-  static const String deleteCommentConfirmMessage =
-      'Are you sure you want to delete comment?';
+  // static const String deletePostConfirmMessage =
+  //     'Are you sure you want to delete post?\nYou will not be able to recover this post.';
+  static const Json deletePostConfirmMessage = {
+    'en':
+        'Are you sure you want to delete post?\nYou will not be able to recover this post.',
+    'ko': '이 글을 삭제하시겠습니까?\n이 글은 복구할 수 없습니다.',
+  };
 
-  static const String notYourComment = 'This is not your comment.';
+  // static const String deleteCommentConfirmTitle = 'Delete this comment?';
+  static const Json deleteCommentConfirmTitle = {
+    'en': 'Delete this comment?',
+    'ko': '이 글을 삭제하시겠습니까?',
+  };
 
-  static const String occupation = 'occupation';
+  // static const String deleteCommentConfirmMessage =
+  //     'Are you sure you want to delete comment?';
+  static const Json deleteCommentConfirmMessage = {
+    'en': 'Are you sure you want to delete comment?',
+    'ko': '이 글을 삭제하시겠습니까?',
+  };
+
+  // static const String notYourComment = 'This is not your comment.';
+  static const Json notYourComment = {
+    'en': 'This is not your comment.',
+    'ko': '이 글은 당신이 작성한 글이 아닙니다.',
+  };
+
+  // static const String occupation = 'occupation';
+  static const Json occupation = {
+    'en': 'occupation',
+    'ko': '직업',
+  };
+
   static const String occupationInputDescription = 'occupationInputDescription';
-  static const String hintInputOccupation = 'Please input your occupation';
+  // static const String hintInputOccupation = 'Please input your occupation';
+  static const Json hintInputOccupation = {
+    'en': 'Please input your occupation',
+    'ko': '직업을 입력해주세요.',
+  };
 
-  static const String postEmptyList = 'No post found.';
+  // static const String postEmptyList = 'No post found.';
+  static const Json postEmptyList = {
+    'en': 'No post found.',
+    'ko': '글이 없습니다.',
+  };
 
-  static const String commentEmptyList = 'No comments';
+  // static const String commentEmptyList = 'No comments';
+  static const Json commentEmptyList = {
+    'en': 'No comments',
+    'ko': '댓글이 없습니다.',
+  };
 
-  static const String postCreate = 'Create';
-  static const String postUpdate = 'Update';
+  // static const String postCreate = 'Create';
+
+  static const Json postCreate = {
+    'en': 'Create',
+    'ko': '글쓰기',
+  };
+  // static const String postUpdate = 'Update';
+  static const Json postUpdate = {
+    'en': 'Update',
+    'ko': '글수정',
+  };
 
   /// Meetup
 
-  static const String meetupEmptyList = 'No meetup found.';
+  // static const String meetupEmptyList = 'No meetup found.';
+  static const Json meetupEmptyList = {
+    'en': 'No meetup found.',
+    'ko': '모임이 없습니다.',
+  };
 
   /// Phone sign in
-  static const String phoneNumber = 'Phone Number';
-  static const String phoneSignInHeaderTitle =
-      'Please enter your phone number and tap "Get Verification Code" button.';
-  static const String phoneNumberInputHint = 'Enter your phone number.';
-  static const String phoneNumberInputDescription =
-      'Input phone number. e.g 010 1234 5678 or 0917 1234 5678';
+  // static const String phoneNumber = 'Phone Number';
+  static const Json phoneNumber = {
+    'en': 'Phone Number',
+    'ko': '전화번호',
+  };
+  // static const String phoneSignInHeaderTitle =
+  //     'Please enter your phone number and tap "Get Verification Code" button.';
+  static const Json phoneSignInHeaderTitle = {
+    'en':
+        'Please enter your phone number and tap "Get Verification Code" button.',
+    'ko': '전화번호를 입력하고 "인증 코드 받기" 버튼을 눌러주세요.',
+  };
 
-  static const String phoneSignInTimeoutTryAgain = 'Timeout. Please try again.';
-  static const String phoneSignInGetVerificationCode = 'Get Verification Code';
-  static const String phoneSignInInputSmsCode =
-      'Input Verification Code and press submit button';
-  static const String phoneSignInRetry = 'Retry';
-  static const String phoneSignInVerifySmsCode = 'Verification Code';
+  // static const String phoneNumberInputHint = 'Enter your phone number.';
+  static const Json phoneNumberInputHint = {
+    'en': 'Enter your phone number.',
+    'ko': '전화번호를 입력해주세요.',
+  };
 
-  static const String invalidSmsCodeMessage = 'Invalid SMS code';
+  // static const String phoneNumberInputDescription =
+  //     'Input phone number. e.g 010 1234 5678 or 0917 1234 5678';
+  static const Json phoneNumberInputDescription = {
+    'en': 'Input phone number. e.g 010 1234 5678 or 0917 1234 5678',
+    'ko': '전화번호를 입력해주세요. e.g 010 1234 5678 or 0917 1234 5678',
+  };
+
+  // static const String phoneSignInTimeoutTryAgain = 'Timeout. Please try again.';
+  static const Json phoneSignInTimeoutTryAgain = {
+    'en': 'Timeout. Please try again.',
+    'ko': '시간 초과. 다시 시도해주세요.',
+  };
+
+  // static const String phoneSignInGetVerificationCode = 'Get Verification Code';
+  static const Json phoneSignInGetVerificationCode = {
+    'en': 'Get Verification Code',
+    'ko': '인증 코드 받기',
+  };
+  // static const String phoneSignInInputSmsCode =
+  //     'Input Verification Code and press submit button';
+  static const Json phoneSignInInputSmsCode = {
+    'en': 'Input Verification Code and press submit button',
+    'ko': '인증 코드를 입력하고 제출 버튼을 눌러주세요.',
+  };
+  // static const String phoneSignInRetry = 'Retry';
+  static const Json phoneSignInRetry = {
+    'en': 'Retry',
+    'ko': '다시 시도',
+  };
+
+  // static const String phoneSignInVerifySmsCode = 'Verification Code';
+  static const Json phoneSignInVerifySmsCode = {
+    'en': 'Verification Code',
+    'ko': '인증 코드',
+  };
+
+  // static const String invalidSmsCodeMessage = 'Invalid SMS code';
+  static const Json invalidSmsCodeMessage = {
+    'en': 'Invalid SMS code',
+    'ko': '잘못된 SMS 코드',
+  };
 
   /// Korean Sigungu Selector
-  static const String selectProvince = "Select Province";
-  static const String selectRegion = 'Select Region';
-  static const String noSelectTedRegion = 'No selected province';
+  // static const String selectProvince = "Select Province";
+  static const Json selectProvince = {
+    'en': 'Select Province',
+    'ko': '시도 선택',
+  };
+
+  // static const String selectRegion = 'Select Region';
+  static const Json selectRegion = {
+    'en': 'Select Region',
+    'ko': '시군구 선택',
+  };
+  // static const String noSelectTedRegion = 'No selected province';
+  static const Json noSelectTedRegion = {
+    'en': 'No selected province',
+    'ko': '시도를 선택해주세요.',
+  };
 
   // BlockScreen
-  static const String noBlockUser = 'No blocked users';
-  static const String youCanBlockUserFromTheirProfilePage =
-      'You can block users from their profile page';
+  // static const String noBlockUser = 'No blocked users';
+  static const Json noBlockUser = {
+    'en': 'No blocked users',
+    'ko': '차단된 사용자가 없습니다.',
+  };
+  // static const String youCanBlockUserFromTheirProfilePage =
+  //     'You can block users from their profile page';
+  static const Json youCanBlockUserFromTheirProfilePage = {
+    'en': 'You can block users from their profile page',
+    'ko': '차단할 수 있는 사용자의 프로필 페이지에서 차단할 수 있습니다.',
+  };
 
   // SettingScreen
-  static const String pushNotificationsOnProfileView =
-      'Push Notifications on Profile View';
-  static const String getNotifiedWhenSomeoneViewYourProfile =
-      'Get notified when someone views your profile';
-  static const String chooseYourLanguage = 'Choose your language';
+  // static const String pushNotificationsOnProfileView =
+  //     'Push Notifications on Profile View';
+  static const Json pushNotificationsOnProfileView = {
+    'en': 'Push Notifications on Profile View',
+    'ko': '프로필 페이지에서 알림을 받을 수 있습니다.',
+  };
+  // static const String getNotifiedWhenSomeoneViewYourProfile =
+  //     'Get notified when someone views your profile';
+  static const Json getNotifiedWhenSomeoneViewYourProfile = {
+    'en': 'Get notified when someone views your profile',
+    'ko': '차단할 수 있는 사용자의 프로필 페이지에서 차단할 수 있습니다.',
+  };
+  // static const String chooseYourLanguage = 'Choose your language';
+  static const Json chooseYourLanguage = {
+    'en': 'Choose your language',
+    'ko': '언어를 선택해주세요.',
+  };
 
   /// Used in DefaultLoginFirstScreen
-  static const String loginRequredTitle = 'Login Required';
-  static const String loginRequredMessage = 'Please login to continue.';
-  static const String askToLoginMessage =
-      'Login is required to continue. Do you want to login?';
+  // static const String loginRequredTitle = 'Login Required';
+  static const Json loginRequredTitle = {
+    'en': 'Login Required',
+    'ko': '로그인이 필요합니다.',
+  };
+
+  // static const String loginRequredMessage = 'Please login to continue.';
+  static const Json loginRequredMessage = {
+    'en': 'Please login to continue.',
+    'ko': '로그인을 해주세요.',
+  };
+
+  // static const String askToLoginMessage =
+  //     'Login is required to continue. Do you want to login?';
+  static const Json askToLoginMessage = {
+    'en': 'Login is required to continue. Do you want to login?',
+    'ko': '로그인이 필요합니다. 로그인 하시겠습니까?',
+  };
 
   // Club Translation
   // static const String clubCreate = '모임 만들기';
@@ -1376,11 +1732,31 @@ class T {
   // static const String clubDescriptionInputDescription = "모임 설명을 적어주세요.";
   // static const String clubUpdateMessage = '모임이 수정되었습니다.';
 
-  static const String userNotFoundTitleOnShowPublicProfileScreen = '사용자 정보 오류';
-  static const String userNotFoundMessageOnShowPublicProfileScreen =
-      '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.';
+  // static const String userNotFoundTitleOnShowPublicProfileScreen = '사용자 정보 오류';
+  static const Json userNotFoundTitleOnShowPublicProfileScreen = {
+    'en': 'User Information Error',
+    'ko': '사용자 정보 오류',
+  };
 
-  static const String userNotFoundTitleOnSingleChat = '사용자 정보 오류';
-  static const String userNotFoundMessageOnSingleChat =
-      '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.';
+  // static const String userNotFoundMessageOnShowPublicProfileScreen =
+  //     '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.';
+  static const Json userNotFoundMessageOnShowPublicProfileScreen = {
+    'en':
+        'User information is not valid. The user has either deleted or there is no information',
+    'ko': '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.',
+  };
+
+  // static const String userNotFoundTitleOnSingleChat = '사용자 정보 오류';
+  static const Json userNotFoundTitleOnSingleChat = {
+    'en': 'User Information Error',
+    'ko': '사용자 정보 오류',
+  };
+
+  // static const String userNotFoundMessageOnSingleChat =
+  //     '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.';
+  static const Json userNotFoundMessageOnSingleChat = {
+    'en':
+        'User information is not valid. The user has either deleted or there is no information',
+    'ko': '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.',
+  };
 }
