@@ -128,8 +128,8 @@ class _MeetupEventUpdateFormState extends State<MeetupEventUpdateForm> {
                           ),
                           errorWidget: (context, url, error) {
                             dog('post.bubble: Image url has problem: $error');
-                            return Center(
-                              child: const Icon(
+                            return const Center(
+                              child: Icon(
                                 Icons.error_outline,
                                 color: Colors.red,
                               ),
