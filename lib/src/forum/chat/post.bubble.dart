@@ -18,7 +18,7 @@ class PostBubble extends StatefulWidget {
 class _PostBubbleState extends State<PostBubble> {
   bool get isMine => widget.post.uid == myUid;
 
-  bool get isLongText => (widget.post.content.length > 100 ||
+  bool get isLongText => (widget.post.content.length >= 99 ||
       '\n'.allMatches(widget.post.content).length > 5);
 
   String get text {

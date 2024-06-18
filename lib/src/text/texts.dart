@@ -279,25 +279,20 @@ class T {
     'ko': '그룹으로 검색',
   };
 
-  
   static Json searchByField = {
     'en': 'Search by field',
     'ko': '필드로 검색',
   };
 
-  
   static Json searchByForumType = {
     'en': 'Search by forum type',
     'ko': '게시판 종류로 검색',
   };
 
-  
   static Json reset = {
     'en': 'Reset',
     'ko': '초기화',
   };
-
-
 
   static Json info = {
     'en': 'Info',
