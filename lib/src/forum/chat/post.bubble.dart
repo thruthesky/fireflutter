@@ -18,6 +18,25 @@ class PostBubble extends StatefulWidget {
 class _PostBubbleState extends State<PostBubble> {
   bool get isMine => widget.post.uid == myUid;
 
+  bool get isLongText => (widget.post.content.length > 100 ||
+      '\n'.allMatches(widget.post.content).length > 5);
+
+  String get text {
+    dog('isLongText: $isLongText');
+    dog('post.content: ${widget.post.content}');
+    if (isLongText) {
+      String t = widget.post.content;
+      final splits = t.split('\n');
+      if (splits.length > 5) {
+        return '${splits.sublist(0, 5).join('\n')}...';
+      } else {
+        return '${widget.post.content.substring(0, 99)}...';
+      }
+    } else {
+      return widget.post.content;
+    }
+  }
+
   final List<String> urls = [];
 
   @override
@@ -95,10 +114,10 @@ class _PostBubbleState extends State<PostBubble> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                           child: Text(
-                            widget.post.content.cut(80).orBlocked(
-                                  widget.post.uid,
-                                  T.blockedContentMessage.tr,
-                                ),
+                            text.orBlocked(
+                              widget.post.uid,
+                              T.blockedContentMessage.tr,
+                            ),
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!

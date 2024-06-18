@@ -56,6 +56,15 @@ class _MeetupEventViewScreenState extends State<MeetupEventViewScreen> {
                     width: double.infinity,
                     height: 200,
                     fit: BoxFit.cover,
+                    errorWidget: (context, url, error) {
+                      dog('meetup_event.view.screen: Image url has problem: $error');
+                      return const Center(
+                        child: Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                        ),
+                      );
+                    },
                   ),
                 ),
               const SizedBox(height: 16),

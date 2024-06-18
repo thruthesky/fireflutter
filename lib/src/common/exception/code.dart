@@ -52,6 +52,7 @@ class Code {
   static const String readMore = 'readMore';
   static const String viewProfile = 'viewProfile';
   static const String reply = 'reply';
+  static const String copy = 'copy';
 
   static const String deleted = 'deleted';
 

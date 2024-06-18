@@ -357,23 +357,24 @@ class _CommentViewState extends State<CommentView> {
     );
   }
 
-  Widget _shortVerticalLine() {
-    return Container(
-      width: lineWidth,
-      height: 6,
-      child: Column(
-        children: [
-          Expanded(
-            child: VerticalDivider(
-              width: lineWidth,
-              color: Colors.red,
-              thickness: lineWidth,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // TODO review, these codes are not used
+  // Widget _shortVerticalLine() {
+  //   return Container(
+  //     width: lineWidth,
+  //     height: 6,
+  //     child: Column(
+  //       children: [
+  //         Expanded(
+  //           child: VerticalDivider(
+  //             width: lineWidth,
+  //             color: Colors.red,
+  //             thickness: lineWidth,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   /// 세로 라인을 긋는다.
   ///

@@ -123,7 +123,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                                             color: Colors.red);
                                       },
                                       errorListener: (value) => dog(
-                                          'Image not exist in storage: $value'),
+                                          'chat.message_input_box: Image load error: $value'),
                                     ),
                                   ),
                                 ),
@@ -162,6 +162,12 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: T.pleaseEnterMessage.tr,
+              // This hintStyle is important because we cannot simply let
+              // the devs to update the font size because of alignment things.
+              // Please check the input box
+              hintStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    fontSize: 14,
+                  ),
               hintMaxLines: 1,
               prefixIcon: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

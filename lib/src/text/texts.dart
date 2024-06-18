@@ -1081,7 +1081,8 @@ class T {
   };
   static const Json unblockUserChatConfirmation = {
     'en':
-        "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room."
+        "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room.",
+    'ko': '채팅방에 차단해제하시겠습니까? 이 행동은 취소할 수 없습니다.',
   };
 
   static const Json create = {
@@ -1092,6 +1093,16 @@ class T {
   static const Json leave = {
     'en': 'Leave',
     'ko': '나가기',
+  };
+
+  static const Json copy = {
+    'en': 'Copy',
+    'ko': '복사',
+  };
+
+  static const Json messageWasCopiedToClipboard = {
+    'en': "Message was copied to clipboard.",
+    'ko': '메시지가 클립보드에 복사되었습니다.',
   };
 
   // Chat-Setting
@@ -1223,6 +1234,13 @@ class T {
     'ko': '내용을 입력해주세요.',
   };
 
+  // User Settings
+
+  static const Json getNotifiedWhenSomeoneCommentOnYourPost = {
+    'en': "Get notified when other user comments/replies on your post/comment",
+    'ko': ""
+  };
+
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
 
@@ -1344,9 +1362,6 @@ class T {
   static const String getNotifiedWhenSomeoneViewYourProfile =
       'Get notified when someone views your profile';
   static const String chooseYourLanguage = 'Choose your language';
-
-  static const String getNotifiedWhenSomeoneCommentOnYourPost =
-      "Get notified when other user comments/replies on your post/comment";
 
   /// Used in DefaultLoginFirstScreen
   static const String loginRequredTitle = 'Login Required';
