@@ -36,7 +36,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
             controller: contentController,
             autofocus: false,
             decoration: InputDecoration(
-              hintText: "Input content here...",
+              hintText: T.inputContentHere.tr,
               prefixIcon: isEmpty
                   ? IconButton(
                       onPressed: onUpload,
