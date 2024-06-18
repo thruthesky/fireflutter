@@ -36,6 +36,10 @@ class _PostViewScreenState extends State<PostViewScreen> {
   /// To display all photos in the PostViewScreen, we fetch the complete list of photo URLs from the database.
   final List<String> urls = [];
 
+  /// [likes] is the list of uids that liked the posts
+  /// This are mainly used for the [Icon] because the [widget.post.likes] are not working as expected
+  /// This save and remove the [myUid] locally instead of reading from [widget.post.likes]
+  final List<String> likes = [];
   @override
   void initState() {
     super.initState();
@@ -43,6 +47,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
     if (post.urls.isNotEmpty) {
       urls.addAll(post.urls);
     }
+    likes.addAll(post.likes);
 
     widget.post.urlsRef.once().then((DatabaseEvent event) {
       final value = event.snapshot.value as List<dynamic>?;
@@ -52,6 +57,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
         if (data.isNotEmpty) {
           urls.clear();
           urls.addAll(data);
+          likes.clear();
         }
       }
     });
@@ -109,12 +115,18 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 child: Row(
                   children: [
                     TextButton.icon(
-                      icon: post.likes.contains(myUid)
-                          ? const Icon(Icons.thumb_up_outlined)
-                          : const Icon(Icons.thumb_up),
+                      icon: likes.contains(myUid)
+                          ? const Icon(Icons.thumb_up)
+                          : const Icon(Icons.thumb_up_outlined),
                       iconAlignment: IconAlignment.start,
                       onPressed: () {
-                        setState(() {});
+                        setState(() {
+                          if (likes.contains(myUid)) {
+                            likes.remove(myUid);
+                          } else {
+                            likes.add(myUid!);
+                          }
+                        });
                         post.like(context: context);
                       },
                       label: Login(
@@ -133,7 +145,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
                     /// Bookmark
                     TextButton.icon(
-                      icon: const Icon(Icons.bookmark_add_outlined),
                       onPressed: () async {
                         await Bookmark.toggle(
                           context: context,
@@ -149,6 +160,14 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           ),
                         ),
                         no: () => Text(T.bookmark.tr),
+                      ),
+                      icon: Value(
+                        ref: Bookmark.postRef(post.id),
+                        builder: (v) => Icon(
+                          v == null
+                              ? Icons.bookmark_add_outlined
+                              : Icons.bookmark_added,
+                        ),
                       ),
                     ),
 

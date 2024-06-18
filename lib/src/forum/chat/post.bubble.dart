@@ -35,6 +35,8 @@ class _PostBubbleState extends State<PostBubble> {
     }
   }
 
+  final model = UrlPreviewModel();
+
   List<String> urls = [];
   bool get hasLink => widget.post.content.hasUrl;
   @override
@@ -58,6 +60,11 @@ class _PostBubbleState extends State<PostBubble> {
         }
       }
     });
+
+    /// Set if the content has previewUrl
+    if (widget.post.content.hasUrl) {
+      model.load(widget.post.content);
+    }
   }
 
   @override
@@ -141,6 +148,9 @@ class _PostBubbleState extends State<PostBubble> {
                                 .bodyMedium!
                                 .copyWith(
                                   color: isMine
+
+                                      /// [LinkifyText] is on colorScheme.primary and it does not look good in terms of constrast
+                                      /// .withGreen(200) matches the [Color.blue] of the [LinkifyText]
                                       ? Colors.blue.withGreen(200)
                                       : Colors.blue,
                                   fontWeight: FontWeight.w600,
@@ -148,6 +158,13 @@ class _PostBubbleState extends State<PostBubble> {
                                 ),
                           ),
                         ),
+                        if (widget.post.content.hasUrl)
+                          UrlPreview(
+                            previewUrl: model.firstLink!,
+                            title: model.title,
+                            description: model.description,
+                            imageUrl: model.image,
+                          ),
                       ],
                     ),
                   ),
