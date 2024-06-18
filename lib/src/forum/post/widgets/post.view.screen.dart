@@ -108,13 +108,16 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 padding: const EdgeInsets.only(left: 2.0, right: 16),
                 child: Row(
                   children: [
-                    TextButton(
+                    TextButton.icon(
+                      icon: post.likes.contains(myUid)
+                          ? const Icon(Icons.thumb_up_outlined)
+                          : const Icon(Icons.thumb_up),
                       iconAlignment: IconAlignment.start,
                       onPressed: () {
                         setState(() {});
                         post.like(context: context);
                       },
-                      child: Login(
+                      label: Login(
                         yes: (uid) => Value(
                           ref: post.noOfLikesRef,
                           builder: (no) {
@@ -129,7 +132,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     ),
 
                     /// Bookmark
-                    TextButton(
+                    TextButton.icon(
+                      icon: const Icon(Icons.bookmark_add_outlined),
                       onPressed: () async {
                         await Bookmark.toggle(
                           context: context,
@@ -137,7 +141,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           postId: post.id,
                         );
                       },
-                      child: Login(
+                      label: Login(
                         yes: (uid) => Value(
                           ref: Bookmark.postRef(post.id),
                           builder: (v) => Text(
@@ -148,87 +152,108 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       ),
                     ),
 
-                    TextButton(
+                    TextButton.icon(
+                      icon: const Icon(Icons.chat_bubble_outline_outlined),
                       onPressed: () => ChatService.instance.showChatRoomScreen(
                         context: context,
                         otherUid: post.uid,
                       ),
-                      child: Text(T.chat.tr),
+                      label: Text(T.chat.tr),
                     ),
-                    TextButton(
-                      onPressed: () async {
-                        final re = await input(
-                          context: context,
-                          title: T.reportInputTitle.tr,
-                          subtitle: T.reportInputMessage.tr,
-                          hintText: T.reportInputHint.tr,
-                        );
-                        if (re == null || re == '') return;
-                        await Report.create(
-                          postId: post.id,
-                          category: post.category,
-                          reason: re,
-                        );
-                      },
-                      child: Text(T.report.tr),
-                    ),
+                    // TextButton(
+                    //   onPressed: () async {
+                    //     final re = await input(
+                    //       context: context,
+                    //       title: T.reportInputTitle.tr,
+                    //       subtitle: T.reportInputMessage.tr,
+                    //       hintText: T.reportInputHint.tr,
+                    //     );
+                    //     if (re == null || re == '') return;
+                    //     await Report.create(
+                    //       postId: post.id,
+                    //       category: post.category,
+                    //       reason: re,
+                    //     );
+                    //   },
+                    //   child: Text(T.report.tr),
+                    // ),
 
                     // BlockButton.textButton(uid: post.uid),
 
-                    const Spacer(),
-
-                    PopupMenuButton(
-                      itemBuilder: (context) {
-                        return [
-                          if (post.uid == myUid) ...[
-                            PopupMenuItem(
-                              value: 'edit',
-                              child: Text(T.edit.tr),
-                            ),
-                            PopupMenuItem(
-                              value: 'delete',
-                              child: Text(T.delete.tr),
-                            ),
-                          ] else ...[
-                            PopupMenuItem(
-                              value: 'block',
-                              child: Text(T.block.tr),
-                            ),
-                          ],
-                          PopupMenuItem(
-                            value: 'share',
-                            child: Text(T.share.tr),
-                          ),
-                        ];
-                      },
-                      onSelected: (value) async {
-                        if (value == 'block') {
-                          await UserService.instance.block(
-                            context: context,
-                            otherUserUid: post.uid,
-                            ask: true,
-                            notify: true,
-                          );
-                        } else if (value == 'share') {
-                          final link =
-                              LinkService.instance.generatePostLink(post);
-                          Share.shareUri(link);
-                        } else if (value == 'edit') {
-                          await ForumService.instance.showPostUpdateScreen(
-                              context: context, post: post);
-                          await post.reload();
-                          if (mounted) setState(() {});
-                        } else if (value == 'delete') {
-                          final re = await confirm(
-                            context: context,
-                            title: T.deletePostConfirmTitle.tr,
-                            message: T.deletePostConfirmMessage.tr,
-                          );
-                          if (re != true) return;
-                          await post.delete();
-                          if (context.mounted) Navigator.of(context).pop();
-                        }
-                      },
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: PopupMenuButton(
+                          itemBuilder: (context) {
+                            return [
+                              if (post.uid == myUid) ...[
+                                PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text(T.edit.tr),
+                                ),
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text(T.delete.tr),
+                                ),
+                              ] else ...[
+                                PopupMenuItem(
+                                  value: 'block',
+                                  child: Text(T.block.tr),
+                                ),
+                              ],
+                              PopupMenuItem(
+                                value: 'share',
+                                child: Text(T.share.tr),
+                              ),
+                              PopupMenuItem(
+                                value: 'report',
+                                child: Text(T.report.tr),
+                              ),
+                            ];
+                          },
+                          onSelected: (value) async {
+                            if (value == 'block') {
+                              await UserService.instance.block(
+                                context: context,
+                                otherUserUid: post.uid,
+                                ask: true,
+                                notify: true,
+                              );
+                            } else if (value == 'share') {
+                              final link =
+                                  LinkService.instance.generatePostLink(post);
+                              Share.shareUri(link);
+                            } else if (value == 'edit') {
+                              await ForumService.instance.showPostUpdateScreen(
+                                  context: context, post: post);
+                              await post.reload();
+                              if (mounted) setState(() {});
+                            } else if (value == 'delete') {
+                              final re = await confirm(
+                                context: context,
+                                title: T.deletePostConfirmTitle.tr,
+                                message: T.deletePostConfirmMessage.tr,
+                              );
+                              if (re != true) return;
+                              await post.delete();
+                              if (context.mounted) Navigator.of(context).pop();
+                            } else if (value == 'report') {
+                              final re = await input(
+                                context: context,
+                                title: T.reportInputTitle.tr,
+                                subtitle: T.reportInputMessage.tr,
+                                hintText: T.reportInputHint.tr,
+                              );
+                              if (re == null || re == '') return;
+                              await Report.create(
+                                postId: post.id,
+                                category: post.category,
+                                reason: re,
+                              );
+                            }
+                          },
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -298,7 +323,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
                 ),
               )
-            : null,
+            : const SizedBox(
+                height: 32), // Added because there is no space at the bottom
       ),
     );
   }
