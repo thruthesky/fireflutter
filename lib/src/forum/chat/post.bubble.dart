@@ -178,33 +178,37 @@ class ImageDisplay extends StatelessWidget {
   });
 
   final List<String> urls;
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: urls
             .asMap()
             .map(
               (index, url) => MapEntry(
                 index,
-                InkWell(
-                  onTap: () => showGeneralDialog(
-                    context: context,
-                    pageBuilder: (_, __, ___) => PhotoViewerScreen(
-                      urls: urls,
-                      selectedIndex: index,
+                Padding(
+                  padding:
+                      EdgeInsets.only(right: index == urls.length - 1 ? 0 : 8),
+                  child: InkWell(
+                    onTap: () => showGeneralDialog(
+                      context: context,
+                      pageBuilder: (_, __, ___) => PhotoViewerScreen(
+                        urls: urls,
+                        selectedIndex: index,
+                      ),
                     ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: SizedBox(
-                      width: 150,
-                      height: 150,
-                      child: CachedNetworkImage(
-                        imageUrl: url,
-                        fit: BoxFit.cover,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: SizedBox(
+                        width: 150,
+                        height: 150,
+                        child: CachedNetworkImage(
+                          imageUrl: url,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -212,15 +216,7 @@ class ImageDisplay extends StatelessWidget {
               ),
             )
             .values
-            .toList()
-            .fold(
-          [],
-          (prev, curr) => prev
-            ..add(curr)
-            ..add(
-              const SizedBox(height: 8, width: 8),
-            ),
-        ),
+            .toList(),
       ),
     );
   }

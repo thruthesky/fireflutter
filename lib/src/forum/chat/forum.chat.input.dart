@@ -36,6 +36,13 @@ class _ForumChatInputState extends State<ForumChatInput> {
             controller: contentController,
             autofocus: false,
             decoration: InputDecoration(
+              filled: true,
+              fillColor: Theme.of(context).colorScheme.primary.withAlpha(20),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16),
+                ),
+              ),
               hintText: "Input content here...",
               prefixIcon: isEmpty
                   ? IconButton(
