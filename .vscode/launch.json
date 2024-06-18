@@ -260,6 +260,16 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Momcafe - Emulator - English(locale=en)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "locale=en"]
+    },
+    {
       "name": "Momcafe - Chrome",
       "request": "launch",
       "type": "dart",
