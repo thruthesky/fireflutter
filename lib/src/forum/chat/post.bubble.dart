@@ -158,17 +158,20 @@ class _PostBubbleState extends State<PostBubble> {
                                 ),
                           ),
                         ),
-                        if (widget.post.content.hasUrl)
-                          UrlPreview(
-                            previewUrl: model.firstLink!,
-                            title: model.title,
-                            description: model.description,
-                            imageUrl: model.image,
-                          ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 4),
+                  if (widget.post.content.hasUrl) ...[
+                    UrlPreview(
+                      key: Key(widget.post.content),
+                      previewUrl: model.firstLink!,
+                      title: model.title,
+                      description: model.description,
+                      imageUrl: model.image,
+                    ),
+                    const SizedBox(height: 4),
+                  ],
                   dateAndName(context: context, post: widget.post),
                 ],
               ),
