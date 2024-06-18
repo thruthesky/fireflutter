@@ -10,11 +10,15 @@ class LinkifyText extends StatelessWidget {
     this.text, {
     super.key,
     this.style,
+    this.linkStyle,
     this.selectable = true,
   });
   final String text;
-  final TextStyle? style;
   final bool selectable;
+  final TextStyle? style;
+
+  /// adding this so the link can be customized depending where it will be displayed
+  final TextStyle? linkStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +34,7 @@ class LinkifyText extends StatelessWidget {
             },
             text: text,
             style: style,
+            linkStyle: linkStyle,
             contextMenuBuilder: (_, state) =>
                 AdaptiveTextSelectionToolbar.buttonItems(
               anchors: state.contextMenuAnchors,
@@ -47,6 +52,7 @@ class LinkifyText extends StatelessWidget {
             },
             text: text,
             style: style,
+            linkStyle: linkStyle,
           );
   }
 }
