@@ -1,3 +1,4 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -36,7 +37,9 @@ class LinkifyText extends StatelessWidget {
         ? SelectableLinkify(
             options: const LinkifyOptions(humanize: false),
             onOpen: (link) async {
-              if (await canLaunchUrlString(link.url)) {
+              if (LinkService.instance.isThisUrlPrefix(link.url)) {
+                LinkService.instance.handleUrlTap(context, link.url);
+              } else if (await canLaunchUrlString(link.url)) {
                 await launchUrlString(link.url);
               } else {
                 throw 'Could not launch $link';
@@ -55,7 +58,9 @@ class LinkifyText extends StatelessWidget {
         : Linkify(
             options: const LinkifyOptions(humanize: false),
             onOpen: (link) async {
-              if (await canLaunchUrlString(link.url)) {
+              if (LinkService.instance.isThisUrlPrefix(link.url)) {
+                LinkService.instance.handleUrlTap(context, link.url);
+              } else if (await canLaunchUrlString(link.url)) {
                 await launchUrlString(link.url);
               } else {
                 throw 'Could not launch $link';
