@@ -23,13 +23,7 @@ class LinkifyText extends StatelessWidget {
         ? SelectableLinkify(
             options: const LinkifyOptions(humanize: false),
             onOpen: (link) async {
-              if (LinkService.instance.isThisUrlPrefix(link.url)) {
-                LinkService.instance.handleUrlTap(context, link.url);
-              } else if (await canLaunchUrlString(link.url)) {
-                await launchUrlString(link.url);
-              } else {
-                throw 'Could not launch $link';
-              }
+              _onOpen(context, link.url);
             },
             text: text,
             style: style,
@@ -42,16 +36,20 @@ class LinkifyText extends StatelessWidget {
         : Linkify(
             options: const LinkifyOptions(humanize: false),
             onOpen: (link) async {
-              if (LinkService.instance.isThisUrlPrefix(link.url)) {
-                LinkService.instance.handleUrlTap(context, link.url);
-              } else if (await canLaunchUrlString(link.url)) {
-                await launchUrlString(link.url);
-              } else {
-                throw 'Could not launch $link';
-              }
+              _onOpen(context, link.url);
             },
             text: text,
             style: style,
           );
+  }
+
+  Future<void> _onOpen(BuildContext context, String link) async {
+    if (LinkService.instance.isDeepLink(link)) {
+      LinkService.instance.openScreen(context, link);
+    } else if (await canLaunchUrlString(link)) {
+      await launchUrlString(link);
+    } else {
+      throw 'Could not launch $link';
+    }
   }
 }

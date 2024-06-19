@@ -50,16 +50,16 @@ class LinkService {
           final uriString = uri.toString();
           final context = FireFlutterService.instance.globalContext;
           if (context != null) {
-            handleUrlTap(context, uriString, onLinkTap: onLinkTap);
+            openScreen(context, uriString, onLinkTap: onLinkTap);
           }
         });
       });
     }
   }
 
-  bool isThisUrlPrefix(String url) => url.startsWith(urlPrefix);
+  bool isDeepLink(String url) => url.startsWith(urlPrefix);
 
-  Future<void> handleUrlTap(
+  Future<void> openScreen(
     BuildContext context,
     String url, {
     Function(Map<String, String> parms)? onLinkTap,
