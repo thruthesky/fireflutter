@@ -21,9 +21,7 @@ class _PostBubbleState extends State<PostBubble> {
   bool get isLongText => (widget.post.content.length >= 99 ||
       '\n'.allMatches(widget.post.content).length > 5);
 
-  String get text {
-    dog('isLongText: $isLongText');
-    dog('post.content: ${widget.post.content}');
+  String get content {
     if (isLongText) {
       String t = widget.post.content;
       final splits = t.split('\n');
@@ -37,11 +35,14 @@ class _PostBubbleState extends State<PostBubble> {
     }
   }
 
-  final List<String> urls = [];
-
+  List<String> urls = [];
   @override
   void initState() {
     super.initState();
+
+    if (widget.post.urls.isNotEmpty) {
+      urls.addAll(widget.post.urls);
+    }
 
     widget.post.urlsRef.once().then((DatabaseEvent event) {
       final value = event.snapshot.value as List<dynamic>?;
@@ -60,10 +61,10 @@ class _PostBubbleState extends State<PostBubble> {
 
   @override
   Widget build(BuildContext context) {
+    // To hide the [PostBubble] when the post is deleted
     if (widget.post.deleted) {
       return const SizedBox.shrink();
     }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -71,20 +72,41 @@ class _PostBubbleState extends State<PostBubble> {
         children: [
           if (!isMine) ...[
             UserAvatar(
-              uid: widget.post.uid,
-              cacheId: widget.post.uid,
-              size: 32,
-              radius: 13,
-            ),
+                uid: widget.post.uid,
+                cacheId: widget.post.uid,
+                size: 32,
+                radius: 13,
+                onTap: () => UserService.instance.showPublicProfileScreen(
+                      context: context,
+                      uid: widget.post.uid,
+                    )),
           ],
           const SizedBox(width: 14),
           Expanded(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment:
                   isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
-                ImageDisplay(urls: urls),
-                const SizedBox(height: 8),
+                if (widget.post.urls.isNotEmpty) ImageDisplay(urls: urls),
+                if (widget.post.content.hasUrl) ...[
+                  Blocked(
+                    otherUserUid: widget.post.uid,
+                    yes: () => const SizedBox.shrink(),
+                    no: () => Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * .7,
+                      ),
+                      child: UrlPreview(
+                        previewUrl: widget.post.previewUrl!,
+                        title: widget.post.previewTitle,
+                        description: widget.post.previewDescription,
+                        imageUrl: widget.post.previewImageUrl,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () => ForumService.instance.showPostViewScreen(
@@ -102,7 +124,12 @@ class _PostBubbleState extends State<PostBubble> {
                           ? Theme.of(context).colorScheme.primary.tone(40)
                           : Theme.of(context).colorScheme.surface.tone(93),
                       borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(16),
+                        topLeft: Radius.circular(!isMine
+                            ? widget.post.urls.isNotEmpty ||
+                                    widget.post.content.hasUrl
+                                ? 0
+                                : 16
+                            : 16),
                         topRight: Radius.circular(isMine ? 0 : 16),
                         bottomLeft: Radius.circular(isMine ? 16 : 0),
                         bottomRight: const Radius.circular(16),
@@ -113,19 +140,35 @@ class _PostBubbleState extends State<PostBubble> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                          child: Text(
-                            text.orBlocked(
+                          child: LinkifyText(
+                            content.orBlocked(
                               widget.post.uid,
                               T.blockedContentMessage.tr,
                             ),
+                            selectable: false,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
                                 .copyWith(
-                                  color: isMine ? Colors.white : Colors.black,
+                                  color: isMine
+                                      ? Theme.of(context).colorScheme.onPrimary
+                                      : Theme.of(context).colorScheme.onSurface,
                                   fontWeight: isMine
                                       ? FontWeight.w500
                                       : FontWeight.normal,
+                                ),
+                            linkStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: isMine
+
+                                      /// [LinkifyText] is using its default color and it does not look good in terms of constrast when it is on [colorScheme.primary]
+                                      /// [.withGreen(200)] matches the [Color.blue] of the [LinkifyText]
+                                      ? Colors.blue.withGreen(200)
+                                      : Colors.blue,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
                                 ),
                           ),
                         ),
@@ -133,7 +176,7 @@ class _PostBubbleState extends State<PostBubble> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 dateAndName(context: context, post: widget.post),
               ],
             ),
@@ -156,7 +199,6 @@ class _PostBubbleState extends State<PostBubble> {
                 fontWeight: FontWeight.w600,
               ),
         ),
-        const SizedBox(width: 8),
         if (!isMine) _dateTime(post, context),
       ],
     );
@@ -200,45 +242,45 @@ class ImageDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: urls
-            .asMap()
-            .map(
-              (index, url) => MapEntry(
-                index,
-                InkWell(
-                  onTap: () => showGeneralDialog(
-                    context: context,
-                    pageBuilder: (_, __, ___) => PhotoViewerScreen(
-                      urls: urls,
-                      selectedIndex: index,
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: SizedBox(
-                      width: 150,
-                      height: 150,
-                      child: CachedNetworkImage(
-                        imageUrl: url,
-                        fit: BoxFit.cover,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: urls
+              .asMap()
+              .map(
+                (index, url) => MapEntry(
+                  index,
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: index == urls.length - 1 ? 0 : 8),
+                    child: InkWell(
+                      onTap: () => showGeneralDialog(
+                        context: context,
+                        pageBuilder: (_, __, ___) => PhotoViewerScreen(
+                          urls: urls,
+                          selectedIndex: index,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: CachedNetworkImage(
+                            imageUrl: url,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            )
-            .values
-            .toList()
-            .fold(
-          [],
-          (prev, curr) => prev
-            ..add(curr)
-            ..add(
-              const SizedBox(height: 8, width: 8),
-            ),
+              )
+              .values
+              .toList(),
         ),
       ),
     );

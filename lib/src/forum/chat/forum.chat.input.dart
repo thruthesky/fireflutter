@@ -54,6 +54,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
             maxLines: 4,
             onChanged: onChanged,
             onSubmitted: onSubmitted,
+            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
           if (isNotEmpty) ...[
             const SizedBox(height: 8),

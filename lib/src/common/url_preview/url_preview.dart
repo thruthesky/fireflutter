@@ -29,6 +29,8 @@ class UrlPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (previewUrl.isNullOrEmpty) return const SizedBox.shrink();
+
     return GestureDetector(
       onTap: () async {
         if (await canLaunchUrlString(previewUrl)) {
@@ -38,6 +40,12 @@ class UrlPreview extends StatelessWidget {
         }
       },
       child: Container(
+        /// [imageUrl] are sometimes smaller than the length of the [description] and leads to
+        /// inconsistent design of the [UrlPreview] in [ChatViewScreen] and [ForumChatViewScreen]
+        /// [BoxConstraints] to make it a single width and consistent design
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * .5,
+        ),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
@@ -46,7 +54,7 @@ class UrlPreview extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (imageUrl != null) ...[
+            if (!imageUrl.isNullOrEmpty) ...[
               CachedNetworkImage(
                 imageUrl: imageUrl!,
                 // Don't show
@@ -57,22 +65,24 @@ class UrlPreview extends StatelessWidget {
               ),
               const SizedBox(height: 8),
             ],
-            if (title != null) ...[
+            if (!title.isNullOrEmpty) ...[
               Text(
                 title!,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
-            if (description != null) ...[
+            if (!description.isNullOrEmpty) ...[
               const SizedBox(height: 8),
               Text(
                 description!.length > 100
-                    ? '${description!.substring(0, 100)}...'
+                    ? '${description!.substring(0, 90)}...'
                     : description!,
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade800),
+                style: TextStyle(fontSize: 12, color: Colors.grey.shade800),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

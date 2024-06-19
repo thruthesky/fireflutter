@@ -46,7 +46,9 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                           ForumService.instance.showPostCreateScreen(
                         context: context,
                         category: widget.meetup.id +
-                            (index == 4 ? '-meetup-gallery' : '-meetup-post'),
+                            (index == 4
+                                ? Code.meetupGalleryCategoryPostFix
+                                : Code.meetupPostCategoryPostFix),
                         group: 'meetup',
                       ),
                       child: Text(
@@ -277,7 +279,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                 builder: (meetup) {
                   if (meetup.users.contains(myUid)) {
                     return PostListView(
-                      category: '${widget.meetup.id}-meetup-post',
+                      category: '${widget.meetup.id}${Code.meetupPostCategoryPostFix}',
                       padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                       pageSize: 20,
                       separatorBuilder: (p0, p1) => Padding(
@@ -317,7 +319,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                 builder: (meetup) {
                   if (meetup.users.contains(myUid)) {
                     return PostListView.gridView(
-                      category: '${widget.meetup.id}-meetup-gallery',
+                      category: '${widget.meetup.id}${Code.meetupGalleryCategoryPostFix}',
                       padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
                       itemBuilder: (post, i) => ClipRRect(
                         borderRadius: BorderRadius.circular(16),
