@@ -35,8 +35,6 @@ class _PostBubbleState extends State<PostBubble> {
     }
   }
 
-  final model = UrlPreviewModel();
-
   List<String> urls = [];
   bool get hasLink => widget.post.content.hasUrl;
   @override
@@ -60,11 +58,6 @@ class _PostBubbleState extends State<PostBubble> {
         }
       }
     });
-
-    /// Set if the content has previewUrl
-    if (widget.post.content.hasUrl) {
-      model.load(widget.post.content);
-    }
   }
 
   @override
@@ -164,11 +157,10 @@ class _PostBubbleState extends State<PostBubble> {
                   const SizedBox(height: 4),
                   if (widget.post.content.hasUrl) ...[
                     UrlPreview(
-                      key: Key(widget.post.content),
-                      previewUrl: model.firstLink!,
-                      title: model.title,
-                      description: model.description,
-                      imageUrl: model.image,
+                      previewUrl: widget.post.previewUrl!,
+                      title: widget.post.previewTitle,
+                      description: widget.post.previewDescription,
+                      imageUrl: widget.post.previewImageUrl,
                     ),
                     const SizedBox(height: 4),
                   ],

@@ -44,6 +44,10 @@ class Post {
     required this.noOfComments,
     required this.deleted,
     required this.photoOrder,
+    this.previewUrl,
+    this.previewTitle,
+    this.previewDescription,
+    this.previewImageUrl,
   });
 
   final DatabaseReference ref;
@@ -55,6 +59,10 @@ class Post {
   final int order;
   List<String> likes;
   List<String> urls;
+  String? previewUrl;
+  String? previewTitle;
+  String? previewDescription;
+  String? previewImageUrl;
 
   int noOfLikes;
 
@@ -301,7 +309,28 @@ class Post {
 
     /// Call the onPostCreate callback
     ForumService.instance.onPostCreate?.call(created);
+    await updateUrlPreview(created.ref, content);
     return created;
+  }
+
+  static Future updateUrlPreview(DatabaseReference ref, String? text) async {
+    if (text == null || text == '') {
+      return;
+    }
+
+    /// Update url preview
+    final model = UrlPreviewModel();
+    await model.load(text);
+
+    if (model.hasData) {
+      final data = {
+        'previewUrl': model.firstLink!,
+        if (model.title != null) 'previewTitle': model.title,
+        if (model.description != null) 'previewDescription': model.description,
+        if (model.image != null) 'previewImageUrl': model.image,
+      };
+      await ref.update(data);
+    }
   }
 
   /// Update post data in the database
