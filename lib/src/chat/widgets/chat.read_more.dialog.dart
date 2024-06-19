@@ -56,34 +56,38 @@ class ChatReadMoreDialog extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (message.text != null) LinkifyText(message.text!),
-            if (message.url != null)
-              ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(16),
-                ),
-                child: Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.6),
-                  child: CachedNetworkImage(
-                    imageUrl: message.url!,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator(),
+            if (my?.hasBlocked(message.uid ?? "") == true)
+              Text(T.blockedContentMessage.tr)
+            else ...[
+              if (message.text != null) LinkifyText(message.text!),
+              if (message.url != null)
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(16),
+                  ),
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.6),
+                    child: CachedNetworkImage(
+                      imageUrl: message.url!,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                      // if thumbnail is not available, show original image
+                      errorWidget: (context, url, error) {
+                        return const Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                        );
+                      },
+                      errorListener: (value) => dog(
+                          'chat.read_more.dialog.dart: Image has problem:  $value'),
                     ),
-                    // if thumbnail is not available, show original image
-                    errorWidget: (context, url, error) {
-                      return const Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                      );
-                    },
-                    errorListener: (value) => dog(
-                        'chat.read_more.dialog.dart: Image has problem:  $value'),
                   ),
                 ),
-              ),
+            ],
           ],
         ),
       ),
