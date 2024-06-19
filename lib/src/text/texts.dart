@@ -1300,12 +1300,18 @@ class T {
   static const Json stateMessageDescription = {
     'en': 'State Message Description',
     'ko': '상태 메시지 설명',
+    'vi': 'Mô tả thông báo trạng thái',
+    'th': 'คำอธิบายข้อความสถานะ',
+    'lo': 'ລາຍລະອຽດຂໍ້ຄວາມຂອງລັດ',
   };
 
   // static const String blockConfirmTitle = 'Block this user?';
   static const Json blockConfirmTitle = {
     'en': 'Block this user?',
     'ko': '사용자를 차단할까요?',
+    'vi': 'Chặn người dùng này?',
+    'th': 'บล็อกผู้ใช้นี้?',
+    'lo': 'ປິດຜູ້ໃຊ້ນີ້?',
   };
 
   // static const String blockConfirmMessage =
@@ -1314,12 +1320,20 @@ class T {
     'en':
         'Do you want to block this user?\nYou will not be able to see the contents of this user.',
     'ko': '사용자를 차단할까요?\n사용자의 내용을 볼 수 없습니다.',
+    'vi':
+        'Bạn có muốn chặn người dùng này?\nBạn sẽ không thể xem nội dung của người dùng này nữa.',
+    'th':
+        'คุณต้องการบล็อกผู้ใช้นี้หรือไม่?\nคุณจะไม่สามารถดูเนื้อหาของผู้ใช้นี้ได้',
+    'lo': 'ທ່ານຕ້ອງການປິດຜູ້ໃຊ້ນີ້ບໍ?',
   };
 
   // static const String unblockConfirmTitle = 'Unblock this user?';
   static const Json unblockConfirmTitle = {
     'en': 'Unblock this user?',
     'ko': '사용자를 차단해제할까요?',
+    'vi': 'Hủy chặn người dùng này?',
+    'th': 'ยกเลิกการบล็อกผู้ใช้นี้',
+    'lo': 'ປິດຜູ້ໃຊ້ນີ້?',
   };
 
   // static const String unblockConfirmMessage =
@@ -1328,6 +1342,9 @@ class T {
     'en':
         'If you unblock this user, you will be able to see the contents of this user.',
     'ko': '사용자를 차단해제할까요?\n사용자의 내용을 볼 수 없습니다.',
+    'vi': 'Bạn sẽ có thể xem nội dung của người dùng này lại.',
+    'th': 'คุณจะสามารถดูเนื้อหาของผู้ใช้นี้อีกครั้ง',
+    'lo': 'ທ່ານຈະສາມາດເບິ່ງເນື້ອຫາຂອງຜູ້ໃຊ້ນີ້ອີກຄັ້ງ.',
   };
 
   // static const String writeYourMessage = 'Write your message';
@@ -1340,12 +1357,18 @@ class T {
   static const Json visitedYourProfileTitle = {
     'en': 'Your profile was visited.',
     'ko': '사용자의 프로필을 방문했습니다.',
+    'lo': 'ໂປຣໄຟລ໌ຂອງທ່ານຖືກເຂົ້າເບິ່ງແລ້ວ.',
+    'vi': 'Hồ sơ của bạn đã được truy cập.',
+    'th': 'โปรไฟล์ของคุณถูกเยี่ยมชม',
   };
 
   // static const String visitedYourProfileBody = '#name visited your profile';
   static const Json visitedYourProfileBody = {
     'en': '#name visited your profile',
     'ko': '#name 사용자의 프로필을 방문했습니다.',
+    'th': '#name เยี่ยมชมโปรไฟล์ของคุณ',
+    'vi': '#name đã truy cập hồ sơ của bạn',
+    'lo': '#name ໄດ້ໄປຢ້ຽມຢາມໂປຣໄຟລ໌ຂອງທ່ານ',
   };
 
   /// User and Profile
@@ -1356,24 +1379,36 @@ class T {
   static const Json backgroundImage = {
     'en': 'Background Image',
     'ko': '배경 이미지',
+    'vi': 'Hình nền',
+    'th': 'ภาพพื้นหลัง',
+    'lo': 'ພາບພື້ນຫຼັງ',
   };
 
   // static const String profilePhoto = 'Profile Photo';
   static const Json profilePhoto = {
     'en': 'Profile Photo',
     'ko': '프로필 사진',
+    'vi': 'Ảnh hồ sơ',
+    'th': 'รูปประจำตัว',
+    'lo': 'ຮູບໂປຣໄຟລ໌',
   };
 
   // static const String takePhotoClosely = 'Take a photo closely';
   static const Json takePhotoClosely = {
     'en': 'Take a photo closely',
     'ko': '사진을 찍어주세요.',
+    'vi': 'Chụp ảnh',
+    'th': 'ถ่ายรูป',
+    'lo': 'ຖ່າຍ​ຮູບ',
   };
 
   // static const String birthdateLabel = 'Birthdate';
   static const Json birthdateLabel = {
     'en': 'Birthdate',
     'ko': '생년월일',
+    'th': 'วันที่เกิด',
+    'vi': 'Ngày sinh',
+    'lo': 'ວັນເດືອນປີເກີດ',
   };
 
   // static const String birthdateSelectDescription = 'birthdateSelectDescription';
@@ -1398,24 +1433,36 @@ class T {
   static const Json selectBirthDate = {
     'en': 'Select Birth',
     'ko': '생년월일 선택',
+    'vi': 'Chọn ngày sinh',
+    'th': 'เลือกวันเกิด',
+    'lo': 'ເລືອກວັນເກີດ',
   };
 
   // static const String yearInBirthdatePicker = 'Year';
   static const Json yearInBirthdatePicker = {
     'en': 'Year',
     'ko': '년',
+    'vi': 'Năm',
+    'th': 'ปี',
+    'lo': 'ປີ',
   };
 
   // static const String monthInBirthdatePicker = 'Month';
   static const Json monthInBirthdatePicker = {
     'en': 'Month',
     'ko': '월',
+    'vi': 'Tháng',
+    'th': 'เดือน',
+    'lo': 'ເດືອນ',
   };
 
   // static const String dayInBirthdatePicker = 'Day';
   static const Json dayInBirthdatePicker = {
     'en': 'Day',
     'ko': '일',
+    'vi': 'Ngày',
+    'th': 'วัน',
+    'lo': 'ມື້',
   };
 
   // static const String descriptionInBirthdatePicker =
@@ -1423,6 +1470,9 @@ class T {
   static const Json descriptionInBirthdatePicker = {
     'en': 'Please select your birthdate.',
     'ko': '생년월일을 선택해주세요.',
+    'vi': 'Vui lòng chọn ngày sinh của bạn',
+    'th': 'โปรดเลือกวันเกิดของคุณ',
+    'lo': 'ກະລຸນາເລືອກວັນເກີດຂອງທ່ານ',
   };
 
   // profile update labels and error messages
@@ -1430,6 +1480,9 @@ class T {
   static const Json gender = {
     'en': 'Gender',
     'ko': '성별',
+    'th': 'เพศ',
+    'vi': 'giới tính',
+    'lo': 'ເພດ',
   };
 
   static const Json any = {
@@ -1441,18 +1494,27 @@ class T {
   static const Json genderInProfileUpdate = {
     'en': 'GENDER',
     'ko': '성별',
+    'th': 'เพศ',
+    'vi': 'giới tính',
+    'lo': 'ເພດ',
   };
 
   // static const String male = 'Male';
   static const Json male = {
     'en': 'Male',
     'ko': '남자',
+    'th': 'ชาย',
+    'vi': 'Nam giới',
+    'lo': 'ຜູ້​ຊາຍ',
   };
 
   // static const String female = 'Female';
   static const Json female = {
     'en': 'Female',
     'ko': '여자',
+    'lo': 'ເພດຍິງ',
+    'vi': 'Nữ giới',
+    'th': 'หญิง',
   };
 
   static const Json noUserFound = {
@@ -1464,12 +1526,18 @@ class T {
   static const Json nationality = {
     'en': 'Nationality',
     'ko': '국적',
+    'th': 'ສັນຊາດ',
+    'vi': 'Quốc tịch',
+    'lo': 'Quốc tịch',
   };
 
   // static const String region = 'Region';
   static const Json region = {
     'en': 'Region',
     'ko': '지역',
+    'th': 'ภูมิภาค',
+    'vi': 'vùng đất',
+    'lo': 'ພາກພື້ນ',
   };
 
   // static const String pleaseInputBirthday = 'Please input your birthday';
@@ -1515,6 +1583,9 @@ class T {
     'en':
         'Please add more photos (minimum 2 of photos and maximum 2 of photos)',
     'ko': '사진을 추가해주세요. (최소 2개의 사진, 최대 2개의 사진)',
+    'lo': 'ກະລຸນາເພີ່ມຮູບເພີ່ມເຕີມ (ຢ່າງໜ້ອຍ 2 ຮູບ ແລະສູງສຸດ 2 ຮູບ)',
+    'vi': 'Vui lòng thêm nhiều ảnh hơn (tối thiểu 2 ảnh và tối đa 2 ảnh)',
+    'th': 'โปรดเพิ่มรูปภาพเพิ่มเติม (รูปภาพขั้นต่ำ 2 รูป และรูปภาพสูงสุด 2 รูป)'
   };
 
   // static const String pleaseInputStateMessage =
@@ -1562,6 +1633,9 @@ class T {
   static const Json occupation = {
     'en': 'occupation',
     'ko': '직업',
+    'th': 'ອາຊີບ',
+    'vi': 'nghề nghiệp',
+    'lo': 'ອາຊີບ',
   };
 
   static const String occupationInputDescription = 'occupationInputDescription';
@@ -1608,6 +1682,9 @@ class T {
   static const Json phoneNumber = {
     'en': 'Phone Number',
     'ko': '전화번호',
+    'lo': 'ເບີ​ໂທລະ​ສັບ',
+    'vi': 'Số điện thoại',
+    'th': 'หมายเลขโทรศัพท์',
   };
   // static const String phoneSignInHeaderTitle =
   //     'Please enter your phone number and tap "Get Verification Code" button.';
@@ -1615,12 +1692,18 @@ class T {
     'en':
         'Please enter your phone number and tap "Get Verification Code" button.',
     'ko': '전화번호를 입력하고 "인증 코드 받기" 버튼을 눌러주세요.',
+    'th': 'กรุณากรอกหมายเลขโทรศัพท์ของคุณแล้วแตะปุ่ม "รับรหัสยืนยัน"',
+    'vi': 'Vui lòng nhập số điện thoại của bạn và nhấn nút "Nhận mã xác minh".',
+    'lo': 'ກະລຸນາໃສ່ເບີໂທລະສັບຂອງທ່ານແລະແຕະປຸ່ມ "ຮັບລະຫັດຢືນຢັນ".',
   };
 
   // static const String phoneNumberInputHint = 'Enter your phone number.';
   static const Json phoneNumberInputHint = {
     'en': 'Enter your phone number.',
     'ko': '전화번호를 입력해주세요.',
+    'vi': 'Nhập số điện thoại của bạn.',
+    'th': 'ใส่หมายเลขโทรศัพท์ของคุณ',
+    'lo': 'ກະລຸນາໃສ່ເບີໂທລະສັບຂອງທ່ານ',
   };
 
   // static const String phoneNumberInputDescription =
@@ -1628,35 +1711,53 @@ class T {
   static const Json phoneNumberInputDescription = {
     'en': 'Input phone number. e.g 010 1234 5678 or 0917 1234 5678',
     'ko': '전화번호를 입력해주세요. e.g 010 1234 5678 or 0917 1234 5678',
+    'vi': 'Nhập số điện thoại. Ví dụ: 010 1234 5678 hoặc 0917 1234 5678',
+    'th': 'ใส่หมายเลขโทรศัพท์ เช่น 010 1234 5678 หรือ 0917 1234 5678',
+    'lo': 'ໃສ່ເບີໂທລະສັບ. ຕົວຢ່າງ: 010 1234 5678 ຫຼື 0917 1234 5678',
   };
 
   // static const String phoneSignInTimeoutTryAgain = 'Timeout. Please try again.';
   static const Json phoneSignInTimeoutTryAgain = {
     'en': 'Timeout. Please try again.',
     'ko': '시간 초과. 다시 시도해주세요.',
+    'vi': 'Quá thời gian. Vui lòng thử lại.',
+    'th': 'หมดเวลา โปรดลองอีกครั้ง',
+    'lo': 'ເວລາສົ່ງບີດ. ກະລຸນາລອງອີກ',
   };
 
   // static const String phoneSignInGetVerificationCode = 'Get Verification Code';
   static const Json phoneSignInGetVerificationCode = {
     'en': 'Get Verification Code',
     'ko': '인증 코드 받기',
+    'vi': 'Nhận Mã Xác Minh',
+    'th': 'รับรหัสยืนยัน',
+    'lo': 'ຮັບລະຫັດຢຶນ',
   };
   // static const String phoneSignInInputSmsCode =
   //     'Input Verification Code and press submit button';
   static const Json phoneSignInInputSmsCode = {
     'en': 'Input Verification Code and press submit button',
     'ko': '인증 코드를 입력하고 제출 버튼을 눌러주세요.',
+    'vi': 'Nhập Mã Xác Minh và nhấn nút gửi.',
+    'th': 'ใส่รหัสยืนยันและกดปุ่มส่ง',
+    'lo': 'ພິມລະຫັດຢຶນແລະກົດປຸ່ມສົ່ງ',
   };
   // static const String phoneSignInRetry = 'Retry';
   static const Json phoneSignInRetry = {
     'en': 'Retry',
     'ko': '다시 시도',
+    'vi': 'Thử lại',
+    'th': 'ลองอีกครั้ง',
+    'lo': 'ລອງອີກ',
   };
 
   // static const String phoneSignInVerifySmsCode = 'Verification Code';
   static const Json phoneSignInVerifySmsCode = {
     'en': 'Verification Code',
     'ko': '인증 코드',
+    'vi': 'Xác Minh Mã',
+    'th': 'ยืนยันรหัส',
+    'lo': 'ຢຶນລະຫັດຢຶນ',
   };
 
   // static const String invalidSmsCodeMessage = 'Invalid SMS code';
@@ -1670,17 +1771,26 @@ class T {
   static const Json selectProvince = {
     'en': 'Select Province',
     'ko': '시도 선택',
+    'vi': 'Chọn Tỉnh/Thành phố',
+    'th': 'เลือกจังหวัด',
+    'lo': 'ເລືອກແຂວງ',
   };
 
   // static const String selectRegion = 'Select Region';
   static const Json selectRegion = {
     'en': 'Select Region',
     'ko': '시군구 선택',
+    'vi': 'Chọn Khu vực',
+    'th': 'เลือกภูมิภาค',
+    'lo': 'ເລືອກເຂດ'
   };
   // static const String noSelectTedRegion = 'No selected province';
   static const Json noSelectTedRegion = {
     'en': 'No selected province',
     'ko': '시도를 선택해주세요.',
+    'vi': 'Không có tỉnh/thành phố được chọn',
+    'th': 'ไม่ได้เลือกจังหวัด',
+    'lo': 'ບໍ່ມີແຂວງທີ່ເລືອກ',
   };
 
   // BlockScreen
@@ -1688,12 +1798,18 @@ class T {
   static const Json noBlockUser = {
     'en': 'No blocked users',
     'ko': '차단된 사용자가 없습니다.',
+    'vi': 'Không có người dùng bị chặn',
+    'th': 'ไม่มีผู้ใช้ที่ถูกบล็อก',
+    'lo': 'ບໍ່ມີຜູ້ໃຊ້ທີ່ໄດ້ຖືກປິດ'
   };
   // static const String youCanBlockUserFromTheirProfilePage =
   //     'You can block users from their profile page';
   static const Json youCanBlockUserFromTheirProfilePage = {
     'en': 'You can block users from their profile page',
     'ko': '차단할 수 있는 사용자의 프로필 페이지에서 차단할 수 있습니다.',
+    'vi': 'Bạn có thể chặn người dùng từ trang hồ sơ của họ',
+    'th': 'คุณสามารถบล็อกผู้ใช้จากหน้าโปรไฟล์ของพวกเขา',
+    'lo': 'ທ່ານສາມາດປິດຜູ້ໃຊ້ຈາກຫົວຂໍ້ບັນຊີຂອງເຂົ້າ',
   };
 
   // SettingScreen
@@ -1702,17 +1818,26 @@ class T {
   static const Json pushNotificationsOnProfileView = {
     'en': 'Push Notifications on Profile View',
     'ko': '프로필 페이지에서 알림을 받을 수 있습니다.',
+    'vi': 'Thông báo đẩy khi xem hồ sơ',
+    'th': 'การแจ้งเตือนผลัดจากการดูโปรไฟล์',
+    'lo': 'การแจ้งเตือนผลัดเมื่อดูโปรไฟล์',
   };
   // static const String getNotifiedWhenSomeoneViewYourProfile =
   //     'Get notified when someone views your profile';
   static const Json getNotifiedWhenSomeoneViewYourProfile = {
     'en': 'Get notified when someone views your profile',
     'ko': '차단할 수 있는 사용자의 프로필 페이지에서 차단할 수 있습니다.',
+    'vi': 'Nhận thông báo khi có người xem hồ sơ của bạn',
+    'th': 'รับการแจ้งเตือนเมื่อมีคนดูโปรไฟล์ของคุณ',
+    'lo': 'รับการแจ้งเตือนเมื่อมีคนดูโปรไฟล์ของคุณ',
   };
   // static const String chooseYourLanguage = 'Choose your language';
   static const Json chooseYourLanguage = {
     'en': 'Choose your language',
     'ko': '언어를 선택해주세요.',
+    'vi': 'Chọn ngôn ngữ của bạn',
+    'th': 'เลือกภาษาของคุณ',
+    'lo': 'ເລືອກພາສາຂອງທ່ານ',
   };
 
   /// Used in DefaultLoginFirstScreen
@@ -1751,6 +1876,9 @@ class T {
   static const Json userNotFoundTitleOnShowPublicProfileScreen = {
     'en': 'User Information Error',
     'ko': '사용자 정보 오류',
+    'vi': 'Lỗi Thông Tin Người Dùng',
+    'th': 'ข้อผิดพลาดในข้อมูลผู้ใช้',
+    'lo': 'ຂໍ້ມູນຜູ້ໃຊ້ຜິດພາດ',
   };
 
   // static const String userNotFoundMessageOnShowPublicProfileScreen =
@@ -1759,6 +1887,9 @@ class T {
     'en':
         'User information is not valid. The user has either deleted or there is no information',
     'ko': '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.',
+    'vi': 'Người dùng đã từ chức hoặc không có thông tin người dùng khả dụng',
+    'th': 'ผู้ใช้ได้ลาออกหรือไม่มีข้อมูลผู้ใช้ที่ใช้ได้',
+    'lo': 'ຜູ້ໃຊ້ໄດ້ລາອອກຫຼືບໍ່ມີຂໍ້ມູນຜູ້ໃຊ້ທີ່ມີຢູ່ໃນ',
   };
 
   // static const String userNotFoundTitleOnSingleChat = '사용자 정보 오류';
