@@ -19,7 +19,8 @@ class Post {
   static DatabaseReference postSummariesRef = rootRef.child('post-summaries');
 
   /// Returns the reference of a post summary
-  static DatabaseReference e(String category, String id) =>
+  /// renamed from e() to postSummary() to understand better
+  static DatabaseReference postSummary(String category, String id) =>
       postSummariesRef.child(category).child(id);
 
   static DatabaseReference postAllSummariesRef =
@@ -142,6 +143,8 @@ class Post {
         noOfComments: json[Field.noOfComments] ?? 0,
         deleted: json[Field.deleted] ?? false,
         photoOrder: json['photoOrder'] ?? 0,
+
+        /// This fields are for the [UrlPreview]
         previewUrl: json['previewUrl'] ?? '',
         previewTitle: json['previewTitle'] ?? '',
         previewDescription: json['previewDescription'] ?? '',
@@ -314,12 +317,14 @@ class Post {
     /// Call the onPostCreate callback
     ForumService.instance.onPostCreate?.call(created);
 
-    /// Since the summary are automatically added using cloud functions
-
-    await updateUrlPreview(e(created.category, created.id), content);
+    /// Since the summary are automatically added using cloud functions do this to add the fields for Url Preview
+    /// gets the post-summary of the post and update it to add the [UrlPreview]
+    /// if the post has url in content
+    await updateUrlPreview(postSummary(created.category, created.id), content);
     return created;
   }
 
+  /// If this method used make sure to pass the post-summary reference and not the post reference
   static Future updateUrlPreview(DatabaseReference ref, String? text) async {
     if (text == null || text == '') {
       return;

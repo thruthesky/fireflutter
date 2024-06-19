@@ -29,6 +29,8 @@ class UrlPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (previewUrl.isNullOrEmpty) return const SizedBox.shrink();
+
     return GestureDetector(
       onTap: () async {
         if (await canLaunchUrlString(previewUrl)) {
@@ -46,7 +48,7 @@ class UrlPreview extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (imageUrl != null) ...[
+            if (!imageUrl.isNullOrEmpty) ...[
               CachedNetworkImage(
                 imageUrl: imageUrl!,
                 // Don't show
@@ -57,7 +59,7 @@ class UrlPreview extends StatelessWidget {
               ),
               const SizedBox(height: 8),
             ],
-            if (title != null) ...[
+            if (!title.isNullOrEmpty) ...[
               Text(
                 title!,
                 style:
@@ -66,11 +68,11 @@ class UrlPreview extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ],
-            if (description != null) ...[
+            if (!description.isNullOrEmpty) ...[
               const SizedBox(height: 8),
               Text(
                 description!.length > 100
-                    ? '${description!.substring(0, 100)}...'
+                    ? '${description!.substring(0, 90)}...'
                     : description!,
                 style: TextStyle(fontSize: 13, color: Colors.grey.shade800),
                 maxLines: 1,

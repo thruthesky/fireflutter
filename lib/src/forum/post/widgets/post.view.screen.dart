@@ -36,10 +36,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
   /// To display all photos in the PostViewScreen, we fetch the complete list of photo URLs from the database.
   final List<String> urls = [];
 
-  /// [likes] is the list of uids that liked the posts
-  /// This are mainly used for the [Icon] because the [widget.post.likes] are not working as expected
-  /// This save and remove the [myUid] locally instead of reading from [widget.post.likes]
-  final List<String> likes = [];
   @override
   void initState() {
     super.initState();
@@ -47,7 +43,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
     if (post.urls.isNotEmpty) {
       urls.addAll(post.urls);
     }
-    likes.addAll(post.likes);
 
     widget.post.urlsRef.once().then((DatabaseEvent event) {
       final value = event.snapshot.value as List<dynamic>?;
@@ -57,7 +52,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
         if (data.isNotEmpty) {
           urls.clear();
           urls.addAll(data);
-          likes.clear();
         }
       }
     });
@@ -92,12 +86,24 @@ class _PostViewScreenState extends State<PostViewScreen> {
               centerTitle: false,
             ),
             SliverToBoxAdapter(child: PostMeta(post: post)),
-            if (post.title != post.content)
+            const SliverToBoxAdapter(),
+            if (widget.commentable)
               SliverToBoxAdapter(child: PostTitle(post: post)),
             SliverToBoxAdapter(child: PostContent(post: post)),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: UrlPreview(
+                  previewUrl: post.previewUrl ?? '',
+                  title: post.previewTitle,
+                  description: post.previewDescription,
+                  imageUrl: post.previewImageUrl,
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Blocked(
                   otherUserUid: widget.post.uid,
                   yes: () => SizedBox.fromSize(),
@@ -115,16 +121,16 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 child: Row(
                   children: [
                     TextButton.icon(
-                      icon: likes.contains(myUid)
+                      icon: widget.post.likes.contains(myUid)
                           ? const Icon(Icons.thumb_up)
                           : const Icon(Icons.thumb_up_outlined),
                       iconAlignment: IconAlignment.start,
                       onPressed: () {
                         setState(() {
-                          if (likes.contains(myUid)) {
-                            likes.remove(myUid);
+                          if (widget.post.likes.contains(myUid)) {
+                            widget.post.likes.remove(myUid);
                           } else {
-                            likes.add(myUid!);
+                            widget.post.likes.add(myUid!);
                           }
                         });
                         post.like(context: context);
@@ -244,7 +250,10 @@ class _PostViewScreenState extends State<PostViewScreen> {
                               Share.shareUri(link);
                             } else if (value == 'edit') {
                               await ForumService.instance.showPostUpdateScreen(
-                                  context: context, post: post);
+                                context: context,
+                                post: post,
+                                displayTitle: widget.commentable,
+                              );
                               await post.reload();
                               if (mounted) setState(() {});
                             } else if (value == 'delete') {

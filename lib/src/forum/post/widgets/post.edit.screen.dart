@@ -8,11 +8,16 @@ class PostEditScreen extends StatefulWidget {
     this.category,
     this.post,
     this.group,
+    this.displayTitle = true,
   });
 
   final String? category;
   final Post? post;
   final String? group;
+
+  /// Title are not being displayed on [PostViewScreen] if the [Post]came from [ForumChatViewScreen]
+  /// Hides the title if the post came from [ForumChatViewScreen]
+  final bool? displayTitle;
 
   @override
   State<PostEditScreen> createState() => _PostEditScreenState();
@@ -86,23 +91,25 @@ class _PostEditScreenState extends State<PostEditScreen> {
 
               const SizedBox(height: 24),
 
-              _textTitle('Title'),
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: T.inputTitle.tr, // 'Title',
+              if (widget.displayTitle!) ...[
+                _textTitle(T.title.tr),
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: T.inputTitle.tr, // 'Title',
 
-                  hintStyle: _hintTextStyle(),
+                    hintStyle: _hintTextStyle(),
+                  ),
+                  onTapOutside: (event) => FocusManager.instance.primaryFocus
+                      ?.unfocus(), // to remove keyboard on tap outside
+                  // style: Theme.of(context).textTheme.titleMedium,
+                  minLines: 1,
+                  maxLines: 3,
                 ),
-                onTapOutside: (event) => FocusManager.instance.primaryFocus
-                    ?.unfocus(), // to remove keyboard on tap outside
-                // style: Theme.of(context).textTheme.titleMedium,
-                minLines: 1,
-                maxLines: 3,
-              ),
+              ],
               const SizedBox(height: 16),
-              _textTitle('Content'),
+              _textTitle(T.content.tr),
               TextField(
                 controller: contentController,
                 decoration: InputDecoration(
