@@ -23,7 +23,7 @@ class LinkifyText extends StatelessWidget {
         ? SelectableLinkify(
             options: const LinkifyOptions(humanize: false),
             onOpen: (link) async {
-              _onOpen(context, link.url);
+              await _onOpen(context, link.url);
             },
             text: text,
             style: style,
@@ -36,7 +36,7 @@ class LinkifyText extends StatelessWidget {
         : Linkify(
             options: const LinkifyOptions(humanize: false),
             onOpen: (link) async {
-              _onOpen(context, link.url);
+              await _onOpen(context, link.url);
             },
             text: text,
             style: style,
