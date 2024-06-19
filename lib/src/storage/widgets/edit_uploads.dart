@@ -29,6 +29,12 @@ class EditUploads extends StatelessWidget {
           children: [
             Container(
               clipBehavior: Clip.antiAlias,
+
+              /// fixed the size of the container
+              /// The image takes all the height available
+              /// but not the width resulting to unbalance of the images in [GridView]
+              width: double.infinity,
+              height: 200,
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(16)),
               child: Image.network(

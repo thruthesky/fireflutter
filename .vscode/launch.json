@@ -215,10 +215,37 @@
       "args": ["--dart-define", "MODE=test"]
     },
     {
+      "name": "Momcafe - Android Pixel",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Momcafe - iPhone 14 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - iPhone SE",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Momcafe - iPad Air (5th generation)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPad Air (5th generation)",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart"
@@ -258,6 +285,16 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart"
+    },
+    {
+      "name": "Momcafe - Emulator - English(locale=en)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "locale=en"]
     },
     {
       "name": "Momcafe - Chrome",

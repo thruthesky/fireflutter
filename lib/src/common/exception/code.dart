@@ -47,7 +47,6 @@ class Code {
   static const String members = 'members';
   static const String blockUser = 'blockUser';
 
-  // TODO review where to put this because this is under exception folder and this is not for exception things.
   // Chat Bubble Codes
   static const String readMore = 'readMore';
   static const String viewProfile = 'viewProfile';
@@ -72,6 +71,9 @@ class Code {
   static const String meetupNotJoined = 'meetup-not-joined';
 
   static const String meetupNotVerified = 'meetupNotVerified';
+
+  static const String meetupGalleryCategoryPostFix = '-meetup-gallery';
+  static const String meetupPostCategoryPostFix = '-meetup-post';
 
   static const String joinWithPasswordFailed = 'joinWithPasswordFailed';
 
