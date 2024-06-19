@@ -125,24 +125,27 @@ class Post {
           'Post.fromJson: category is empty');
     }
     return Post(
-      id: id,
-      ref: Post.postRef(category, id),
-      title: json['title'] ?? '',
-      content: json['content'] ?? '',
-      uid: json['uid'] ?? '',
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] ?? 0),
-      order: json[Field.order] ?? 0,
-      likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
-      noOfLikes: json[Field.noOfLikes] ?? 0,
+        id: id,
+        ref: Post.postRef(category, id),
+        title: json['title'] ?? '',
+        content: json['content'] ?? '',
+        uid: json['uid'] ?? '',
+        createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] ?? 0),
+        order: json[Field.order] ?? 0,
+        likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
+        noOfLikes: json[Field.noOfLikes] ?? 0,
 
-      /// Post summary has the first photo url in 'url' field.
-      urls: empty(json['url'])
-          ? List<String>.from(json['urls'] ?? [])
-          : [json['url']],
-      noOfComments: json[Field.noOfComments] ?? 0,
-      deleted: json[Field.deleted] ?? false,
-      photoOrder: json['photoOrder'] ?? 0,
-    );
+        /// Post summary has the first photo url in 'url' field.
+        urls: empty(json['url'])
+            ? List<String>.from(json['urls'] ?? [])
+            : [json['url']],
+        noOfComments: json[Field.noOfComments] ?? 0,
+        deleted: json[Field.deleted] ?? false,
+        photoOrder: json['photoOrder'] ?? 0,
+        previewUrl: json['previewUrl'] ?? '',
+        previewTitle: json['previewTitle'] ?? '',
+        previewDescription: json['previewDescription'] ?? '',
+        previewImageUrl: json['previewImageUrl'] ?? '');
   }
 
   /// Create a Post from a category with empty values.
@@ -285,6 +288,7 @@ class Post {
 
     final order = DateTime.now().millisecondsSinceEpoch * -1;
 
+    /// Update url preview
     final data = {
       'uid': myUid,
       'title': title,
@@ -309,7 +313,10 @@ class Post {
 
     /// Call the onPostCreate callback
     ForumService.instance.onPostCreate?.call(created);
-    await updateUrlPreview(created.ref, content);
+
+    /// Since the summary are automatically added using cloud functions
+
+    await updateUrlPreview(e(created.category, created.id), content);
     return created;
   }
 
@@ -333,17 +340,6 @@ class Post {
     }
   }
 
-  /// Update post data in the database
-  ///
-  /// For deleting the field, must use otherData
-  /// instead of setting the arguments to null.
-  /// Example:
-  /// ```dart
-  /// await post.update(
-  ///   otherData: {
-  ///     Field.title: null,
-  ///   },
-  /// );
   Future<Post> update({
     String? title,
     String? content,

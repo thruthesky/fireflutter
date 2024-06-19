@@ -96,6 +96,20 @@ class _PostBubbleState extends State<PostBubble> {
                 crossAxisAlignment:
                     isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
+                  if (widget.post.content.hasUrl) ...[
+                    Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * .7,
+                      ),
+                      child: UrlPreview(
+                        previewUrl: widget.post.previewUrl!,
+                        title: widget.post.previewTitle,
+                        description: widget.post.previewDescription,
+                        imageUrl: widget.post.previewImageUrl,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                  ],
                   ImageDisplay(urls: urls),
                   const SizedBox(height: 8),
                   Container(
@@ -155,15 +169,6 @@ class _PostBubbleState extends State<PostBubble> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  if (widget.post.content.hasUrl) ...[
-                    UrlPreview(
-                      previewUrl: widget.post.previewUrl!,
-                      title: widget.post.previewTitle,
-                      description: widget.post.previewDescription,
-                      imageUrl: widget.post.previewImageUrl,
-                    ),
-                    const SizedBox(height: 4),
-                  ],
                   dateAndName(context: context, post: widget.post),
                 ],
               ),
