@@ -40,6 +40,12 @@ class UrlPreview extends StatelessWidget {
         }
       },
       child: Container(
+        /// [imageUrl] are sometimes smaller than the length of the [description] and leads to
+        /// inconsistent design of the [UrlPreview] in [ChatViewScreen] and [ForumChatViewScreen]
+        /// [BoxConstraints] to make it a single width and consistent design
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * .5,
+        ),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
@@ -62,8 +68,10 @@ class UrlPreview extends StatelessWidget {
             if (!title.isNullOrEmpty) ...[
               Text(
                 title!,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -74,7 +82,7 @@ class UrlPreview extends StatelessWidget {
                 description!.length > 100
                     ? '${description!.substring(0, 90)}...'
                     : description!,
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade800),
+                style: TextStyle(fontSize: 12, color: Colors.grey.shade800),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -39,7 +39,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
   @override
   void initState() {
     super.initState();
-
     if (post.urls.isNotEmpty) {
       urls.addAll(post.urls);
     }
@@ -59,7 +58,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(post.id);
     return Theme(
       data: Theme.of(context).copyWith(
         textButtonTheme: TextButtonThemeData(
@@ -120,20 +118,17 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 padding: const EdgeInsets.only(left: 2.0, right: 16),
                 child: Row(
                   children: [
+                    /// This is bad! @withcenterdev5
                     TextButton.icon(
                       icon: widget.post.likes.contains(myUid)
                           ? const Icon(Icons.thumb_up)
                           : const Icon(Icons.thumb_up_outlined),
                       iconAlignment: IconAlignment.start,
-                      onPressed: () {
-                        setState(() {
-                          if (widget.post.likes.contains(myUid)) {
-                            widget.post.likes.remove(myUid);
-                          } else {
-                            widget.post.likes.add(myUid!);
-                          }
-                        });
-                        post.like(context: context);
+                      onPressed: () async {
+                        dog(myUid.toString());
+                        dog(widget.post.likes.toString());
+                        setState(() {});
+                        await post.like(context: context);
                       },
                       label: Login(
                         yes: (uid) => Value(
