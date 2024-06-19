@@ -1427,6 +1427,11 @@ class T {
     'ko': '성별',
   };
 
+  static const Json any = {
+    'en': 'Any',
+    'ko': '상관없음',
+  };
+
   // static const String genderInProfileUpdate = 'GENDER';
   static const Json genderInProfileUpdate = {
     'en': 'GENDER',
