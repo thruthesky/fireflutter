@@ -1,7 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ForumService {
   static ForumService? _instance;
@@ -107,12 +106,14 @@ class ForumService {
     required BuildContext context,
     required Post post,
     String? group,
+    bool? displayTitle = true,
   }) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => PostEditScreen(
         post: post,
         group: group,
+        displayTitle: displayTitle,
       ),
     );
   }

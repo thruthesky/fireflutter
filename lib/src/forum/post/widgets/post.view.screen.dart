@@ -36,18 +36,12 @@ class _PostViewScreenState extends State<PostViewScreen> {
   /// To display all photos in the PostViewScreen, we fetch the complete list of photo URLs from the database.
   final List<String> urls = [];
 
-  /// [likes] is the list of uids that liked the posts
-  /// This are mainly used for the [Icon] because the [widget.post.likes] are not working as expected
-  /// This save and remove the [myUid] locally instead of reading from [widget.post.likes]
-  final List<String> likes = [];
   @override
   void initState() {
     super.initState();
-
     if (post.urls.isNotEmpty) {
       urls.addAll(post.urls);
     }
-    likes.addAll(post.likes);
 
     widget.post.urlsRef.once().then((DatabaseEvent event) {
       final value = event.snapshot.value as List<dynamic>?;
@@ -57,7 +51,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
         if (data.isNotEmpty) {
           urls.clear();
           urls.addAll(data);
-          likes.clear();
         }
       }
     });
@@ -65,7 +58,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(post.id);
     return Theme(
       data: Theme.of(context).copyWith(
         textButtonTheme: TextButtonThemeData(
@@ -92,12 +84,24 @@ class _PostViewScreenState extends State<PostViewScreen> {
               centerTitle: false,
             ),
             SliverToBoxAdapter(child: PostMeta(post: post)),
-            if (post.title != post.content)
+            const SliverToBoxAdapter(),
+            if (widget.commentable)
               SliverToBoxAdapter(child: PostTitle(post: post)),
             SliverToBoxAdapter(child: PostContent(post: post)),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: UrlPreview(
+                  previewUrl: post.previewUrl ?? '',
+                  title: post.previewTitle,
+                  description: post.previewDescription,
+                  imageUrl: post.previewImageUrl,
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Blocked(
                   otherUserUid: widget.post.uid,
                   yes: () => SizedBox.fromSize(),
@@ -114,20 +118,17 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 padding: const EdgeInsets.only(left: 2.0, right: 16),
                 child: Row(
                   children: [
+                    /// This is bad! @withcenterdev5
                     TextButton.icon(
-                      icon: likes.contains(myUid)
+                      icon: widget.post.likes.contains(myUid)
                           ? const Icon(Icons.thumb_up)
                           : const Icon(Icons.thumb_up_outlined),
                       iconAlignment: IconAlignment.start,
-                      onPressed: () {
-                        setState(() {
-                          if (likes.contains(myUid)) {
-                            likes.remove(myUid);
-                          } else {
-                            likes.add(myUid!);
-                          }
-                        });
-                        post.like(context: context);
+                      onPressed: () async {
+                        dog(myUid.toString());
+                        dog(widget.post.likes.toString());
+                        setState(() {});
+                        await post.like(context: context);
                       },
                       label: Login(
                         yes: (uid) => Value(
@@ -244,7 +245,10 @@ class _PostViewScreenState extends State<PostViewScreen> {
                               Share.shareUri(link);
                             } else if (value == 'edit') {
                               await ForumService.instance.showPostUpdateScreen(
-                                  context: context, post: post);
+                                context: context,
+                                post: post,
+                                displayTitle: widget.commentable,
+                              );
                               await post.reload();
                               if (mounted) setState(() {});
                             } else if (value == 'delete') {

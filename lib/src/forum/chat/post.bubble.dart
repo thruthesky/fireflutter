@@ -35,10 +35,7 @@ class _PostBubbleState extends State<PostBubble> {
     }
   }
 
-  final model = UrlPreviewModel();
-
   List<String> urls = [];
-  bool get hasLink => widget.post.content.hasUrl;
   @override
   void initState() {
     super.initState();
@@ -60,11 +57,6 @@ class _PostBubbleState extends State<PostBubble> {
         }
       }
     });
-
-    /// Set if the content has previewUrl
-    if (widget.post.content.hasUrl) {
-      model.load(widget.post.content);
-    }
   }
 
   @override
@@ -73,10 +65,6 @@ class _PostBubbleState extends State<PostBubble> {
     if (widget.post.deleted) {
       return const SizedBox.shrink();
     }
-
-    // if (widget.post.id == '-O-dlO3rKHY3DwFNHwye') {
-    //   debugger();
-    // }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -84,28 +72,49 @@ class _PostBubbleState extends State<PostBubble> {
         children: [
           if (!isMine) ...[
             UserAvatar(
-              uid: widget.post.uid,
-              cacheId: widget.post.uid,
-              size: 32,
-              radius: 13,
-            ),
+                uid: widget.post.uid,
+                cacheId: widget.post.uid,
+                size: 32,
+                radius: 13,
+                onTap: () => UserService.instance.showPublicProfileScreen(
+                      context: context,
+                      uid: widget.post.uid,
+                    )),
           ],
           const SizedBox(width: 14),
           Expanded(
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () => ForumService.instance.showPostViewScreen(
-                context: context,
-                post: widget.post,
-                commentable: false,
-              ),
-              child: Column(
-                crossAxisAlignment:
-                    isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  ImageDisplay(urls: urls),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment:
+                  isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                if (widget.post.urls.isNotEmpty) ImageDisplay(urls: urls),
+                if (widget.post.content.hasUrl) ...[
+                  Blocked(
+                    otherUserUid: widget.post.uid,
+                    yes: () => const SizedBox.shrink(),
+                    no: () => Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * .7,
+                      ),
+                      child: UrlPreview(
+                        previewUrl: widget.post.previewUrl!,
+                        title: widget.post.previewTitle,
+                        description: widget.post.previewDescription,
+                        imageUrl: widget.post.previewImageUrl,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  Container(
+                ],
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => ForumService.instance.showPostViewScreen(
+                    context: context,
+                    post: widget.post,
+                    commentable: false,
+                  ),
+                  child: Container(
                     clipBehavior: Clip.antiAlias,
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * .7,
@@ -115,7 +124,12 @@ class _PostBubbleState extends State<PostBubble> {
                           ? Theme.of(context).colorScheme.primary.tone(40)
                           : Theme.of(context).colorScheme.surface.tone(93),
                       borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(16),
+                        topLeft: Radius.circular(!isMine
+                            ? widget.post.urls.isNotEmpty ||
+                                    widget.post.content.hasUrl
+                                ? 0
+                                : 16
+                            : 16),
                         topRight: Radius.circular(isMine ? 0 : 16),
                         bottomLeft: Radius.circular(isMine ? 16 : 0),
                         bottomRight: const Radius.circular(16),
@@ -149,8 +163,8 @@ class _PostBubbleState extends State<PostBubble> {
                                 .copyWith(
                                   color: isMine
 
-                                      /// [LinkifyText] is on colorScheme.primary and it does not look good in terms of constrast
-                                      /// .withGreen(200) matches the [Color.blue] of the [LinkifyText]
+                                      /// [LinkifyText] is using its default color and it does not look good in terms of constrast when it is on [colorScheme.primary]
+                                      /// [.withGreen(200)] matches the [Color.blue] of the [LinkifyText]
                                       ? Colors.blue.withGreen(200)
                                       : Colors.blue,
                                   fontWeight: FontWeight.w600,
@@ -158,20 +172,13 @@ class _PostBubbleState extends State<PostBubble> {
                                 ),
                           ),
                         ),
-                        if (widget.post.content.hasUrl)
-                          UrlPreview(
-                            previewUrl: model.firstLink!,
-                            title: model.title,
-                            description: model.description,
-                            imageUrl: model.image,
-                          ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  dateAndName(context: context, post: widget.post),
-                ],
-              ),
+                ),
+                const SizedBox(height: 8),
+                dateAndName(context: context, post: widget.post),
+              ],
             ),
           ),
         ],
@@ -192,7 +199,6 @@ class _PostBubbleState extends State<PostBubble> {
                 fontWeight: FontWeight.w600,
               ),
         ),
-        const SizedBox(width: 8),
         if (!isMine) _dateTime(post, context),
       ],
     );
@@ -236,43 +242,46 @@ class ImageDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: urls
-            .asMap()
-            .map(
-              (index, url) => MapEntry(
-                index,
-                Padding(
-                  padding:
-                      EdgeInsets.only(right: index == urls.length - 1 ? 0 : 8),
-                  child: InkWell(
-                    onTap: () => showGeneralDialog(
-                      context: context,
-                      pageBuilder: (_, __, ___) => PhotoViewerScreen(
-                        urls: urls,
-                        selectedIndex: index,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: urls
+              .asMap()
+              .map(
+                (index, url) => MapEntry(
+                  index,
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: index == urls.length - 1 ? 0 : 8),
+                    child: InkWell(
+                      onTap: () => showGeneralDialog(
+                        context: context,
+                        pageBuilder: (_, __, ___) => PhotoViewerScreen(
+                          urls: urls,
+                          selectedIndex: index,
+                        ),
                       ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: SizedBox(
-                        width: 150,
-                        height: 150,
-                        child: CachedNetworkImage(
-                          imageUrl: url,
-                          fit: BoxFit.cover,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: CachedNetworkImage(
+                            imageUrl: url,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            )
-            .values
-            .toList(),
+              )
+              .values
+              .toList(),
+        ),
       ),
     );
   }

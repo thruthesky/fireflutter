@@ -230,7 +230,8 @@
       "deviceId": "iPhone 14 Pro Max",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
     },
     {
       "name": "Momcafe - iPhone SE",
@@ -239,7 +240,8 @@
       "deviceId": "iPhone SE",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
     },
     {
       "name": "Momcafe - iPad Air (5th generation)",
@@ -248,7 +250,8 @@
       "deviceId": "iPad Air (5th generation)",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
     },
     {
       "name": "Momcafe - iPad 10",

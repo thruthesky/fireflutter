@@ -19,7 +19,8 @@ class Post {
   static DatabaseReference postSummariesRef = rootRef.child('post-summaries');
 
   /// Returns the reference of a post summary
-  static DatabaseReference e(String category, String id) =>
+  /// renamed from e() to postSummary() to understand better
+  static DatabaseReference postSummary(String category, String id) =>
       postSummariesRef.child(category).child(id);
 
   static DatabaseReference postAllSummariesRef =
@@ -44,6 +45,10 @@ class Post {
     required this.noOfComments,
     required this.deleted,
     required this.photoOrder,
+    this.previewUrl,
+    this.previewTitle,
+    this.previewDescription,
+    this.previewImageUrl,
   });
 
   final DatabaseReference ref;
@@ -55,6 +60,10 @@ class Post {
   final int order;
   List<String> likes;
   List<String> urls;
+  String? previewUrl;
+  String? previewTitle;
+  String? previewDescription;
+  String? previewImageUrl;
 
   int noOfLikes;
 
@@ -117,24 +126,29 @@ class Post {
           'Post.fromJson: category is empty');
     }
     return Post(
-      id: id,
-      ref: Post.postRef(category, id),
-      title: json['title'] ?? '',
-      content: json['content'] ?? '',
-      uid: json['uid'] ?? '',
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] ?? 0),
-      order: json[Field.order] ?? 0,
-      likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
-      noOfLikes: json[Field.noOfLikes] ?? 0,
+        id: id,
+        ref: Post.postRef(category, id),
+        title: json['title'] ?? '',
+        content: json['content'] ?? '',
+        uid: json['uid'] ?? '',
+        createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] ?? 0),
+        order: json[Field.order] ?? 0,
+        likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
+        noOfLikes: json[Field.noOfLikes] ?? 0,
 
-      /// Post summary has the first photo url in 'url' field.
-      urls: empty(json['url'])
-          ? List<String>.from(json['urls'] ?? [])
-          : [json['url']],
-      noOfComments: json[Field.noOfComments] ?? 0,
-      deleted: json[Field.deleted] ?? false,
-      photoOrder: json['photoOrder'] ?? 0,
-    );
+        /// Post summary has the first photo url in 'url' field.
+        urls: empty(json['url'])
+            ? List<String>.from(json['urls'] ?? [])
+            : [json['url']],
+        noOfComments: json[Field.noOfComments] ?? 0,
+        deleted: json[Field.deleted] ?? false,
+        photoOrder: json['photoOrder'] ?? 0,
+
+        /// This fields are for the [UrlPreview]
+        previewUrl: json['previewUrl'] ?? '',
+        previewTitle: json['previewTitle'] ?? '',
+        previewDescription: json['previewDescription'] ?? '',
+        previewImageUrl: json['previewImageUrl'] ?? '');
   }
 
   /// Create a Post from a category with empty values.
@@ -277,6 +291,7 @@ class Post {
 
     final order = DateTime.now().millisecondsSinceEpoch * -1;
 
+    /// Update url preview
     final data = {
       'uid': myUid,
       'title': title,
@@ -301,6 +316,10 @@ class Post {
 
     /// Call the onPostCreate callback
     ForumService.instance.onPostCreate?.call(created);
+
+    /// Since the summary are automatically added using cloud functions do this to add the fields for Url Preview
+    /// gets the post-summary of the post and update it to add the [UrlPreview] if the post has url in content
+    await updateUrlPreview(postSummary(created.category, created.id), content);
     return created;
   }
 
@@ -315,6 +334,28 @@ class Post {
   ///     Field.title: null,
   ///   },
   /// );
+
+  /// If this method used make sure to pass the post-summary reference and not the post reference
+  static Future updateUrlPreview(DatabaseReference ref, String? text) async {
+    if (text == null || text == '') {
+      return;
+    }
+
+    /// Update url preview
+    final model = UrlPreviewModel();
+    await model.load(text);
+
+    if (model.hasData) {
+      final data = {
+        'previewUrl': model.firstLink!,
+        if (model.title != null) 'previewTitle': model.title,
+        if (model.description != null) 'previewDescription': model.description,
+        if (model.image != null) 'previewImageUrl': model.image,
+      };
+      await ref.update(data);
+    }
+  }
+
   Future<Post> update({
     String? title,
     String? content,
