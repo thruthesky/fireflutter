@@ -318,11 +318,22 @@ class Post {
     ForumService.instance.onPostCreate?.call(created);
 
     /// Since the summary are automatically added using cloud functions do this to add the fields for Url Preview
-    /// gets the post-summary of the post and update it to add the [UrlPreview]
-    /// if the post has url in content
+    /// gets the post-summary of the post and update it to add the [UrlPreview] if the post has url in content
     await updateUrlPreview(postSummary(created.category, created.id), content);
     return created;
   }
+
+  /// Update post data in the database
+  ///
+  /// For deleting the field, must use otherData
+  /// instead of setting the arguments to null.
+  /// Example:
+  /// ```dart
+  /// await post.update(
+  ///   otherData: {
+  ///     Field.title: null,
+  ///   },
+  /// );
 
   /// If this method used make sure to pass the post-summary reference and not the post reference
   static Future updateUrlPreview(DatabaseReference ref, String? text) async {

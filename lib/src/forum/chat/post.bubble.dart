@@ -36,7 +36,6 @@ class _PostBubbleState extends State<PostBubble> {
   }
 
   List<String> urls = [];
-  bool get hasLink => widget.post.content.hasUrl;
   @override
   void initState() {
     super.initState();
