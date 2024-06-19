@@ -339,6 +339,16 @@ class T {
     'ko': '게시판',
   };
 
+  static Json menu = {
+    'en': 'Menu',
+    'ko': '메뉴',
+  };
+
+  static Json friend = {
+    'en': 'Friend',
+    'ko': '친구',
+  };
+
   static Json gallery = {
     'en': 'Gallery',
     'ko': '사진첩',

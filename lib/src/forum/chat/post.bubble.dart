@@ -21,9 +21,7 @@ class _PostBubbleState extends State<PostBubble> {
   bool get isLongText => (widget.post.content.length >= 99 ||
       '\n'.allMatches(widget.post.content).length > 5);
 
-  String get text {
-    dog('isLongText: $isLongText');
-    dog('post.content: ${widget.post.content}');
+  String get content {
     if (isLongText) {
       String t = widget.post.content;
       final splits = t.split('\n');
@@ -37,11 +35,17 @@ class _PostBubbleState extends State<PostBubble> {
     }
   }
 
-  final List<String> urls = [];
+  final model = UrlPreviewModel();
 
+  List<String> urls = [];
+  bool get hasLink => widget.post.content.hasUrl;
   @override
   void initState() {
     super.initState();
+
+    if (widget.post.urls.isNotEmpty) {
+      urls.addAll(widget.post.urls);
+    }
 
     widget.post.urlsRef.once().then((DatabaseEvent event) {
       final value = event.snapshot.value as List<dynamic>?;
@@ -56,14 +60,23 @@ class _PostBubbleState extends State<PostBubble> {
         }
       }
     });
+
+    /// Set if the content has previewUrl
+    if (widget.post.content.hasUrl) {
+      model.load(widget.post.content);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // To hide the [PostBubble] when the post is deleted
     if (widget.post.deleted) {
       return const SizedBox.shrink();
     }
 
+    // if (widget.post.id == '-O-dlO3rKHY3DwFNHwye') {
+    //   debugger();
+    // }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -79,20 +92,20 @@ class _PostBubbleState extends State<PostBubble> {
           ],
           const SizedBox(width: 14),
           Expanded(
-            child: Column(
-              crossAxisAlignment:
-                  isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                ImageDisplay(urls: urls),
-                const SizedBox(height: 8),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => ForumService.instance.showPostViewScreen(
-                    context: context,
-                    post: widget.post,
-                    commentable: false,
-                  ),
-                  child: Container(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => ForumService.instance.showPostViewScreen(
+                context: context,
+                post: widget.post,
+                commentable: false,
+              ),
+              child: Column(
+                crossAxisAlignment:
+                    isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  ImageDisplay(urls: urls),
+                  const SizedBox(height: 8),
+                  Container(
                     clipBehavior: Clip.antiAlias,
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * .7,
@@ -113,29 +126,52 @@ class _PostBubbleState extends State<PostBubble> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                          child: Text(
-                            text.orBlocked(
+                          child: LinkifyText(
+                            content.orBlocked(
                               widget.post.uid,
                               T.blockedContentMessage.tr,
                             ),
+                            selectable: false,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
                                 .copyWith(
-                                  color: isMine ? Colors.white : Colors.black,
+                                  color: isMine
+                                      ? Theme.of(context).colorScheme.onPrimary
+                                      : Theme.of(context).colorScheme.onSurface,
                                   fontWeight: isMine
                                       ? FontWeight.w500
                                       : FontWeight.normal,
                                 ),
+                            linkStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: isMine
+
+                                      /// [LinkifyText] is on colorScheme.primary and it does not look good in terms of constrast
+                                      /// .withGreen(200) matches the [Color.blue] of the [LinkifyText]
+                                      ? Colors.blue.withGreen(200)
+                                      : Colors.blue,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
+                                ),
                           ),
                         ),
+                        if (widget.post.content.hasUrl)
+                          UrlPreview(
+                            previewUrl: model.firstLink!,
+                            title: model.title,
+                            description: model.description,
+                            imageUrl: model.image,
+                          ),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                dateAndName(context: context, post: widget.post),
-              ],
+                  const SizedBox(height: 4),
+                  dateAndName(context: context, post: widget.post),
+                ],
+              ),
             ),
           ),
         ],
@@ -203,27 +239,32 @@ class ImageDisplay extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: urls
             .asMap()
             .map(
               (index, url) => MapEntry(
                 index,
-                InkWell(
-                  onTap: () => showGeneralDialog(
-                    context: context,
-                    pageBuilder: (_, __, ___) => PhotoViewerScreen(
-                      urls: urls,
-                      selectedIndex: index,
+                Padding(
+                  padding:
+                      EdgeInsets.only(right: index == urls.length - 1 ? 0 : 8),
+                  child: InkWell(
+                    onTap: () => showGeneralDialog(
+                      context: context,
+                      pageBuilder: (_, __, ___) => PhotoViewerScreen(
+                        urls: urls,
+                        selectedIndex: index,
+                      ),
                     ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: SizedBox(
-                      width: 150,
-                      height: 150,
-                      child: CachedNetworkImage(
-                        imageUrl: url,
-                        fit: BoxFit.cover,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: SizedBox(
+                        width: 150,
+                        height: 150,
+                        child: CachedNetworkImage(
+                          imageUrl: url,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -231,15 +272,7 @@ class ImageDisplay extends StatelessWidget {
               ),
             )
             .values
-            .toList()
-            .fold(
-          [],
-          (prev, curr) => prev
-            ..add(curr)
-            ..add(
-              const SizedBox(height: 8, width: 8),
-            ),
-        ),
+            .toList(),
       ),
     );
   }
