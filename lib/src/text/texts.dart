@@ -325,6 +325,11 @@ class T {
     'ko': '초기화',
   };
 
+  static Json age = {
+    'en': 'Age',
+    'ko': '나이',
+  };
+
   static Json info = {
     'en': 'Info',
     'ko': '정보',
@@ -1490,6 +1495,11 @@ class T {
     'lo': 'ເພດ',
   };
 
+  static const Json any = {
+    'en': 'Any',
+    'ko': '상관없음',
+  };
+
   // static const String genderInProfileUpdate = 'GENDER';
   static const Json genderInProfileUpdate = {
     'en': 'GENDER',
@@ -1515,6 +1525,11 @@ class T {
     'lo': 'ເພດຍິງ',
     'vi': 'Nữ giới',
     'th': 'หญิง',
+  };
+
+  static const Json noUserFound = {
+    'en': 'No user found',
+    'ko': '사용자를 찾을 수 없습니다.',
   };
 
   // static const String nationality = 'Nationality';
