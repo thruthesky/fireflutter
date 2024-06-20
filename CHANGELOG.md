@@ -1,10 +1,7 @@
-## 0.3.33
+## 0.3.32
 - Add. Chat forum. A chat style forum. It looks like and acts like a chat. But it's a forum category.
 - Update. Chat feature updated.
 - Update. Forum feature updated. Comment tree and others.
-
-
-## 0.3.32
 - Change in progress. Firebase Cloud Functions are not moving into FireFlutterExtensions
 - Change. The term club is replaced with meetup and the code was refactorred accordingly
 - Refactor. Text translation
