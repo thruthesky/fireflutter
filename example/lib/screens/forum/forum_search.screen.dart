@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:example/keys.dart';
 import 'package:example/screens/forum/forum.screen.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -62,9 +63,9 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
   };
 
   Client client = Client(Configuration(
-    "typesenseApiKey",
+    typesenseApiKey,
     nodes: {
-      Node(Protocol.https, "typesenseHost", port: 443),
+      Node(Protocol.https, typesenseHost, port: 443),
     },
   ));
 
@@ -680,7 +681,7 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
     };
 
     final res = await client
-        .collection("typesenseForumCollection")
+        .collection(typesenseForumCollection)
         .documents
         .search(searchParameters);
     final hits = res['hits'];
