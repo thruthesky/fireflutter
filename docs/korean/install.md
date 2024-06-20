@@ -16,7 +16,7 @@ FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 dependency 추�
 flutter create --org com.t3 app
 ```
 
-그리고 아래와 같이 Firebase 관련 패키지를 설치한다. FlutterFire 의 플러그인 2.1.0 버전을 설치하면 된다.
+그리고 아래와 같이 Firebase 관련 패키지를 설치한다. FlutterFire 의 플러그인 2.1.0 버전을 설치하면 된다. 참고로 flutterfire 는 플러터에서 firebase 관련 설정을 도와주는 것이다. FireFlutter 와 혼동되지 않도록 한다.
 
 ```sh
 flutterfire install 2.1.0
@@ -43,7 +43,39 @@ Storage: 12.0.1
 flutterfire config -a com.t3.app -i com.t3.app -p withcenter-test-3
 ```
 
-그리고 소스 코드에서 
+그리고 플러터 main.dart 소스 코드에서 아래와 같이 Firebase 를 연결한다.
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
+}
+```
+
+그리고, Podfile 에서 아래와 같이 platform :ios 버전을 13 이상으로 해 준다.
+
+```pod
+platform :ios, '13.0'
+```
+
+그리고 아래와 같이 firestore pre-compliled sdk 를 Podfile 에 추가해 준다.
+
+```pod
+target 'Runner' do
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '10.27.0'
+end
+```
+
+그리고 FireFlutter 를 설치한다.
+
+```
+% flutter pub add fireflutter
+```
+
+그리고 아래와 같이 [빠르게 시작하기(퀵 스타트)](./quick_start.md#빠르게-시작하기) 항목에 나오는 로그인 코드를 복사 & 붙여 넣기 하여, 회원 로그인과 로그아웃 코드를 작성하여 잘 실행되는지 테스트 한다.
+
+참고로, 이 과정이 올바로 동작하기 위해서는 security rules 를 먼저 설치를 해야 할 수 있다.
 
 
 만약 개발자 모드로 설치하기 위해서는 아래의 [FireFlutter 패키지를 개발자 모드로 설치하기](#fireflutter-패키지를-개발자-모드로-설치하기)항목을 참고한다.
