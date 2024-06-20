@@ -478,6 +478,7 @@ class User {
     double? longitude,
     String? languageCode,
     int? ping,
+    Map<String, dynamic>? customData,
   }) async {
     final data = {
       if (name != null) 'name': name,

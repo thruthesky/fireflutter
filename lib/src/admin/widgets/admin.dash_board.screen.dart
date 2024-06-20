@@ -44,7 +44,7 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
               ElevatedButton(
                 onPressed: () async {
                   final result = await AdminService.instance
-                      .mirrorBackfillRtdbToFirestore();
+                      .mirrorUserBackfillRtdbToFirestore();
                   final response = result.data;
                   print(response.toString());
                 },
