@@ -280,6 +280,19 @@ class T {
     'ko': '장터',
   };
 
+  
+  static Json job = {
+    'en': 'Job',
+    'ko': '직업',
+  };
+  
+
+  static Json news = {
+    'en': 'News',
+    'ko': '뉴스',
+  };
+
+
   static Json category = {
     'en': 'Category',
     'ko': '카테고리',
