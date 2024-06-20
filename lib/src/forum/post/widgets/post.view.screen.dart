@@ -28,6 +28,7 @@ class PostViewScreen extends StatefulWidget {
 class _PostViewScreenState extends State<PostViewScreen> {
   Post get post => widget.post;
   int? previousNoOfLikes;
+  bool? bookmarked;
 
   /// [urls] is the URLs of the post photos.
   ///
@@ -76,11 +77,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
             SliverAppBar(
               pinned: true,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              // title: PostMeta(
-              //   post: post,
-              //   avatarSize: 32,
-              //   padding: const EdgeInsets.all(0),
-              // ),
               centerTitle: false,
             ),
             SliverToBoxAdapter(child: PostMeta(post: post)),
@@ -101,7 +97,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Blocked(
                   otherUserUid: widget.post.uid,
                   yes: () => SizedBox.fromSize(),
@@ -118,17 +114,15 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 padding: const EdgeInsets.only(left: 2.0, right: 16),
                 child: Row(
                   children: [
-                    /// This is bad! @withcenterdev5
-                    TextButton.icon(
+                    TextButtonIcon(
+                      post: post,
                       icon: widget.post.likes.contains(myUid)
                           ? const Icon(Icons.thumb_up)
                           : const Icon(Icons.thumb_up_outlined),
-                      iconAlignment: IconAlignment.start,
                       onPressed: () async {
-                        dog(myUid.toString());
-                        dog(widget.post.likes.toString());
-                        setState(() {});
                         await post.like(context: context);
+                        dog(post.likes.toString());
+                        setState(() {});
                       },
                       label: Login(
                         yes: (uid) => Value(
@@ -145,34 +139,33 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     ),
 
                     /// Bookmark
-                    TextButton.icon(
-                      onPressed: () async {
-                        await Bookmark.toggle(
-                          context: context,
-                          category: post.category,
-                          postId: post.id,
-                        );
-                      },
-                      label: Login(
-                        yes: (uid) => Value(
-                          ref: Bookmark.postRef(post.id),
-                          builder: (v) => Text(
+                    Value(
+                      ref: Bookmark.postRef(post.id),
+                      builder: (v) {
+                        bookmarked = v == null;
+                        return TextButtonIcon(
+                          post: post,
+                          icon: Icon(
+                            v == null
+                                ? Icons.bookmark_add_outlined
+                                : Icons.bookmark_added,
+                          ),
+                          label: Text(
                             v == null ? T.bookmark.tr : T.unbookmark.tr,
                           ),
-                        ),
-                        no: () => Text(T.bookmark.tr),
-                      ),
-                      icon: Value(
-                        ref: Bookmark.postRef(post.id),
-                        builder: (v) => Icon(
-                          v == null
-                              ? Icons.bookmark_add_outlined
-                              : Icons.bookmark_added,
-                        ),
-                      ),
+                          onPressed: () async {
+                            await Bookmark.toggle(
+                              context: context,
+                              category: post.category,
+                              postId: post.id,
+                            );
+                          },
+                        );
+                      },
                     ),
 
-                    TextButton.icon(
+                    TextButtonIcon(
+                      post: post,
                       icon: const Icon(Icons.chat_bubble_outline_outlined),
                       onPressed: () => ChatService.instance.showChatRoomScreen(
                         context: context,
@@ -180,25 +173,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       ),
                       label: Text(T.chat.tr),
                     ),
-                    // TextButton(
-                    //   onPressed: () async {
-                    //     final re = await input(
-                    //       context: context,
-                    //       title: T.reportInputTitle.tr,
-                    //       subtitle: T.reportInputMessage.tr,
-                    //       hintText: T.reportInputHint.tr,
-                    //     );
-                    //     if (re == null || re == '') return;
-                    //     await Report.create(
-                    //       postId: post.id,
-                    //       category: post.category,
-                    //       reason: re,
-                    //     );
-                    //   },
-                    //   child: Text(T.report.tr),
-                    // ),
-
-                    // BlockButton.textButton(uid: post.uid),
 
                     Expanded(
                       child: Align(
@@ -349,6 +323,34 @@ class _PostViewScreenState extends State<PostViewScreen> {
             : const SizedBox(
                 height: 32), // Added because there is no space at the bottom
       ),
+    );
+  }
+}
+
+class TextButtonIcon extends StatefulWidget {
+  const TextButtonIcon({
+    super.key,
+    required this.post,
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final Post post;
+  final Widget icon;
+  final Widget label;
+  final void Function()? onPressed;
+  @override
+  State<TextButtonIcon> createState() => _TextButtonIconState();
+}
+
+class _TextButtonIconState extends State<TextButtonIcon> {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      onPressed: widget.onPressed,
+      label: widget.label,
+      icon: widget.icon,
     );
   }
 }
