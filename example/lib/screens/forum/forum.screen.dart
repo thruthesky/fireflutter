@@ -1,30 +1,6 @@
+import 'package:example/etc/categories.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-
-class Categories {
-  static String qna = 'qna';
-  static String discussion = 'discussion';
-  static String buyandsell = 'buyandsell';
-  static String info = 'info';
-
-  Categories._();
-
-  static List<({String name, String id, String? group})> menus = [
-    (name: T.discussion.tr, id: discussion, group: 'community'),
-    (name: T.qna.tr, id: qna, group: 'community'),
-    (name: T.buyandsell.tr, id: buyandsell, group: null),
-    (name: T.info.tr, id: info, group: null),
-  ];
-
-  static String name(String id) {
-    for (final menu in menus) {
-      if (menu.id == id) {
-        return menu.name;
-      }
-    }
-    return '';
-  }
-}
 
 class ForumScreen extends StatefulWidget {
   const ForumScreen({super.key});
@@ -40,12 +16,15 @@ class _ForumScreenState extends State<ForumScreen>
   int index = 0;
   late TabController _tabController;
 
+  Iterable<({String? group, String id, String name})> categories =
+      Categories.menus.where((v) => v.group == Categories.community);
+
   @override
   void initState() {
     super.initState();
 
     _tabController = TabController(
-      length: Categories.menus.length,
+      length: categories.length,
       initialIndex: 0,
       vsync: this,
     );
@@ -89,8 +68,8 @@ class _ForumScreenState extends State<ForumScreen>
               onPressed: () {
                 ForumService.instance.showPostCreateScreen(
                   context: context,
-                  category: Categories.menus[index].id,
-                  group: Categories.menus[index].group,
+                  category: categories.elementAt(index).id,
+                  group: categories.elementAt(index).group,
                 );
               },
               icon: const Icon(
@@ -102,12 +81,12 @@ class _ForumScreenState extends State<ForumScreen>
           ],
           bottom: TabBar(
             controller: _tabController,
-            tabs: Categories.menus.map((e) => Tab(text: e.name)).toList(),
+            tabs: categories.map((e) => Tab(text: e.name)).toList(),
           ),
         ),
         body: TabBarView(
           controller: _tabController,
-          children: Categories.menus
+          children: categories
               .map(
                 (e) => PostListView(
                   category: e.id,
