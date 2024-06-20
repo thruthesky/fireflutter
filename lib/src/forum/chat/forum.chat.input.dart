@@ -73,8 +73,10 @@ class _ForumChatInputState extends State<ForumChatInput> {
             ),
           ],
           const SizedBox(height: 8),
-          EditUploads(
-              urls: urls, onDelete: (url) => setState(() => urls.remove(url))),
+          if (urls.isNotEmpty)
+            EditUploads(
+                urls: urls,
+                onDelete: (url) => setState(() => urls.remove(url))),
         ],
       ),
     );

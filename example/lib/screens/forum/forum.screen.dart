@@ -1,6 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Categories {
   static String qna = 'qna';
