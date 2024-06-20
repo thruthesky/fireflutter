@@ -37,7 +37,7 @@ class _PostContentState extends State<PostContent> {
     return Blocked(
       otherUserUid: widget.post.uid,
       no: () => LinkifyText(content),
-      yes: () =>  Text(T.blockedContentMessage.tr),
+      yes: () => Text(T.blockedContentMessage.tr),
     );
   }
 }

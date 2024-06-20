@@ -279,7 +279,8 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                 builder: (meetup) {
                   if (meetup.users.contains(myUid)) {
                     return PostListView(
-                      category: '${widget.meetup.id}${Code.meetupPostCategoryPostFix}',
+                      category:
+                          '${widget.meetup.id}${Code.meetupPostCategoryPostFix}',
                       padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                       pageSize: 20,
                       separatorBuilder: (p0, p1) => Padding(
@@ -319,7 +320,8 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                 builder: (meetup) {
                   if (meetup.users.contains(myUid)) {
                     return PostListView.gridView(
-                      category: '${widget.meetup.id}${Code.meetupGalleryCategoryPostFix}',
+                      category:
+                          '${widget.meetup.id}${Code.meetupGalleryCategoryPostFix}',
                       padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
                       itemBuilder: (post, i) => ClipRRect(
                         borderRadius: BorderRadius.circular(16),

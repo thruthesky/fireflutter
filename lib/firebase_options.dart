@@ -59,9 +59,10 @@ class DefaultFirebaseOptions {
     projectId: 'withcenter-test-3',
     databaseURL: 'https://withcenter-test-3-default-rtdb.firebaseio.com',
     storageBucket: 'withcenter-test-3.appspot.com',
-    androidClientId: '776648753457-2opu3g9o51193enkoek48fhpedgpmm1d.apps.googleusercontent.com',
-    iosClientId: '776648753457-2k6anelhhe2fidrndsm1dllu7505e519.apps.googleusercontent.com',
+    androidClientId:
+        '776648753457-2opu3g9o51193enkoek48fhpedgpmm1d.apps.googleusercontent.com',
+    iosClientId:
+        '776648753457-2k6anelhhe2fidrndsm1dllu7505e519.apps.googleusercontent.com',
     iosBundleId: 'com.unittesting.example',
   );
-
 }
