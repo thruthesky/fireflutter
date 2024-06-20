@@ -110,7 +110,7 @@ class AdminService {
     );
   }
 
-  /// ## Mirror Backfill RTDB to Firestore
+  /// ## Mirror User Backfill RTDB to Firestore
   ///
   /// This function calls the cloud function mirrorBackfillRtdToFirestore
   /// that will copy RTDB's post, comments, and users to Firestore's post,
@@ -120,9 +120,9 @@ class AdminService {
   ///
   /// **Be warned that this may cost lots of data transfer from RTDB, and**
   /// **lots of write in Firestore, so be careful when using this.**
-  Future<HttpsCallableResult> mirrorBackfillRtdbToFirestore() async {
+  Future<HttpsCallableResult> mirrorUserBackfillRtdbToFirestore() async {
     return await FirebaseFunctions.instanceFor(
       region: FireFlutterService.instance.cloudFunctionRegion,
-    ).httpsCallable('mirrorBackfillRtdbToFirestore').call();
+    ).httpsCallable('mirrorUserBackfillRtdbToFirestore').call();
   }
 }
