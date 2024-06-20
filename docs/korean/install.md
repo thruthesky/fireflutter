@@ -1,6 +1,8 @@
 # 설치
 
-FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 설치한다고 되는 것이 아니다. 앱을 개발하고 운영하기 위해서 필요한 것들이 같이 설치되어야 하는데 예를 들면, 각종 Security Rules 가 반드시 설치되어야 한다.
+FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 dependency 추가 및 시작 코드 작성한다고 되는 것이 아니다. 앱이 올바로 동작하기 위해서는 각종 Security Rules, Cloud Functions 등이 같이 설치되어야 한다.
+
+본 문서에서는 이러한 설치에 대한 설명을 한다.
 
 
 
@@ -8,7 +10,43 @@ FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 설치한다고 
 
 패키지 설치는 단순히, pub.dev 의 최신 버전을 설치하면 된다.
 
-그러나 개발자 모드로 설치하기 위해서는 아래의 개발자 모드를 참고한다.
+먼저 플러터 앱을 생성한다.
+
+```sh
+flutter create --org com.t3 app
+```
+
+그리고 아래와 같이 Firebase 관련 패키지를 설치한다. FlutterFire 의 플러그인 2.1.0 버전을 설치하면 된다.
+
+```sh
+flutterfire install 2.1.0
+```
+
+위 명령을 실행 후, `Core,Authentication,Firestore,Functions,Realtime Database,Dynamic Links,Messaging, Storage` 를 선택하면 된다.
+
+만약 수동으로 설치하고자 한다면, 아래의 버전을 설치하면 된다.
+
+```txt
+Core: 3.1.0
+Authentication: 5.1.0
+Firestore: 5.0.1
+Functions: 5.0.1
+Realtime Database: 11.0.1
+Dynamic Links: 6.0.1
+Messaging: 15.0.1
+Storage: 12.0.1
+```
+
+그리고 아래와 같이 프로젝트에 Firebase 를 연결한다.
+
+```sh
+flutterfire config -a com.t3.app -i com.t3.app -p withcenter-test-3
+```
+
+그리고 소스 코드에서 
+
+
+만약 개발자 모드로 설치하기 위해서는 아래의 [FireFlutter 패키지를 개발자 모드로 설치하기](#fireflutter-패키지를-개발자-모드로-설치하기)항목을 참고한다.
 
 ## FireFlutter 패키지를 개발자 모드로 설치하기
 
