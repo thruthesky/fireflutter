@@ -115,69 +115,80 @@ class _PostBubbleState extends State<PostBubble> {
                     commentable: false,
                   ),
                   child: Container(
-                    clipBehavior: Clip.antiAlias,
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * .7,
                     ),
-                    decoration: BoxDecoration(
-                      color: isMine
-                          ? Theme.of(context).colorScheme.primary.tone(40)
-                          : Theme.of(context).colorScheme.surface.tone(93),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(!isMine
-                            ? widget.post.urls.isNotEmpty ||
-                                    widget.post.content.hasUrl
-                                ? 0
-                                : 16
-                            : 16),
-                        topRight: Radius.circular(isMine ? 0 : 16),
-                        bottomLeft: Radius.circular(isMine ? 16 : 0),
-                        bottomRight: const Radius.circular(16),
-                      ),
-                    ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: isMine
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                          child: LinkifyText(
-                            content.orBlocked(
-                              widget.post.uid,
-                              T.blockedContentMessage.tr,
+                        Container(
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            color: isMine
+                                ? Theme.of(context).colorScheme.primary.tone(40)
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .tone(93),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(!isMine
+                                  ? widget.post.urls.isNotEmpty ||
+                                          widget.post.content.hasUrl
+                                      ? 0
+                                      : 16
+                                  : 16),
+                              topRight: Radius.circular(isMine ? 0 : 16),
+                              bottomLeft: Radius.circular(isMine ? 16 : 0),
+                              bottomRight: const Radius.circular(16),
                             ),
-                            selectable: false,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: isMine
-                                      ? Theme.of(context).colorScheme.onPrimary
-                                      : Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: isMine
-                                      ? FontWeight.w500
-                                      : FontWeight.normal,
-                                ),
-                            linkStyle: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: isMine
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                            child: LinkifyText(
+                              content.orBlocked(
+                                widget.post.uid,
+                                T.blockedContentMessage.tr,
+                              ),
+                              selectable: false,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: isMine
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                    fontWeight: isMine
+                                        ? FontWeight.w500
+                                        : FontWeight.normal,
+                                  ),
+                              linkStyle: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: isMine
 
-                                      /// [LinkifyText] is using its default color and it does not look good in terms of constrast when it is on [colorScheme.primary]
-                                      /// [.withGreen(200)] matches the [Color.blue] of the [LinkifyText]
-                                      ? Colors.blue.withGreen(200)
-                                      : Colors.blue,
-                                  fontWeight: FontWeight.w600,
-                                  decoration: TextDecoration.underline,
-                                ),
+                                        /// [LinkifyText] is using its default color and it does not look good in terms of constrast when it is on [colorScheme.primary]
+                                        /// [.withGreen(200)] matches the [Color.blue] of the [LinkifyText]
+                                        ? Colors.blue.withGreen(200)
+                                        : Colors.blue,
+                                    fontWeight: FontWeight.w600,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                            ),
                           ),
                         ),
+                        const SizedBox(height: 8),
+                        dateAndName(context: context, post: widget.post),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                dateAndName(context: context, post: widget.post),
               ],
             ),
           ),
@@ -191,7 +202,11 @@ class _PostBubbleState extends State<PostBubble> {
       mainAxisAlignment:
           isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        if (isMine) _dateTime(post, context),
+        if (isMine) ...[
+          if (post.content.hasUrl && isLongText) _readMore(),
+          const Spacer(),
+          _dateTime(post, context),
+        ],
         UserDisplayName(
           uid: post.uid,
           style: Theme.of(context).textTheme.labelSmall!.copyWith(
@@ -199,7 +214,11 @@ class _PostBubbleState extends State<PostBubble> {
                 fontWeight: FontWeight.w600,
               ),
         ),
-        if (!isMine) _dateTime(post, context),
+        if (!isMine) ...[
+          _dateTime(post, context),
+          const Spacer(),
+          if (post.content.hasUrl && isLongText) _readMore(),
+        ],
       ],
     );
   }
@@ -216,19 +235,19 @@ class _PostBubbleState extends State<PostBubble> {
     );
   }
 
-  String _readMore(String content) {
-    // Text(
-    //   '   ${isMine ? '수정 삭제' : ''} ${T.readMore.tr}...   ',
-    //   style: Theme.of(context)
-    //       .textTheme
-    //       .labelSmall!
-    //       .copyWith(color: Colors.grey.shade600),
-    // );
+  _readMore() {
+    return Text(
+      '   ${isMine ? '수정 삭제' : ''} ${T.readMore.tr}...   ',
+      style: Theme.of(context)
+          .textTheme
+          .labelSmall!
+          .copyWith(color: Colors.grey.shade600),
+    );
 
-    if (content.length < 80) {
-      return '';
-    }
-    return '${isMine ? '수정 삭제' : ''} ${T.readMore.tr}   ';
+    // if (content.length < 80) {
+    //   return '';
+    // }
+    // return '${isMine ? '수정 삭제' : ''} ${T.readMore.tr}   ';
   }
 }
 

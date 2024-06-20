@@ -1,6 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Categories {
   static String qna = 'qna';
@@ -13,7 +12,6 @@ class Categories {
   static List<({String name, String id, String? group})> menus = [
     (name: T.discussion.tr, id: discussion, group: 'community'),
     (name: T.qna.tr, id: qna, group: 'community'),
-    (name: T.buyandsell.tr, id: buyandsell, group: null),
     (name: T.info.tr, id: info, group: null),
   ];
 
