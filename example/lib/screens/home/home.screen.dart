@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:example/screens/buyandsell/buyandsell.screen.dart';
 import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
@@ -7,7 +8,9 @@ import 'package:example/screens/forum/forum_search.screen.dart';
 import 'package:example/screens/forum/latest.posts.screen.dart';
 import 'package:example/screens/forum/post_list_by_group.screen.dart';
 import 'package:example/screens/meetup/meetup.screen.dart';
+import 'package:example/screens/user/user.search.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -97,6 +100,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             .showDashboard(context: context),
                         child: const Text('Admin dashboard'),
                       ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(UserSearchScreen.routeName),
+                        child: const Text('User Search'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _backfillSearchValue();
+                        },
+                        child: const Text("Backfill Search Value"),
+                      ),
                     ],
                   ),
                 ],
@@ -104,9 +118,30 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             no: () => const Text("Not logged in"),
           ),
-          const Expanded(child: UserListView())
+          const Expanded(
+            child: UserListView(),
+          )
         ],
       ),
     );
+  }
+
+  /// This will add searchValue field in all users under users node
+  _backfillSearchValue() async {
+    // Get all users
+    final users = FirebaseDatabase.instance.ref('users');
+    final snapshot = await users.get();
+    final usersMapList = snapshot.children.map((e) {
+      // e.value!.["displayName"];
+      final user = Map<String, dynamic>.from(e.value! as Map<dynamic, dynamic>);
+      final searchValue = ((user["displayName"] ?? "") as String)
+          .trim()
+          .replaceAll(' ', '')
+          .toLowerCase();
+      e.ref.child('searchValue').set(searchValue);
+      return e.value;
+    }).toList();
+    dog("Snapshot: $usersMapList");
+    // On each user set searchValue: ""
   }
 }

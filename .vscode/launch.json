@@ -12,7 +12,10 @@
       "flutterMode": "debug",
       "cwd": "apps/philov",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "WHO=song"]
+      "args": [
+        "--dart-define",
+        "WHO=song"
+      ]
     },
     {
       "name": "PhiLov - iPhone 14 Pro",
@@ -86,7 +89,6 @@
       "cwd": "apps/philov",
       "program": "lib/main.dart"
     },
-    
     {
       "name": "PhiLov - Emulator 5556",
       "request": "launch",
@@ -221,7 +223,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe - Android Pixel",
@@ -240,7 +245,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe - iPhone SE",
@@ -250,7 +258,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe - iPad Air (5th generation)",
@@ -260,7 +271,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe - iPad 10",
@@ -306,7 +320,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "locale=en"]
+      "args": [
+        "--dart-define",
+        "locale=en"
+      ]
     },
     {
       "name": "Momcafe - Chrome",
@@ -409,6 +426,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Example - Main - iPad Air 13-inch",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPad Air 13-inch",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Example - Chat - iPhone SE",
       "request": "launch",
       "type": "dart",
@@ -435,7 +461,6 @@
       "cwd": "example",
       "program": "lib/main.chat.dart"
     },
-    
     {
       "name": "Example - Emulator 5554",
       "request": "launch",
@@ -445,7 +470,6 @@
       "cwd": "example",
       "program": "lib/main.dart"
     },
-    
     {
       "name": "Example - Emulator 5556",
       "request": "launch",
@@ -526,7 +550,11 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=test"]
+      "args": [
+        "-v",
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe (Chris) TEST - iPhone 15 Pro (debug)",
@@ -536,7 +564,11 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=test"]
+      "args": [
+        "-v",
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe (Chris) TEST - iPhone 15 Pro Max (debug)",
@@ -546,7 +578,11 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=test"]
+      "args": [
+        "-v",
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Silbus (Chris) TEST - iPhone 15 Pro Max (debug)",
@@ -556,7 +592,11 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=test"]
+      "args": [
+        "-v",
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Silbus (Chris) TEST - iPhone SE 17.4 (debug)",
@@ -566,7 +606,10 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Silbus (Chris) - iPhone 15 Pro Max (debug)",
@@ -576,7 +619,9 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["-v"]
+      "args": [
+        "-v"
+      ]
     },
     {
       "name": "Silbus (Chris) TEST - iPhone 15 Pro (debug)",
@@ -586,7 +631,11 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=test"]
+      "args": [
+        "-v",
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Silbus (Chris) TEST - Emulator (debug)",
@@ -596,7 +645,10 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Silbus (Chris) TEST - iPhone external sm (debug)",
@@ -606,7 +658,10 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Silbus (Chris) TEST - iPhone external pink (debug)",
@@ -616,7 +671,10 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Silbus (Chris) - External Sam (debug)",
@@ -636,7 +694,11 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=test"]
+      "args": [
+        "-v",
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Wemeet (Chris) TEST - iPhone 15 Pro Max (debug)",
@@ -646,7 +708,9 @@
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["-v"]
+      "args": [
+        "-v"
+      ]
     },
     {
       "name": "Wemeet (Chris) TEST - iPhone 15 Pro Max 17.4 (debug)",
@@ -656,7 +720,9 @@
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["-v"]
+      "args": [
+        "-v"
+      ]
     },
     {
       "name": "Wemeet (Chris) TEST - iPhone 15 SE 17.4 (debug)",
@@ -686,7 +752,9 @@
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["-v"]
+      "args": [
+        "-v"
+      ]
     },
     {
       "name": "Wemeet (Chris) TEST - SM T295 (debug)",
@@ -716,7 +784,10 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Roha (Noe) TEST - iPhone 15 Pro Max (debug-nodev)",
@@ -736,7 +807,10 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Roha (Noe) TEST - SM A045F (debug)",
@@ -746,7 +820,10 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Roha (Noe) TEST - emulator 5554 (debug)",
@@ -756,7 +833,10 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Roha (Noe) TEST - iPhone SE (3rd Generation)",
@@ -766,7 +846,10 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Roha (Noe) TEST - SM T295",
@@ -776,7 +859,10 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Roha (Noe) TEST - SM T295(no dev)",
@@ -796,7 +882,11 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=dev"]
+      "args": [
+        "-v",
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Wemeet (Noe) TEST - iPhone 15 Pro (debug)",
@@ -846,7 +936,11 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=dev"]
+      "args": [
+        "-v",
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Silbus (Noe) TEST - SM T295 (debug)",
@@ -856,7 +950,10 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Silbus (Noe) TEST - iPad (10th generation) (debug)",
@@ -866,7 +963,10 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Silbus (Noe) TEST - iPhone SE (3rd Generation)",
@@ -876,7 +976,10 @@
       "flutterMode": "debug",
       "cwd": "apps/silbus",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=dev"]
+      "args": [
+        "--dart-define",
+        "MODE=dev"
+      ]
     },
     {
       "name": "Social Kit - iPhone 15 Pro Max",
@@ -914,7 +1017,10 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=jaeho"]
+      "args": [
+        "--dart-define",
+        "MODE=jaeho"
+      ]
     },
     {
       "name": "RoHa - iPhone11ProMax",
@@ -942,7 +1048,10 @@
       "flutterMode": "debug",
       "cwd": "apps/social_design_system/example",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "SDS Emulator emulator-5554",
@@ -970,7 +1079,10 @@
       "flutterMode": "debug",
       "cwd": "apps/social_design_system/example",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "Philov (noe)- iPhone SE (3rd generation)",
@@ -980,7 +1092,10 @@
       "flutterMode": "debug",
       "cwd": "apps/philov",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "Philov (noe)- iPhone 15 Pro Max",
@@ -990,7 +1105,10 @@
       "flutterMode": "debug",
       "cwd": "apps/philov",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "Philov (noe)- SM J737S",
@@ -1000,7 +1118,10 @@
       "flutterMode": "debug",
       "cwd": "apps/philov",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "Example (noe)- iPhone 15 Pro Max",
@@ -1010,7 +1131,10 @@
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "Example (noe)- iPhone SE (3rd generation)",
@@ -1020,7 +1144,10 @@
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
   ]
 }
