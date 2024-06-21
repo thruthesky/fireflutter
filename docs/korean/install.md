@@ -25,6 +25,11 @@ Storage
 Security rules 에는 Firestore, Realtime Database, Storage 와 같이 세 가지가 있다. 각각의 Security rules 파일은 [assets 폴더](../assets/) 에서 찾을 수 있다. 각 Security files 을 복사(또는 수정)하여 Firebase 에 추가하도록 한다.
 
 
+### FireFlutter Functions 설치
+
+- 설정에서 region 은 
+
+
 
 ## Fireflutter 패키지 설치
 
