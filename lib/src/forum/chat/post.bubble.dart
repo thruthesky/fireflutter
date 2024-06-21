@@ -79,7 +79,7 @@ class _PostBubbleState extends State<PostBubble> {
                 onTap: () => UserService.instance.showPublicProfileScreen(
                       context: context,
                       uid: widget.post.uid,
-                    )),
+                    ),),
           ],
           const SizedBox(width: 14),
           Expanded(

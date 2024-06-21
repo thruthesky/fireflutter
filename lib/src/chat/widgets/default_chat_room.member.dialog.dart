@@ -38,7 +38,6 @@ class DefaultChatRoomMemberDialog extends StatelessWidget {
               UserService.instance.showPublicProfileScreen(
                 context: context,
                 user: member,
-                // uid: member.uid,
               );
             },
             child: const Text('View User Profile'),

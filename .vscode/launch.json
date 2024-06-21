@@ -24,6 +24,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - iPad Air 13-inch",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPad Air 13-inch",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "PhiLov - iPhone 14 Pro Max",
       "request": "launch",
       "type": "dart",

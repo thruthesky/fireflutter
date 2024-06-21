@@ -2,10 +2,13 @@
     "dart.lineLength": 80,
     "[dart]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll": "explicit"
+            "source.fixAll": "always"
         },
     },
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always"
+    },
     // "problems.decorations.enabled": false,
     // "dart.analysisExcludedFolders": [
     //     "./apps/momcafe"
