@@ -5,6 +5,26 @@ FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 dependency 추�
 본 문서에서는 이러한 설치에 대한 설명을 한다.
 
 
+## Firebase 프로젝트 준비
+
+
+새로운 프로젝트(또는 기존 프로젝트)에서 아래의 기능을 활성화 한다.
+
+```txt
+Authentication
+Firestore
+Functions
+Realtime Database
+Messaging
+Storage
+```
+
+
+### Firebase Security Rules 설치
+
+Security rules 에는 Firestore, Realtime Database, Storage 와 같이 세 가지가 있다. 각각의 Security rules 파일은 [assets 폴더](../assets/) 에서 찾을 수 있다. 각 Security files 을 복사(또는 수정)하여 Firebase 에 추가하도록 한다.
+
+
 
 ## Fireflutter 패키지 설치
 
@@ -16,13 +36,13 @@ FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 dependency 추�
 flutter create --org com.t3 app
 ```
 
-그리고 아래와 같이 Firebase 관련 패키지를 설치한다. FlutterFire 의 플러그인 2.1.0 버전을 설치하면 된다. 참고로 flutterfire 는 플러터에서 firebase 관련 설정을 도와주는 것이다. FireFlutter 와 혼동되지 않도록 한다.
+그리고 아래와 같이 Firebase 관련 패키지를 설치한다. FlutterFire 의 BoM 2.1.0 버전을 설치하면 된다. 참고로 flutterfire 는 플러터에서 firebase 관련 설정을 도와주는 것이다. FireFlutter 와 혼동되지 않도록 한다.
 
 ```sh
 flutterfire install 2.1.0
 ```
 
-위 명령을 실행 후, `Core,Authentication,Firestore,Functions,Realtime Database,Dynamic Links,Messaging, Storage` 를 선택하면 된다.
+위 명령을 실행 후, `Core,Authentication,Firestore,Functions,Realtime Database,Messaging, Storage` 를 선택하면 된다.
 
 만약 수동으로 설치하고자 한다면, 아래의 버전을 설치하면 된다.
 
@@ -32,7 +52,6 @@ Authentication: 5.1.0
 Firestore: 5.0.1
 Functions: 5.0.1
 Realtime Database: 11.0.1
-Dynamic Links: 6.0.1
 Messaging: 15.0.1
 Storage: 12.0.1
 ```
