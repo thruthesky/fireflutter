@@ -7,10 +7,28 @@ import 'package:flutter/material.dart';
 /// PostListView
 ///
 /// This supports most of the parameters of ListView and GridView.
+///
+/// [category] the category that the posts displayed from. If it's not null,
+/// the posts are coming from `/psots` or `/posts-summary`. If [category] is
+/// null, the posts are coming from `/posts-all-summaries`.
+///
+/// [summary] if it's true, the posts are coming from `/posts-summary`. If it's
+/// false, the posts are coming from `/posts`. It is only affective when the
+/// [category] is not null.
+///
+/// [group] the group that the posts displayed from. if it's not null,
+/// the posts are coming from `/posts-all-summaries`.
+///
+/// if both [category] and [group] are null, the posts are coming from
+/// `/posts-all-summaries` and ordered by [Field.order]. Meaning it displays
+/// all posts from all categories.
+///
+///
 class PostListView extends StatelessWidget {
   const PostListView({
     super.key,
     this.category,
+    this.summary = true,
     this.group,
     this.pageSize = 10,
     this.loadingBuilder,
@@ -37,9 +55,10 @@ class PostListView extends StatelessWidget {
     ///
     this.gridView = false,
     this.gridDelegate,
-  }) : assert(category != null || group != null);
+  });
 
   final String? category;
+  final bool summary;
   final String? group;
 
   final int pageSize;
@@ -72,12 +91,20 @@ class PostListView extends StatelessWidget {
   Widget build(BuildContext context) {
     Query query;
     if (category != null) {
-      query = Post.postSummariesRef.child(category!).orderByChild(Field.order);
-    } else {
+      DatabaseReference ref;
+      if (summary) {
+        ref = Post.postSummariesRef;
+      } else {
+        ref = Post.postsRef;
+      }
+      query = ref.child(category!).orderByChild(Field.order);
+    } else if (group != null) {
       query = Post.postAllSummariesRef
           .orderByChild('group_order')
           .startAt(group)
           .endAt('$group\uf8ff');
+    } else {
+      query = Post.postAllSummariesRef.orderByChild(Field.order);
     }
 
     return FirebaseDatabaseQueryBuilder(
