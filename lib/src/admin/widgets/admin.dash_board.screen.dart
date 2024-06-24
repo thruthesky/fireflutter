@@ -15,53 +15,76 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
       appBar: AppBar(
         title: const Text('Admin DashBoard'),
       ),
-      body: Column(
-        children: [
-          const Text('Chat'),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: SingleChildScrollView(
+          child: Column(
             children: [
-              ElevatedButton(
-                onPressed: () {
+              // const Text('Chat'),
+              ListTile(
+                onTap: () {
                   AdminService.instance.showUserList(context: context);
                 },
-                child: const Text('전체 사용자 목록'),
+                title: const Text('전체 사용자 목록'),
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('신고목록'),
+              const SizedBox(
+                height: 8,
               ),
-              ElevatedButton(
-                onPressed: () {
+              ListTile(
+                onTap: () {},
+                title: const Text('신고목록'),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              ListTile(
+                onTap: () async {
+                  final re = await confirm(
+                    context: context,
+                    title: 'Send Push notification',
+                    message: 'Are you sure you want to send push notification?',
+                  );
+                  if (re == false) return;
                   MessagingService.instance.sendAll(
                     title: 'send all test - ${DateTime.now()}',
                     body: 'this is the content of the message',
                   );
                 },
-                child: const Text('Send push messages to all users'),
+                title: const Text('Send push messages to all users'),
               ),
-              ElevatedButton(
-                onPressed: () async {
+              const SizedBox(
+                height: 8,
+              ),
+              ListTile(
+                onTap: () async {
+                  final re = await confirm(
+                    context: context,
+                    title: 'Send Push notification',
+                    message: 'Are you sure you want to send push notification?',
+                  );
+                  if (re == false) return;
                   final result = await AdminService.instance
                       .mirrorBackfillRtdbToFirestore();
                   final response = result.data;
                   print(response.toString());
                 },
-                child: const Text('Mirror User Data To Firestore'),
+                title: const Text('Mirror User Data To Firestore'),
               ),
-              ElevatedButton(
-                onPressed: () async {
+              const SizedBox(
+                height: 8,
+              ),
+              ListTile(
+                onTap: () async {
                   showGeneralDialog(
                       context: context,
                       pageBuilder: (_, __, ___) =>
                           const AdminMeetupListScreen());
                 },
-                child: const Text('Meetup Management'),
+                title: const Text('Meetup Management'),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
