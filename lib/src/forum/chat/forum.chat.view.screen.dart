@@ -23,7 +23,10 @@ class _ForumChatViewScreenState extends State<ForumChatViewScreen> {
       body: PostListView(
         reverse: true,
         category: widget.category,
-        itemBuilder: (post, index) => PostBubble(key: Key(post.id), post: post),
+        itemBuilder: (post, index) => PostBubble(
+          key: ValueKey(post.id),
+          post: post,
+        ),
       ),
       bottomNavigationBar: Padding(
         /// This is to display the Textfield above the keyboard
