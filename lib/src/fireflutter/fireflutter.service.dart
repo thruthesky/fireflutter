@@ -24,7 +24,11 @@ class FireFlutterService {
   /// if you don't use the resign function or any callable functions.
 
   String? cloudFunctionRegion;
+
+  /// Set the toastBackgroundColor to give color on fireflutter toast background color
   Color? toastBackgroundColor;
+
+  // set the toastForegroundColor to give color on fireflutter toast foreground color
   Color? toastForegroundColor;
 
   /// Confirm Dialog this callback is used to customize all the confirm functions

@@ -157,9 +157,16 @@ ScaffoldFeatureController toast({
     foregroundColor ??= Theme.of(mayBeGlobalContext).colorScheme.onError;
   }
   {
+    /// if the `background` is not set it will use the toastBackgroundcolor from
+    /// `FireflutterService.instance.toastBackgroundColor`and if it also not set
+    ///  it will use `Theme.of(mayBeGlobalContext).colorScheme.onPrimary`
+    ///
+    /// if the `foregroundColor` is not set it will use the toastForegroundColor from
+    /// `FireflutterService.instance.toastForegroundColor`and if it also not set
+    /// it will use `Theme.of(mayBeGlobalContext).colorScheme.onPrimary`
     backgroundColor ??= FireFlutterService.instance.toastBackgroundColor ??
         Theme.of(mayBeGlobalContext).colorScheme.primary;
-    foregroundColor ??= FireFlutterService.instance.toastBackgroundColor ??
+    foregroundColor ??= FireFlutterService.instance.toastForegroundColor ??
         Theme.of(mayBeGlobalContext).colorScheme.onPrimary;
   }
 
