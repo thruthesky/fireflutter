@@ -327,6 +327,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
   }
 }
 
+/// Added this to prevent the whole screen to rebuild
 class TextButtonIcon extends StatefulWidget {
   const TextButtonIcon({
     super.key,
