@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>776648753457-iavpuc8tp91um7n5d9vdj9bu2jqi1csu.apps.googleusercontent.com</string>
+	<string>776648753457-r3kn4lo458upihp50k5d78h13rdgbui0.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.776648753457-iavpuc8tp91um7n5d9vdj9bu2jqi1csu</string>
+	<string>com.googleusercontent.apps.776648753457-r3kn4lo458upihp50k5d78h13rdgbui0</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>776648753457-2opu3g9o51193enkoek48fhpedgpmm1d.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.example</string>
+	<string>com.withcenter.test3</string>
 	<key>PROJECT_ID</key>
 	<string>withcenter-test-3</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:776648753457:ios:b6719dfc0ea5773198f010</string>
+	<string>1:776648753457:ios:819d8b75ac2ecff498f010</string>
 	<key>DATABASE_URL</key>
 	<string>https://withcenter-test-3-default-rtdb.firebaseio.com</string>
 </dict>
