@@ -1,6 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ForumChatInput extends StatefulWidget {
   const ForumChatInput({
@@ -85,16 +84,6 @@ class _ForumChatInputState extends State<ForumChatInput> {
               () => this.hasFocus = hasFocus,
             ),
           ),
-          // if (isValid)
-          //   Padding(
-          //     padding: const EdgeInsets.only(left: 8),
-          //     child: Text(
-          //       T.contentIsTooShort.tr,
-          //       style: Theme.of(context).textTheme.labelSmall!.copyWith(
-          //             color: Colors.redAccent,
-          //           ),
-          //     ),
-          //   ),
           if (inputExpanded) ...[
             const SizedBox(height: 8),
             Row(
@@ -108,9 +97,9 @@ class _ForumChatInputState extends State<ForumChatInput> {
                   onPressed: () async {
                     final re = await confirm(
                         context: context,
-                        title: 'Cancel',
-                        message: 'Do you want to cancel?');
-                    if (re == true) return;
+                        title: T.cancel.tr,
+                        message: T.doYouWanToCancel.tr);
+                    if (re == false) return;
                     urls.map((url) => StorageService.instance.delete(url));
                     setState(() {
                       contentController.clear();

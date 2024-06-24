@@ -344,9 +344,12 @@ class StorageService {
       } else if (error.code == 'camera_access_denied') {
         errorToast(
           context: context,
-          title: 'T.cameraAccessDeniedTitle.tr',
-          message: 'T.cameraAccessDeniedContent.tr',
+          title: T.cameraAccessDeniedTitle.tr,
+          message: T.cameraAccessDeniedContent.tr,
         );
+      } else {
+        /// rethrow the unhandled error from PlatformException if there's any
+        rethrow;
       }
     } catch (e) {
       rethrow;
