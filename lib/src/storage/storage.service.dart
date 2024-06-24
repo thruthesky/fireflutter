@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,11 +15,22 @@ class StorageService {
 
   StorageCustomize customize = StorageCustomize();
 
+  /// [enableFilePickerExceptionHandler] is a flag to enable the exception
+  /// handler. If it is true, it will show an error toast message when the user
+  /// denies the permission to access the camera or the gallery. By default,
+  /// it is true. If you want to handle the exception by yourself, set it to
+  /// false.
+  bool enableFilePickerExceptionHandler = true;
+
   init({
     StorageCustomize? customize,
+    bool? enableFilePickerExceptionHandler,
   }) {
     if (customize != null) {
       this.customize = customize;
+    }
+    if (enableFilePickerExceptionHandler != null) {
+      this.enableFilePickerExceptionHandler = enableFilePickerExceptionHandler;
     }
   }
 
@@ -188,6 +200,7 @@ class StorageService {
     double maxWidth = 1024,
   }) async {
     return uploadFrom(
+      context: context,
       source: await chooseUploadSource(
         context: context,
         camera: true,
@@ -269,6 +282,7 @@ class StorageService {
   /// SourceType.videoGallery, SourceType.videoCamera, SourceType.file
   /// may return null if [source] is invalid.
   Future<String?> uploadFrom({
+    required BuildContext context,
     required ImageSource? source,
     Function(double)? progress,
     Function? complete,
@@ -280,6 +294,7 @@ class StorageService {
   }) async {
     if (source == null) return null;
     String? path = await getFilePathFromPicker(
+      context: context,
       source: source,
       maxHeight: maxHeight,
       maxWidth: maxWidth,
@@ -296,23 +311,45 @@ class StorageService {
   }
 
   Future<String?> getFilePathFromPicker({
+    required BuildContext context,
     required ImageSource? source,
     double maxHeight = 1024,
     double maxWidth = 1024,
   }) async {
     if (source == null) return null;
 
-    if (source == ImageSource.camera) {
-      final XFile? image = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxHeight: maxHeight,
-        maxWidth: maxWidth,
-      );
-      return image?.path;
-    } else if (source == ImageSource.gallery) {
-      final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      return image?.path;
+    try {
+      if (source == ImageSource.camera) {
+        final XFile? image = await ImagePicker().pickImage(
+          source: ImageSource.camera,
+          maxHeight: maxHeight,
+          maxWidth: maxWidth,
+        );
+        return image?.path;
+      } else if (source == ImageSource.gallery) {
+        final XFile? image =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        return image?.path;
+      }
+      return null;
+    } on PlatformException catch (error) {
+      if (enableFilePickerExceptionHandler == false) rethrow;
+
+      if (error.code == 'photo_access_denied') {
+        errorToast(
+          context: context,
+          title: T.galleryAccessDeniedTitle.tr,
+          message: T.galleryAccessDeniedContent.tr,
+        );
+      } else if (error.code == 'camera_access_denied') {
+        errorToast(
+          context: context,
+          title: 'T.cameraAccessDeniedTitle.tr',
+          message: 'T.cameraAccessDeniedContent.tr',
+        );
+      }
+    } catch (e) {
+      rethrow;
     }
     return null;
   }

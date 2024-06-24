@@ -16,12 +16,13 @@ class ForumChatInput extends StatefulWidget {
 
 class _ForumChatInputState extends State<ForumChatInput> {
   final contentController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
   bool isValid = false;
   double? progress;
   bool get inputIsEmpty => contentController.text.isEmpty;
   bool get inputIsNotEmpty => !inputIsEmpty;
 
-  final List<String> urls = [];
+  List<String> urls = [];
 
   bool hasFocus = false;
   bool get inputExpanded => inputIsNotEmpty || hasFocus;
@@ -57,6 +58,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
             ),
           Focus(
             child: TextField(
+              focusNode: focusNode,
               controller: contentController,
               autofocus: inputCollapsed ? false : true,
               decoration: InputDecoration(
@@ -78,8 +80,6 @@ class _ForumChatInputState extends State<ForumChatInput> {
               maxLines: 6,
               onChanged: onChanged,
               onSubmitted: onSubmitted,
-              onTapOutside: (_) =>
-                  FocusManager.instance.primaryFocus?.unfocus(),
             ),
             onFocusChange: (hasFocus) => setState(
               () => this.hasFocus = hasFocus,
@@ -104,6 +104,23 @@ class _ForumChatInputState extends State<ForumChatInput> {
                   icon: const Icon(Icons.camera_alt),
                 ),
                 const Spacer(),
+                IconButton(
+                  onPressed: () async {
+                    final re = await confirm(
+                        context: context,
+                        title: 'Cancel',
+                        message: 'Do you want to cancel?');
+                    if (re == true) return;
+                    urls.map((url) => StorageService.instance.delete(url));
+                    setState(() {
+                      contentController.clear();
+                      urls = [];
+                      hasFocus = false;
+                      focusNode.unfocus();
+                    });
+                  },
+                  icon: const Icon(Icons.delete),
+                ),
                 IconButton(
                   onPressed: contentController.text.isEmpty || progress != null
                       ? null
@@ -149,29 +166,17 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   Future<void> onUpload() async {
-    try {
-      final url = await StorageService.instance.upload(
-        context: context,
-        progress: (p) => setState(() => progress = p),
-        complete: () => setState(() => progress = null),
-      );
-      if (url == null) return;
-      progress = null;
-      if (mounted) {
-        setState(() => urls.add(url));
-      } else {
-        StorageService.instance.delete(url);
-      }
-    } on PlatformException catch (error) {
-      if (error.code == 'photo_access_denied') {
-        toast(
-          context: context,
-          title: T.galleryAccessDeniedTitle.tr,
-          message: T.galleryAccessDeniedContent.tr,
-        );
-      }
-    } catch (e) {
-      rethrow;
+    final url = await StorageService.instance.upload(
+      context: context,
+      progress: (p) => setState(() => progress = p),
+      complete: () => setState(() => progress = null),
+    );
+    if (url == null) return;
+    progress = null;
+    if (mounted) {
+      setState(() => urls.add(url));
+    } else {
+      StorageService.instance.delete(url);
     }
   }
 }

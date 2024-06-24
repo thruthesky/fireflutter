@@ -109,3 +109,18 @@ ListTileTheme(
 ),
 ```
 
+
+
+## 에러 핸들링
+
+사용자가 파일 업로드를 할 때, 갤러리나 카메라 등으로 부터 사진을 업로드 할 수 있는데, 권한을 허용하지 않고 거절하면, 미디어(사진 등)을 선택 할 수 없다. 앱 내부적으로 exception 이 발생한다. 기본적으로 FireFlutter 에서 이 권한에 대한 에러를 핸들링한다. 만약, 직접 에러 핸들링을 하고 싶은 경우 아래와 같이 하면 된다.
+
+```dart
+StorageService.instance.init(
+  enableFilePickerExceptionHandler: false,
+)
+```
+
+위와 같이 `enableFilePickerExceptionHandler` 에 false 값을 주면, FireFlutter 가 exception 을 핸들링하지 않고 그대로 던져버린다. 개발자는 모든 에러를 캡쳐하는 루틴(`Global Error Handler`)을 만들어서 적절하게 처리를 해야 한다.
+
+
