@@ -33,12 +33,12 @@ class DefaultChatRoomMemberDialog extends StatelessWidget {
           /// MEMBER ACTIONS
           /// View User Profile
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              UserService.instance.showPublicProfileScreen(
+            onPressed: () async {
+              await UserService.instance.showPublicProfileScreen(
                 context: context,
                 user: member,
               );
+              Navigator.pop(context);
             },
             child: const Text('View User Profile'),
           ),

@@ -57,7 +57,9 @@ class LinkService {
     }
   }
 
-  bool isDeepLink(String url) => url.startsWith(urlPrefix);
+  /// Return true if the dyanmic link service is initialized and it's
+  /// a deep link.
+  bool isDeepLink(String url) => initialized && url.startsWith(urlPrefix);
 
   Future<void> openScreen(
     BuildContext context,

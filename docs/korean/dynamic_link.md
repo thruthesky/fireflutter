@@ -2,6 +2,8 @@
 
 Dynamic link 란 앱을 공유(다른 사람에게 알려주기 위해)하고자 할 때 앱 내에서 링크를 생성해 다른 사용자에게 전달 해 주고, 그 사용자가 링크를 클릭하면 앱이  설치되어져 있으면 앱을 열고, 설치되어져 있지 않으면 Appstore 또는 Playstore 또는 홈페이지를 여는 것이다. (물론, Appstore 나 Playstore 로 곧 바로 리다이렉트하지 않고 다른 방법으로 할 수 있지만, FireFlutter 에서는 기본적으로 리다이렉트를 하도록 했다.)
 
+단순히 앱 설치 링크를 공유하는 경우는 dynamic link 가 필요 없이, store url 을 바로 링크(공유) 할 수 있도록 하면 된다. 하지만, Dynamic link 에는 site preview 의 기능이 있으므로 더욱 유용하게 쓰일 수 있다.
+
 Dynamic link 를 사용하기 위해서는 FireFlutter 에서 사용하는 dynamic link 의 기본 개념의 이해가 좀 필요하다. 만약, dynamic link 를 사용하지 않는다면 굳이 본 항목을 살펴 볼 필요는 없다.
 
 첫째, dynamic link 를 담당하는 `link` 클라우드 함수를 설치한다.
