@@ -280,18 +280,15 @@ class T {
     'ko': '장터',
   };
 
-  
   static Json job = {
     'en': 'Job',
     'ko': '직업',
   };
-  
 
   static Json news = {
     'en': 'News',
     'ko': '뉴스',
   };
-
 
   static Json category = {
     'en': 'Category',
@@ -467,7 +464,7 @@ class T {
 
   static Json addPhoto = {
     'en': 'Add photo',
-    'ko': '글 쓰기',
+    'ko': '사진',
   };
 
   static Json meetupAdminSetting = {
@@ -1927,5 +1924,26 @@ class T {
     'en':
         'User information is not valid. The user has either deleted or there is no information',
     'ko': '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.',
+  };
+
+  static const Json confirmSendTestMessageToAllUsers = {
+    'en': 'Send Test Message to all users',
+    'ko': '모든 사용자에게 테스트 메시지 보내기',
+  };
+
+  static const Json confirmSendTestMessageToAllUsersMessage = {
+    'en':
+        'Warning!!! Are you sure you want to send a test message to all users?',
+    'ko': '경고!!! 모든 사용자에게 테스트 메시지를 보내시겠습니까?',
+  };
+
+  static const Json confirmMirrorUserDataToFirestore = {
+    'en': 'Mirror User data to firestore',
+    'ko': 'Firestore에 사용자 데이터를 복사합니다.',
+  };
+
+  static const Json confirmMirrorUserDataToFirestoreMessage = {
+    'en': 'Warning!!! Are you sure you want to mirror user data to firestore?',
+    'ko': '경고!!! Firestore에 사용자 데이터를 복사하시겠습니까?',
   };
 }

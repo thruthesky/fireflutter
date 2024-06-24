@@ -31,6 +31,9 @@ class UserService {
     }
   }
 
+  /// [myDataChanges] is a stream of [User] object.
+  ///
+  /// It is fired NOT only when the data is updated but also when the user logs in or logs out.
   BehaviorSubject<User?> myDataChanges = BehaviorSubject<User?>.seeded(null);
 
   /// Alias of [myDataChanges]

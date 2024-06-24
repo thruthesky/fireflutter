@@ -20,8 +20,8 @@ class CategorySubscriptionIcon extends StatelessWidget {
       icon: Value(
         ref: ForumService.categoryPushNotificationPath(category),
         builder: (v) => v == true
-            ? const Icon(Icons.notifications_rounded)
-            : const Icon(Icons.notifications_outlined),
+            ? const Icon(Icons.notifications_on_rounded)
+            : const Icon(Icons.notifications_off_outlined),
       ),
     );
   }

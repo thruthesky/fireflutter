@@ -8,6 +8,12 @@ service cloud.firestore {
       allow read: if true;
     }
 
+		// AI, chatbot used by momcafe.
+    match /chatbot/{documentId} {
+      allow read, write:if true;
+    }
+    
+    // User docuemnts mirrored from RTDB
     match /users/{uid} {
       allow read: if true;
     }

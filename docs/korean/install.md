@@ -1,6 +1,40 @@
 # 설치
 
-FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 설치한다고 되는 것이 아니다. 앱을 개발하고 운영하기 위해서 필요한 것들이 같이 설치되어야 하는데 예를 들면, 각종 Security Rules 가 반드시 설치되어야 한다.
+FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 dependency 추가 및 시작 코드 작성한다고 되는 것이 아니다. 앱이 올바로 동작하기 위해서는 각종 Security Rules, Cloud Functions 등이 같이 설치되어야 한다.
+
+본 문서에서는 이러한 설치에 대한 설명을 한다.
+
+
+## Firebase 프로젝트 준비
+
+
+새로운 프로젝트(또는 기존 프로젝트)에서 아래의 기능을 활성화 한다.
+
+```txt
+Authentication
+Firestore
+Functions
+Realtime Database
+Messaging
+Storage
+```
+
+
+### Firebase Security Rules 설치
+
+Security rules 에는 Firestore, Realtime Database, Storage 와 같이 세 가지가 있다. 각각의 Security rules 파일은 [assets 폴더](../assets/) 에서 찾을 수 있다. 각 Security files 을 복사(또는 수정)하여 Firebase 에 추가하도록 한다.
+
+
+### FireFlutter Functions 설치
+
+- FireFlutter 의 클라우드 함수를 배포해야하는데, 그 전에 설정을 해야 한다.
+- 설정 파일 `config.ts` 를 열고 region, firestoreRegion, databaseRegion 이렇게 세 가지를 수정 해야 한다.
+  - `region` 은 2nd cloud functions 의 위치를 지정하는 것으로, realtime database 의 위치와 동일한 위치를 지정하면 된다.
+  - `firestoreRegion` 에는 Firestore 의 위치를 지정하면 된다.
+  - `databaseRegion` 에는 Realtime Database 의 위치를 지정하면 된다.
+- 그리고 아래와 같이 deploy 하면 된다.
+  - `cd functions`
+  - `npm run deploy`
 
 
 
@@ -8,9 +42,514 @@ FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 설치한다고 
 
 패키지 설치는 단순히, pub.dev 의 최신 버전을 설치하면 된다.
 
-그러나 개발자 모드로 설치하기 위해서는 아래의 개발자 모드를 참고한다.
+먼저 플러터 앱을 생성한다.
+
+```sh
+flutter create --org com.xxx app
+```
+
+그리고 아래와 같이 Firebase 관련 패키지를 설치한다. FlutterFire 의 BoM 2.1.0 버전을 설치하면 된다. 참고로 flutterfire 는 플러터에서 firebase 관련 설정을 도와주는 것이다. FireFlutter 와 혼동되지 않도록 한다.
+
+```sh
+flutterfire install 2.1.0
+```
+
+위 명령을 실행 후, `Core,Authentication,Firestore,Functions,Realtime Database,Messaging, Storage` 를 선택하면 된다.
+
+만약 수동으로 설치하고자 한다면, 아래의 버전을 설치하면 된다.
+
+```txt
+Core: 3.1.0
+Authentication: 5.1.0
+Firestore: 5.0.1
+Functions: 5.0.1
+Realtime Database: 11.0.1
+Messaging: 15.0.1
+Storage: 12.0.1
+```
+
+그리고 아래와 같이 프로젝트에 Firebase 를 연결한다.
+
+```sh
+flutterfire config -a com.xxx.app -i com.xxx.app -p withcenter-test-3
+```
+
+그리고 플러터 main.dart 소스 코드에서 아래와 같이 Firebase 를 연결한다.
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
+}
+```
+
+그리고, Podfile 에서 아래와 같이 platform :ios 버전을 13 이상으로 해 준다.
+
+```pod
+platform :ios, '13.0'
+```
+
+그리고 아래와 같이 firestore pre-compliled sdk 를 Podfile 에 추가해 준다.
+
+```pod
+target 'Runner' do
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '10.27.0'
+end
+```
+
+그리고 FireFlutter 를 설치한다.
+
+```
+% flutter pub add fireflutter
+```
+
+그리고 [빠르게 시작하기(퀵 스타트)](./quick_start.md#빠르게-시작하기) 항목에 나오는 로그인 코드를 복사 & 붙여 넣기 하여, 회원 로그인과 로그아웃 코드를 작성하여 잘 실행되는지 테스트 한다.
+
+다음은 FireFlutter 작업을 할 때, 권장하는 기본 코드이다. 참고로 아래의 코드가 동작하기 위해서는 Firebase 가 올바로 설정되어져 있어야 하며, Push notification 을 위한 설정이 올바로 되어져 있어야 한다. 예를 들면, ios 에서 push notification 이 동작하기 위해서는 Firebase 에 apn auth key 를 등록하고, xcode 에서 push notification, background mode(background fetch, remote notification), info(url type 에 encoded app id 와 bundle id ) 등을 설정 해 주어야 한다.
+
+
+우선 pubspec.yaml 의 파일 내용은 아래와 같다.
+
+```yaml
+name: buyandsell
+description: "A new Flutter project."
+
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  cloud_firestore: 5.0.1
+  cloud_functions: 5.0.1
+  connectivity_plus: ^6.0.3
+  cupertino_icons: ^1.0.6
+  dio: ^5.4.3+1
+  easystate: ^1.0.3
+  firebase_auth: 5.1.0
+  firebase_core: 3.1.0
+  firebase_database: 11.0.1
+  firebase_messaging: 15.0.1
+  firebase_storage: 12.0.1
+  fireflutter:
+    path: ../..
+  flutter:
+    sdk: flutter
+  flutter_local_notifications: ^17.1.2
+  go_router: ^14.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+```
+
+main.dart 의 내용은 아래와 같이 한다.
+- Info.plist 파일에 아래와 같이, 기본적인 것들을 추가해 주어야 한다. 언어 코드, entitlement, application scheme 등 일반적으로 필요한 기능들이며, fireflutter 에서도 필요로하는 것들이다.
+```xml
+<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ko</string>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>...</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>...</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>...</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+		<string>https</string>
+	</array>
+```
+- 참고로 아래의 설정에서 dynamic link 설정은 빠져있다. Dynamic link 에 대한 자세한 내용은 [Dynamic Link](./dynamic_link.md) 항목을 참고한다.
+
+```dart
+import 'dart:async';
+
+import 'package:buyandsell/firebase_options.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:easystate/easystate.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
+
+final GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey();
+BuildContext get globalContext => globalNavigatorKey.currentContext!;
+
+/// GoRouter
+final router = GoRouter(
+  navigatorKey: globalNavigatorKey,
+  routes: [
+    GoRoute(
+      path: HomeScreen.routeName,
+      pageBuilder: (context, state) => NoTransitionPage<void>(
+        key: state.pageKey,
+        child: const HomeScreen(),
+      ),
+    ),
+  ],
+);
+
+void main() async {
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    runApp(
+      EasyState(
+        state: AppState(),
+        child: const MyApp(),
+      ),
+    );
+
+    FlutterError.onError = (FlutterErrorDetails details) {
+      FlutterError.dumpErrorToConsole(details);
+    };
+  }, runZonedGuardedHandler);
+}
+
+class AppState extends ChangeNotifier {
+  int counter = 0;
+
+  void increment() {
+    counter++;
+    notifyListeners();
+  }
+}
+
+runZonedGuardedHandler(e, stackTrace) {
+  dog("---> runZonedGuardedHandler(); runtimeType: ${e.runtimeType}");
+  if (e is FirebaseAuthException) {
+    toast(
+        context: globalContext,
+        message: '로그인 관련 에러 :  ${e.code} - ${e.message}');
+  } else if (e is FirebaseException) {
+    dog("FirebaseException :  $e }");
+    if (e.code.contains('permission-denied')) {
+      error(context: globalContext, message: '권한이 없습니다.');
+    }
+  } else if (e is FireFlutterException) {
+    dog("FireFlutterException: (${e.code}) - ${e.message}");
+    error(context: globalContext, message: e.message);
+  } else {
+    dog("Unknown Error :  $e");
+    if (e.toString().contains('@phone_sign_in/malformed-phone-number')) {
+      error(context: globalContext, message: '전화번호가 올바르지 않습니다.');
+    } else {
+      error(context: globalContext, message: '알 수 없는 에러가 발생했습니다. - $e');
+    }
+  }
+  debugPrintStack(stackTrace: stackTrace);
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    FireFlutterService.instance.init(
+      cloudFunctionRegion: 'asia-southeast1',
+      globalContext: () => globalContext,
+    );
+    AdminService.instance.init();
+    UserService.instance.init();
+    ChatService.instance.init();
+    ForumService.instance.init();
+    initFirstInternetConnection();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final languageCode = getLanguageCode(context);
+    TextService.instance.init(languageCode: languageCode);
+    initIntlDefaultLocale(context);
+  }
+
+  @override
+  void dispose() {
+    connectivitySubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: router,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        AppLocalizationsDelegate(), // 여기에 위의 클래스를 집어 넣는다.
+      ],
+      locale: null,
+      supportedLocales: AppLocalizations.locales,
+    );
+  }
+
+  /// Run code on the first internet connection
+  ///
+  /// It initializes the messaging service when the first internet connection is established
+  /// to avoid `firebase_messaging/unknown] Internet connection is not available` error.
+  StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
+  initFirstInternetConnection() {
+    connectivitySubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> connectivityResult) {
+      dog('connectivityResult: $connectivityResult');
+
+      /// Is the internet connection available?
+      if (connectivityResult.contains(ConnectivityResult.none) == false) {
+        /// Then, run this code only one time on the first internet connection.
+        connectivitySubscription?.cancel();
+        dog('initConnectivity: Internet connection is available. Continue to init MessagingService.');
+        initMessaging();
+      }
+    });
+  }
+
+  initMessaging() async {
+    dog("initMessaging: begins");
+    MessagingService.instance.init(
+      onBackgroundMessage: null,
+      onForegroundMessage: (RemoteMessage message) {},
+      onMessageOpenedFromTerminated: onMessageOpened,
+      onMessageOpenedFromBackground: onMessageOpened,
+      onNotificationPermissionDenied: () {
+        dog("onNotificationPermissionDenied()");
+      },
+      onNotificationPermissionNotDetermined: () {
+        dog("onNotificationPermissionNotDetermined()");
+      },
+      // If Push notification does not work, check the sendURL in the functions
+      sendUrl: "https://sendpushnotifications-2fgryf46pa-du.a.run.app",
+    );
+
+    /// Android Head-up Notification 설정
+    if (isAndroid) {
+      /// 채널 설정
+      const AndroidNotificationChannel channel = AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        description: 'This channel is used for important notifications.', //
+        importance: Importance.max, // max 로 해야 Head-up display 가 잘 된다.
+        showBadge: true,
+        enableVibration: true,
+        playSound: true,
+      );
+
+      /// 채널 등록
+      /// 만약, 채널이 이미 등록되어 있다면, 아래 코드로 업데이트 된다.
+      final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+          FlutterLocalNotificationsPlugin();
+
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+    }
+  }
+
+  onMessageOpened(RemoteMessage remoteMessage) {
+    dog("onMessageOpened: ${remoteMessage.data}");
+    SchedulerBinding.instance.addPostFrameCallback((duration) async {
+      final messageData = remoteMessage.data;
+      dog("---- message ${messageData.toString()}");
+      final message = MessagingService.instance.parseData(messageData);
+      dog(message.toString());
+
+      if (message is CommentMessaging) {
+        dog("CommentMessaging: ${message.toString()}");
+        final post =
+            await Post.get(category: message.category, id: message.postId);
+        if (post == null) return;
+        if (!globalContext.mounted) return;
+        await ForumService.instance.showPostViewScreen(
+          context: globalContext,
+          post: post,
+        );
+      } else if (message is PostMessaging) {
+        // If it gives postId, it means it's a comment,
+        // so show the post view screen using postId. The id
+        // becomes the comment id.
+        dog("PostMessaging: ${message.toString()}");
+        final post = await Post.get(
+          category: message.category,
+          id: message.id,
+        );
+        if (post == null) return;
+        if (!globalContext.mounted) return;
+        await ForumService.instance.showPostViewScreen(
+          context: globalContext,
+          post: post,
+        );
+      } else if (message is ChatMessaging) {
+        if (message.senderUid == myUid) return;
+        if (!globalContext.mounted) return;
+        return await ChatService.instance.showChatRoomScreen(
+          context: globalContext,
+          roomId: message.roomId,
+        );
+      } else if (message is UserMessaging) {
+        if (!globalContext.mounted) return;
+        return await UserService.instance.showPublicProfileScreen(
+          context: globalContext,
+          uid: message.senderUid,
+        );
+      } else if (message is UserProfileMessaging) {
+        if (!globalContext.mounted) return;
+        return await UserService.instance.showPublicProfileScreen(
+          context: globalContext,
+          uid: message.uid,
+        );
+      } else {
+        dog("Unknown message type: $message");
+      }
+    });
+  }
+}
+
+
+class AppLocalizations {
+  AppLocalizations(this.locale);
+
+  final Locale locale;
+  String get lang => locale.languageCode;
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  }
+
+  static const List<Locale> locales = [
+    Locale('en', 'US'),
+    Locale('ko', 'KR'),
+  ];
+}
+
+class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+  const AppLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => AppLocalizations.locales.contains(locale);
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(AppLocalizations(locale));
+  }
+
+  @override
+  bool shouldReload(AppLocalizationsDelegate old) => false;
+}
+
+extension AppLocalizationsExtension on BuildContext {
+  /// 이것을 사용한다! 영어 또는 한글을 리턴한다.
+  String ke(String ko, String en) =>
+      AppLocalizations.of(this).lang == 'ko' ? ko : en;
+}
+
+
+class HomeScreen extends StatefulWidget {
+  static const String routeName = '/';
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          {
+            "en": "Home",
+            "ko": "홈",
+          }.tr,
+        ),
+      ),
+      body: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            height: 80,
+            child: UserListView(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (user, index) => Padding(
+                padding: EdgeInsets.fromLTRB(index == 0 ? 16 : 4, 4, 4, 0),
+                child: SizedBox(
+                  width: 48,
+                  child: Column(
+                    children: [
+                      UserAvatar(
+                        uid: user.uid,
+                        cacheId: 'user',
+                      ),
+                      UserDisplayName(
+                        uid: user.uid,
+                        initialData: user.displayName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Login(
+            yes: (uid) => Column(
+              children: [
+                Text('UID: $uid'),
+                ElevatedButton(
+                  onPressed: () => UserService.instance.signOut(),
+                  child: const Text('로그아웃'),
+                ),
+              ],
+            ),
+            no: () => const SimpleEmailPasswordLoginForm(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+위 소스 코드가 잘 실행(컴파일)되면, 이 후 앱 개발에 필요한 코드를 추가해 나가면 된다. 참고로 위 코드에는 EasyState 상태 관리자를 사용하는데, 사실, 상태 관리자가 하는 역할은 아무것도 없다. 또한 원하는 상태 관리자를 적용해도 된다.
+
+
+
+
 
 ## FireFlutter 패키지를 개발자 모드로 설치하기
+
+fireflutter 패키지를 pub.dev 에서 설치하는 것이 아니라, git clone 하여 소스 코드를 다운 받아 설치하면 보다 더 활용을 잘 할 수 있다.
 
 개발자 모드로 설치하면, FireFlutter 패키지를 좀 더 쉽게 기능 수정(또는 추가)하고 또 PR 할 수 있다.
 
