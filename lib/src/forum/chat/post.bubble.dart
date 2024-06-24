@@ -153,17 +153,12 @@ class _PostBubbleState extends State<PostBubble> {
 
   _readMore() {
     return Text(
-      '   ${isMine ? '수정 삭제' : ''} ${T.readMore.tr}...   ',
+      '   ${isMine ? '${T.edit.tr} ${T.delete.tr}' : ''} ${T.readMore.tr}...   ',
       style: Theme.of(context)
           .textTheme
           .labelSmall!
           .copyWith(color: Colors.grey.shade600),
     );
-
-    // if (content.length < 80) {
-    //   return '';
-    // }
-    // return '${isMine ? '수정 삭제' : ''} ${T.readMore.tr}   ';
   }
 
   List<Widget> sitePreview() {
