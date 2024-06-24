@@ -48,6 +48,26 @@ class T {
     'lo': 'ບັນທຶກ'
   };
 
+  static Json pleaseFillInTheDetails = {
+    'en': 'Reminder: Please fill in the details',
+    'ko': '알림: 내용을 입력하세요', // original
+  };
+
+  static Json contentIsTooShort = {
+    'en': 'The content is too short. Must be at least 30 characters.',
+    'ko': '내용이 너무 짧습니다. 30자 이상이어야 합니다.',
+  };
+
+  static Json galleryAccessDeniedTitle = {
+    'en': 'Gallery Access Denied',
+    'ko': '갤러리 접근이 거부되었습니다',
+  };
+
+  static Json galleryAccessDeniedContent = {
+    'en': 'Please allow the app to access your photo gallery.',
+    'ko': '앱이 사진 갤러리에 액세스할 수 있도록 허용해 주세요.',
+  };
+
   static Json stateMessage = {
     'en': 'State Message',
     'ko': '상태 메시지',

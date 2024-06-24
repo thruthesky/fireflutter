@@ -66,7 +66,7 @@ class _PostBubbleState extends State<PostBubble> {
   @override
   Widget build(BuildContext context) {
     // To hide the [PostBubble] when the post is deleted
-    if (widget.post.deleted) {
+    if (widget.post.deleted || widget.post.content.isEmpty) {
       return const SizedBox.shrink();
     }
     return GestureDetector(

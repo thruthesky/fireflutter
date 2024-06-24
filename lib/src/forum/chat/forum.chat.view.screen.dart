@@ -23,14 +23,19 @@ class _ForumChatViewScreenState extends State<ForumChatViewScreen> {
       body: PostListView(
         reverse: true,
         category: widget.category,
-        itemBuilder: (post, index) => PostBubble(key: Key(post.id), post: post),
+        itemBuilder: (post, index) => PostBubble(
+          key: ValueKey(post.id),
+          post: post,
+        ),
       ),
-      bottomNavigationBar: Padding(
-        /// This is to display the Textfield above the keyboard
-        /// viewInsets is a space that consumed by the keyboard
-        /// and used as a padding of bottomNavigationBar
-        padding: MediaQuery.of(context).viewInsets,
-        child: ForumChatInput(category: widget.category),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          /// This is to display the Textfield above the keyboard
+          /// viewInsets is a space that consumed by the keyboard
+          /// and used as a padding of bottomNavigationBar
+          padding: MediaQuery.of(context).viewInsets,
+          child: ForumChatInput(category: widget.category),
+        ),
       ),
     );
   }

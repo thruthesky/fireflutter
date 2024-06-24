@@ -244,6 +244,16 @@
       "args": ["--dart-define", "MODE=test"]
     },
     {
+      "name": "Momcafe - iPhone 14",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "7C265B80-3FE7-4999-AD50-FC0479117F63",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
       "name": "Momcafe - iPhone SE",
       "request": "launch",
       "type": "dart",

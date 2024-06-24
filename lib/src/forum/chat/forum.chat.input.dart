@@ -1,5 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ForumChatInput extends StatefulWidget {
   const ForumChatInput({
@@ -15,7 +16,7 @@ class ForumChatInput extends StatefulWidget {
 
 class _ForumChatInputState extends State<ForumChatInput> {
   final contentController = TextEditingController();
-
+  bool isValid = false;
   double? progress;
   bool get inputIsEmpty => contentController.text.isEmpty;
   bool get inputIsNotEmpty => !inputIsEmpty;
@@ -40,7 +41,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
           ],
           if (urls.isNotEmpty) ...[
             const Divider(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 2),
             EditUploads(
               urls: urls,
               onDelete: (url) => setState(
@@ -50,14 +51,14 @@ class _ForumChatInputState extends State<ForumChatInput> {
             const SizedBox(height: 8),
           ],
           if (inputCollapsed && urls.isNotEmpty)
-            const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Text('알림: 내용을 입력하세요'),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(T.pleaseFillInTheDetails.tr),
             ),
           Focus(
             child: TextField(
               controller: contentController,
-              autofocus: false,
+              autofocus: inputCollapsed ? false : true,
               decoration: InputDecoration(
                 hintText: T.inputContentHere.tr,
                 prefixIcon: inputCollapsed
@@ -84,6 +85,16 @@ class _ForumChatInputState extends State<ForumChatInput> {
               () => this.hasFocus = hasFocus,
             ),
           ),
+          // if (isValid)
+          //   Padding(
+          //     padding: const EdgeInsets.only(left: 8),
+          //     child: Text(
+          //       T.contentIsTooShort.tr,
+          //       style: Theme.of(context).textTheme.labelSmall!.copyWith(
+          //             color: Colors.redAccent,
+          //           ),
+          //     ),
+          //   ),
           if (inputExpanded) ...[
             const SizedBox(height: 8),
             Row(
@@ -94,7 +105,9 @@ class _ForumChatInputState extends State<ForumChatInput> {
                 ),
                 const Spacer(),
                 IconButton(
-                  onPressed: onSubmitted,
+                  onPressed: contentController.text.isEmpty || progress != null
+                      ? null
+                      : onSubmitted,
                   icon: const Icon(Icons.send),
                 )
               ],
@@ -110,6 +123,14 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   onSubmitted([String? value]) async {
+    if (contentController.text.length <= 30) {
+      toast(context: context, message: T.contentIsTooShort.tr);
+      // setState(() {
+      //   isValid = true;
+      // });
+      return;
+    }
+
     final post = await Post.create(
       title: contentController.text.cut(64),
       content: contentController.text,
@@ -128,13 +149,29 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   Future<void> onUpload() async {
-    final url = await StorageService.instance.upload(
-      context: context,
-      progress: (p) => setState(() => progress = p),
-      complete: () => setState(() => progress = null),
-    );
-    if (url == null) return;
-    progress = null;
-    setState(() => urls.add(url));
+    try {
+      final url = await StorageService.instance.upload(
+        context: context,
+        progress: (p) => setState(() => progress = p),
+        complete: () => setState(() => progress = null),
+      );
+      if (url == null) return;
+      progress = null;
+      if (mounted) {
+        setState(() => urls.add(url));
+      } else {
+        StorageService.instance.delete(url);
+      }
+    } on PlatformException catch (error) {
+      if (error.code == 'photo_access_denied') {
+        toast(
+          context: context,
+          title: T.galleryAccessDeniedTitle.tr,
+          message: T.galleryAccessDeniedContent.tr,
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }
