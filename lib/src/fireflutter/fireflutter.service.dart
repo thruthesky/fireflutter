@@ -24,6 +24,8 @@ class FireFlutterService {
   /// if you don't use the resign function or any callable functions.
 
   String? cloudFunctionRegion;
+  Color? toastBackgroundColor;
+  Color? toastForegroundColor;
 
   /// Confirm Dialog this callback is used to customize all the confirm functions
   /// in fireflutter see `lib/fireflutter.functions.dart`
@@ -63,6 +65,8 @@ class FireFlutterService {
 
   init({
     String? cloudFunctionRegion,
+    Color? toastBackgroundColor,
+    Color? toastForegroundColor,
     BuildContext Function()? globalContext,
     Future<bool?> Function({
       required BuildContext context,
@@ -90,6 +94,8 @@ class FireFlutterService {
     })? inputDialog,
   }) {
     _globalContext = globalContext;
+    this.toastBackgroundColor = toastBackgroundColor;
+    this.toastForegroundColor = toastForegroundColor;
     this.cloudFunctionRegion = cloudFunctionRegion;
     this.confirmDialog = confirmDialog;
     this.errorDialog = errorDialog;
