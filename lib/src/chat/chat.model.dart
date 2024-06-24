@@ -252,6 +252,7 @@ class ChatModel {
       'uid': replyTo.uid,
       if (replyTo.text != null) 'text': replyTo.text,
       if (replyTo.url != null) 'url': replyTo.url,
+      if (replyTo.createdAt != null) 'createdAt': replyTo.createdAt,
     };
   }
 

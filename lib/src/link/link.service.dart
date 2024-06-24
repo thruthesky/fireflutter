@@ -1,5 +1,6 @@
 import 'package:app_links/app_links.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 /// [LinkService] is used to generate links for posts, profiles, chat rooms, and custom links.
@@ -48,54 +49,67 @@ class LinkService {
         SchedulerBinding.instance.addPostFrameCallback((_) async {
           final uriString = uri.toString();
           final context = FireFlutterService.instance.globalContext;
-
-          if (context?.mounted == true) {
-            if (uriString.contains('/link')) {
-              final params = Uri.parse(uriString).queryParameters;
-              if (params.isEmpty) return;
-
-              /// 구글 FirebaseAuth 로그인 시, deep_link_id 가 들어오는데, 그냥 리턴한다.
-              if (params['deep_link_id'] != null) {
-                dog('-- appLinks.allUriLinkScream.listen() param has deep_link_id. It is for Firebase Auth. Just return.');
-                return;
-              }
-              final pid = params['pid'];
-              final uid = params['uid'];
-              final cid = params['cid'];
-              final page = params['page'];
-
-              print('pid: $pid, uid: $uid, cid: $cid, page: $page');
-
-              if (pid != null) {
-                final post = await Post.getAllSummary(pid);
-                print('post; $post');
-                if (post != null) {
-                  ForumService.instance.showPostViewScreen(
-                    context: context!,
-                    post: post,
-                  );
-                } else {
-                  dog('The post of dynamic link pid is null');
-                }
-              } else if (uid != null) {
-                UserService.instance.showPublicProfileScreen(
-                  context: context!,
-                  uid: uid,
-                );
-              } else if (cid != null) {
-                ChatService.instance.showChatRoomScreen(
-                  context: context!,
-                  roomId: cid,
-                );
-              } else {
-                if (onLinkTap != null) {
-                  onLinkTap(params);
-                }
-              }
-            }
+          if (context != null) {
+            openScreen(context, uriString, onLinkTap: onLinkTap);
           }
         });
       });
+    }
+  }
+
+  /// Return true if the dyanmic link service is initialized and it's
+  /// a deep link.
+  bool isDeepLink(String url) => initialized && url.startsWith(urlPrefix);
+
+  Future<void> openScreen(
+    BuildContext context,
+    String url, {
+    Function(Map<String, String> parms)? onLinkTap,
+  }) async {
+    if (context.mounted == true) {
+      if (url.contains('/link')) {
+        final params = Uri.parse(url).queryParameters;
+        if (params.isEmpty) return;
+
+        /// 구글 FirebaseAuth 로그인 시, deep_link_id 가 들어오는데, 그냥 리턴한다.
+        if (params['deep_link_id'] != null) {
+          dog('-- appLinks.allUriLinkScream.listen() param has deep_link_id. It is for Firebase Auth. Just return.');
+          return;
+        }
+        final pid = params['pid'];
+        final uid = params['uid'];
+        final cid = params['cid'];
+        final page = params['page'];
+
+        print('pid: $pid, uid: $uid, cid: $cid, page: $page');
+
+        if (pid != null) {
+          final post = await Post.getAllSummary(pid);
+          print('post; $post');
+          if (post != null) {
+            ForumService.instance.showPostViewScreen(
+              context: context,
+              post: post,
+            );
+          } else {
+            dog('The post of dynamic link pid is null');
+          }
+        } else if (uid != null) {
+          UserService.instance.showPublicProfileScreen(
+            context: context,
+            uid: uid,
+          );
+        } else if (cid != null) {
+          ChatService.instance.showChatRoomScreen(
+            context: context,
+            roomId: cid,
+          );
+        } else {
+          if (onLinkTap != null) {
+            onLinkTap(params);
+          }
+        }
+      }
     }
   }
 

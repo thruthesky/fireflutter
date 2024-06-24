@@ -44,7 +44,6 @@ class _AdminMeetupListScreenState extends State<AdminMeetupListScreen> {
           children: [
             Expanded(
               child: MeetupListView(
-                
                 query: (selectedItem == 'recommend')
                     ? MeetupService.instance.recommendedQuery
                     : null,

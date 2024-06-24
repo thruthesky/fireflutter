@@ -64,7 +64,7 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                   );
                   if (re == false) return;
                   final result = await AdminService.instance
-                      .mirrorBackfillRtdbToFirestore();
+                      .mirrorUserBackfillRtdbToFirestore();
                   final response = result.data;
                   print(response.toString());
                 },

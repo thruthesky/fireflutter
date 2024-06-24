@@ -50,19 +50,25 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
   }
 
   List<PopupMenuItem<String>> get _menuItems => [
-        if (onReplyMessage != null && !message.deleted)
+        if (onReplyMessage != null &&
+            !message.deleted &&
+            my?.hasBlocked(message.uid!) == false)
           PopupMenuItem<String>(
             value: Code.reply,
             height: 40,
             child: Text(T.reply.tr),
           ),
-        if (!message.deleted && isLongText)
+        if (!message.deleted &&
+            isLongText &&
+            my?.hasBlocked(message.uid!) == false)
           PopupMenuItem(
             value: Code.readMore,
             height: 40,
             child: Text(T.readMore.tr),
           ),
-        if (!message.text.isNullOrEmpty && !message.deleted)
+        if (!message.text.isNullOrEmpty &&
+            !message.deleted &&
+            my?.hasBlocked(message.uid!) == false)
           PopupMenuItem(
             value: Code.copy,
             child: Text(T.copy.tr),

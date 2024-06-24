@@ -8,11 +8,20 @@ class PostEditScreen extends StatefulWidget {
     this.category,
     this.post,
     this.group,
+    this.displayTitle = true,
   });
 
   final String? category;
   final Post? post;
   final String? group;
+
+  /// [displayTitle] is to display the title input field on the screen. It is
+  /// set to true by default. If you want to hide the title input field, set it
+  /// to false. This is useful when you want to create a post without a title.
+  ///
+  /// This is used in [ForumChatViewScreen] to hide the title input field which
+  /// is not necessary for chat.
+  final bool? displayTitle;
 
   @override
   State<PostEditScreen> createState() => _PostEditScreenState();
@@ -86,23 +95,25 @@ class _PostEditScreenState extends State<PostEditScreen> {
 
               const SizedBox(height: 24),
 
-              _textTitle('Title'),
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: T.inputTitle.tr, // 'Title',
+              if (widget.displayTitle!) ...[
+                _textTitle(T.title.tr),
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: T.inputTitle.tr, // 'Title',
 
-                  hintStyle: _hintTextStyle(),
+                    hintStyle: _hintTextStyle(),
+                  ),
+                  onTapOutside: (event) => FocusManager.instance.primaryFocus
+                      ?.unfocus(), // to remove keyboard on tap outside
+                  // style: Theme.of(context).textTheme.titleMedium,
+                  minLines: 1,
+                  maxLines: 3,
                 ),
-                onTapOutside: (event) => FocusManager.instance.primaryFocus
-                    ?.unfocus(), // to remove keyboard on tap outside
-                // style: Theme.of(context).textTheme.titleMedium,
-                minLines: 1,
-                maxLines: 3,
-              ),
+              ],
               const SizedBox(height: 16),
-              _textTitle('Content'),
+              _textTitle(T.content.tr),
               TextField(
                 controller: contentController,
                 decoration: InputDecoration(

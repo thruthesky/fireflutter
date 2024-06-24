@@ -54,7 +54,10 @@ String getIntlCurrentLocale() {
 
 ///
 initIntlDefaultLocale(BuildContext context, {String? locale}) async {
-  locale ??= View.of(context).platformDispatcher.locale.toString();
+  locale ??= getDefaultLocale(context);
   print('initIntlDefaultLocale: $locale');
   Intl.defaultLocale = locale;
 }
+
+String getDefaultLocale(BuildContext context) =>
+    View.of(context).platformDispatcher.locale.toString();

@@ -280,6 +280,16 @@ class T {
     'ko': '장터',
   };
 
+  static Json job = {
+    'en': 'Job',
+    'ko': '직업',
+  };
+
+  static Json news = {
+    'en': 'News',
+    'ko': '뉴스',
+  };
+
   static Json category = {
     'en': 'Category',
     'ko': '카테고리',
@@ -325,6 +335,11 @@ class T {
     'ko': '초기화',
   };
 
+  static Json age = {
+    'en': 'Age',
+    'ko': '나이',
+  };
+
   static Json info = {
     'en': 'Info',
     'ko': '정보',
@@ -337,6 +352,16 @@ class T {
   static Json forum = {
     'en': 'Forum',
     'ko': '게시판',
+  };
+
+  static Json menu = {
+    'en': 'Menu',
+    'ko': '메뉴',
+  };
+
+  static Json friend = {
+    'en': 'Friend',
+    'ko': '친구',
   };
 
   static Json gallery = {
@@ -439,7 +464,7 @@ class T {
 
   static Json addPhoto = {
     'en': 'Add photo',
-    'ko': '글 쓰기',
+    'ko': '사진',
   };
 
   static Json meetupAdminSetting = {
@@ -1480,6 +1505,11 @@ class T {
     'lo': 'ເພດ',
   };
 
+  static const Json any = {
+    'en': 'Any',
+    'ko': '상관없음',
+  };
+
   // static const String genderInProfileUpdate = 'GENDER';
   static const Json genderInProfileUpdate = {
     'en': 'GENDER',
@@ -1505,6 +1535,11 @@ class T {
     'lo': 'ເພດຍິງ',
     'vi': 'Nữ giới',
     'th': 'หญิง',
+  };
+
+  static const Json noUserFound = {
+    'en': 'No user found',
+    'ko': '사용자를 찾을 수 없습니다.',
   };
 
   // static const String nationality = 'Nationality';

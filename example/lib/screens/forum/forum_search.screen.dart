@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:example/screens/forum/forum.screen.dart';
+import 'package:example/etc/categories.dart';
+import 'package:example/keys.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:typesense/typesense.dart';
@@ -37,10 +38,6 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
 
   Map<String, String> categories = {
     Code.all: T.all.tr,
-    Categories.qna: Categories.name(Categories.qna),
-    Categories.discussion: Categories.name(Categories.discussion),
-    Categories.buyandsell: Categories.name(Categories.buyandsell),
-    Categories.info: Categories.name(Categories.info)
   };
 
   Map<String, String> groups = {
@@ -62,15 +59,20 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
   };
 
   Client client = Client(Configuration(
-    "typesenseApiKey",
+    typesenseApiKey,
     nodes: {
-      Node(Protocol.https, "typesenseHost", port: 443),
+      Node(Protocol.https, typesenseHost, port: 443),
     },
   ));
 
   @override
   void initState() {
     super.initState();
+    // get categories with group: community only
+    Categories.menus
+        .where((m) => m.group == Categories.community)
+        .forEach((v) => categories[v.id] = v.name);
+
     onSearch();
   }
 
@@ -680,7 +682,7 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
     };
 
     final res = await client
-        .collection("typesenseForumCollection")
+        .collection(typesenseForumCollection)
         .documents
         .search(searchParameters);
     final hits = res['hits'];

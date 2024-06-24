@@ -11,6 +11,10 @@ class MeetupService {
       .where('hasPhoto', isEqualTo: true)
       .orderBy('recommendOrder', descending: true);
 
+  Query get myMeetupQuery => Meetup.col
+      .where('users', arrayContains: myUid)
+      .orderBy('createdAt', descending: true);
+
   MeetupService._();
 
   showViewScreen({

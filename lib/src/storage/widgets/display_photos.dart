@@ -40,7 +40,7 @@ class DisplayPhotos extends StatelessWidget {
                   imageUrl: url,
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  height: 200,
+                  height: 300,
                 ),
               ),
             ),

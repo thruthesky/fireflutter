@@ -42,6 +42,17 @@ class ForumService {
     this.onCommentDelete = onCommentDelete;
   }
 
+  showForumChatScreen(
+      {required BuildContext context,
+      required String category,
+      required String title}) async {
+    await showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) =>
+          ForumChatViewScreen(title: title, category: category),
+    );
+  }
+
   /// Show post create screen when the user taps on the post creation button
   ///
   ///
@@ -95,12 +106,14 @@ class ForumService {
     required BuildContext context,
     required Post post,
     String? group,
+    bool? displayTitle = true,
   }) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => PostEditScreen(
         post: post,
         group: group,
+        displayTitle: displayTitle,
       ),
     );
   }
