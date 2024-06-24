@@ -15,8 +15,12 @@ class PostEditScreen extends StatefulWidget {
   final Post? post;
   final String? group;
 
-  /// Title are not being displayed on [PostViewScreen] if the [Post]came from [ForumChatViewScreen]
-  /// Hides the title if the post came from [ForumChatViewScreen]
+  /// [displayTitle] is to display the title input field on the screen. It is
+  /// set to true by default. If you want to hide the title input field, set it
+  /// to false. This is useful when you want to create a post without a title.
+  ///
+  /// This is used in [ForumChatViewScreen] to hide the title input field which
+  /// is not necessary for chat.
   final bool? displayTitle;
 
   @override

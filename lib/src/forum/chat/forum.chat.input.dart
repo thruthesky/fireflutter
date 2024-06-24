@@ -17,10 +17,14 @@ class _ForumChatInputState extends State<ForumChatInput> {
   final contentController = TextEditingController();
 
   double? progress;
-  bool get isEmpty => contentController.text.isEmpty;
-  bool get isNotEmpty => !isEmpty;
+  bool get inputIsEmpty => contentController.text.isEmpty;
+  bool get inputIsNotEmpty => !inputIsEmpty;
 
   final List<String> urls = [];
+
+  bool hasFocus = false;
+  bool get inputExpanded => inputIsNotEmpty || hasFocus;
+  bool get inputCollapsed => inputIsEmpty && hasFocus == false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,33 +34,57 @@ class _ForumChatInputState extends State<ForumChatInput> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (progress != null) LinearProgressIndicator(value: progress),
-          const SizedBox(height: 8),
-          TextField(
-            controller: contentController,
-            autofocus: false,
-            decoration: InputDecoration(
-              hintText: T.inputContentHere.tr,
-              prefixIcon: isEmpty
-                  ? IconButton(
-                      onPressed: onUpload,
-                      icon: const Icon(Icons.camera_alt),
-                    )
-                  : null,
-              suffixIcon: isEmpty
-                  ? const IconButton(
-                      onPressed: null,
-                      icon: Icon(Icons.send),
-                    )
-                  : null,
+          if (progress != null && progress?.isNaN == false) ...[
+            LinearProgressIndicator(value: progress),
+            const SizedBox(height: 8),
+          ],
+          if (urls.isNotEmpty) ...[
+            const Divider(),
+            const SizedBox(height: 8),
+            EditUploads(
+              urls: urls,
+              onDelete: (url) => setState(
+                () => urls.remove(url),
+              ),
             ),
-            minLines: isEmpty ? 1 : 3,
-            maxLines: 4,
-            onChanged: onChanged,
-            onSubmitted: onSubmitted,
-            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+            const SizedBox(height: 8),
+          ],
+          if (inputCollapsed && urls.isNotEmpty)
+            const Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: Text('알림: 내용을 입력하세요'),
+            ),
+          Focus(
+            child: TextField(
+              controller: contentController,
+              autofocus: false,
+              decoration: InputDecoration(
+                hintText: T.inputContentHere.tr,
+                prefixIcon: inputCollapsed
+                    ? IconButton(
+                        onPressed: onUpload,
+                        icon: const Icon(Icons.camera_alt),
+                      )
+                    : null,
+                suffixIcon: inputCollapsed
+                    ? const IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.send),
+                      )
+                    : null,
+              ),
+              minLines: inputCollapsed ? 1 : 4,
+              maxLines: 6,
+              onChanged: onChanged,
+              onSubmitted: onSubmitted,
+              onTapOutside: (_) =>
+                  FocusManager.instance.primaryFocus?.unfocus(),
+            ),
+            onFocusChange: (hasFocus) => setState(
+              () => this.hasFocus = hasFocus,
+            ),
           ),
-          if (isNotEmpty) ...[
+          if (inputExpanded) ...[
             const SizedBox(height: 8),
             Row(
               children: [
@@ -72,11 +100,6 @@ class _ForumChatInputState extends State<ForumChatInput> {
               ],
             ),
           ],
-          const SizedBox(height: 8),
-          if (urls.isNotEmpty)
-            EditUploads(
-                urls: urls,
-                onDelete: (url) => setState(() => urls.remove(url))),
         ],
       ),
     );

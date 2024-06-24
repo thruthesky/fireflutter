@@ -1,4 +1,4 @@
-```json
+```js
 rules_version = '2';
 
 // Craft rules based on data in your Firestore database
@@ -10,6 +10,10 @@ service firebase.storage {
       allow read, write: if false;
     }
     match /users/{userId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth.uid == userId;
+    }
+    match /ids/{userId}/{allPaths=**} {
       allow read: if true;
       allow write: if request.auth.uid == userId;
     }

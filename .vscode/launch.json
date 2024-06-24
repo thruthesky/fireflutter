@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Buy & Sell - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/buyandsell",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "WHO=song"]
+    },
+    {
       "name": "PhiLov - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",

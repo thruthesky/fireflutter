@@ -62,7 +62,7 @@ class LinkifyText extends StatelessWidget {
   }
 
   Future<void> _onOpen(BuildContext context, String link) async {
-    if (LinkService.instance.isDeepLink(link)) {
+    if (canLaunchDynamicLink(link)) {
       LinkService.instance.openScreen(context, link);
     } else if (await canLaunchUrlString(link)) {
       await launchUrlString(link);
@@ -70,4 +70,7 @@ class LinkifyText extends StatelessWidget {
       throw 'Could not launch $link';
     }
   }
+
+  bool canLaunchDynamicLink(String link) =>
+      LinkService.instance.initialized && LinkService.instance.isDeepLink(link);
 }

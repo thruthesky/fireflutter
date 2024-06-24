@@ -464,7 +464,7 @@ class T {
 
   static Json addPhoto = {
     'en': 'Add photo',
-    'ko': '글 쓰기',
+    'ko': '사진',
   };
 
   static Json meetupAdminSetting = {
