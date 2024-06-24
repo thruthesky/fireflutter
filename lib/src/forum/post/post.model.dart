@@ -30,6 +30,8 @@ class Post {
   DatabaseReference get noOfLikesRef => ref.child(Field.noOfLikes);
   DatabaseReference get urlsRef => ref.child(Field.urls);
 
+  bool get isMine => uid == myUid;
+
   Post({
     required this.ref,
     required this.id,
