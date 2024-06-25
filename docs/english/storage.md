@@ -106,3 +106,15 @@ StorageService.instance.init(customize: StorageCustomize(
     },
 ));
 ```
+
+## Error Handling
+
+When a user uploads a file, he or she can upload a photo from the gallery or camera, but if permission is not granted and the user refuses, the media (photo, etc.) cannot be selected. An exception occurs internally in the app. By default, FireFlutter handles errors regarding this permission. If you want to handle errors yourself, you can do it as follows.
+
+```dart
+StorageService.instance.init(
+  enableFilePickerExceptionHandler: false,
+)
+```
+
+If you give a false value to `enableFilePickerExceptionHandler` as above, FireFlutter does not handle the exception and throws it as is. Developers must create a routine (`Global Error Handler`) to capture all errors and handle them appropriately.

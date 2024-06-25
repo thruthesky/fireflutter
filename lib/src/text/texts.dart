@@ -48,6 +48,41 @@ class T {
     'lo': 'ບັນທຶກ'
   };
 
+  static Json pleaseFillInTheDetails = {
+    'en': 'Reminder: Please fill in the details',
+    'ko': '알림: 내용을 입력하세요', // original
+  };
+
+  static Json contentIsTooShort = {
+    'en': 'The content is too short. Must be at least 30 characters.',
+    'ko': '내용이 너무 짧습니다. 30자 이상이어야 합니다.',
+  };
+
+  static Json cameraAccessDeniedTitle = {
+    'en': 'Camera Access Denied',
+    'ko': '카메라 액세스가 거부되었습니다',
+  };
+
+  static Json cameraAccessDeniedContent = {
+    'en': 'Please allow the app to access your camera.',
+    'ko': '앱이 카메라에 액세스할 수 있도록 허용해 주세요.',
+  };
+
+  static Json galleryAccessDeniedTitle = {
+    'en': 'Gallery Access Denied',
+    'ko': '갤러리 접근이 거부되었습니다',
+  };
+
+  static Json galleryAccessDeniedContent = {
+    'en': 'Please allow the app to access your photo gallery.',
+    'ko': '앱이 사진 갤러리에 액세스할 수 있도록 허용해 주세요.',
+  };
+
+  static Json doYouWanToCancel = {
+    'en': 'Do you want to cancel?',
+    'ko': '취소하시겠습니까?'
+  };
+
   static Json stateMessage = {
     'en': 'State Message',
     'ko': '상태 메시지',
@@ -1924,5 +1959,26 @@ class T {
     'en':
         'User information is not valid. The user has either deleted or there is no information',
     'ko': '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.',
+  };
+
+  static const Json confirmSendTestMessageToAllUsers = {
+    'en': 'Send Test Message to all users',
+    'ko': '모든 사용자에게 테스트 메시지 보내기',
+  };
+
+  static const Json confirmSendTestMessageToAllUsersMessage = {
+    'en':
+        'Warning!!! Are you sure you want to send a test message to all users?',
+    'ko': '경고!!! 모든 사용자에게 테스트 메시지를 보내시겠습니까?',
+  };
+
+  static const Json confirmMirrorUserDataToFirestore = {
+    'en': 'Mirror User data to firestore',
+    'ko': 'Firestore에 사용자 데이터를 복사합니다.',
+  };
+
+  static const Json confirmMirrorUserDataToFirestoreMessage = {
+    'en': 'Warning!!! Are you sure you want to mirror user data to firestore?',
+    'ko': '경고!!! Firestore에 사용자 데이터를 복사하시겠습니까?',
   };
 }

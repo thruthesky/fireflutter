@@ -15,16 +15,23 @@ class ForumChatInput extends StatefulWidget {
 
 class _ForumChatInputState extends State<ForumChatInput> {
   final contentController = TextEditingController();
-
+  final FocusNode focusNode = FocusNode();
+  bool isValid = false;
   double? progress;
   bool get inputIsEmpty => contentController.text.isEmpty;
   bool get inputIsNotEmpty => !inputIsEmpty;
 
-  final List<String> urls = [];
+  List<String> urls = [];
 
   bool hasFocus = false;
   bool get inputExpanded => inputIsNotEmpty || hasFocus;
   bool get inputCollapsed => inputIsEmpty && hasFocus == false;
+
+  @override
+  void dispose() {
+    contentController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +47,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
           ],
           if (urls.isNotEmpty) ...[
             const Divider(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 2),
             EditUploads(
               urls: urls,
               onDelete: (url) => setState(
@@ -50,14 +57,15 @@ class _ForumChatInputState extends State<ForumChatInput> {
             const SizedBox(height: 8),
           ],
           if (inputCollapsed && urls.isNotEmpty)
-            const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Text('알림: 내용을 입력하세요'),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(T.pleaseFillInTheDetails.tr),
             ),
           Focus(
             child: TextField(
+              focusNode: focusNode,
               controller: contentController,
-              autofocus: false,
+              autofocus: inputCollapsed ? false : true,
               decoration: InputDecoration(
                 hintText: T.inputContentHere.tr,
                 prefixIcon: inputCollapsed
@@ -77,8 +85,6 @@ class _ForumChatInputState extends State<ForumChatInput> {
               maxLines: 6,
               onChanged: onChanged,
               onSubmitted: onSubmitted,
-              onTapOutside: (_) =>
-                  FocusManager.instance.primaryFocus?.unfocus(),
             ),
             onFocusChange: (hasFocus) => setState(
               () => this.hasFocus = hasFocus,
@@ -94,7 +100,26 @@ class _ForumChatInputState extends State<ForumChatInput> {
                 ),
                 const Spacer(),
                 IconButton(
-                  onPressed: onSubmitted,
+                  onPressed: () async {
+                    final re = await confirm(
+                        context: context,
+                        title: T.cancel.tr,
+                        message: T.doYouWanToCancel.tr);
+                    if (re == false) return;
+                    urls.map((url) => StorageService.instance.delete(url));
+                    setState(() {
+                      contentController.clear();
+                      urls = [];
+                      hasFocus = false;
+                      focusNode.unfocus();
+                    });
+                  },
+                  icon: const Icon(Icons.delete),
+                ),
+                IconButton(
+                  onPressed: contentController.text.isEmpty || progress != null
+                      ? null
+                      : onSubmitted,
                   icon: const Icon(Icons.send),
                 )
               ],
@@ -110,6 +135,14 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   onSubmitted([String? value]) async {
+    if (contentController.text.length <= 30) {
+      toast(context: context, message: T.contentIsTooShort.tr);
+      // setState(() {
+      //   isValid = true;
+      // });
+      return;
+    }
+
     final post = await Post.create(
       title: contentController.text.cut(64),
       content: contentController.text,
@@ -135,6 +168,10 @@ class _ForumChatInputState extends State<ForumChatInput> {
     );
     if (url == null) return;
     progress = null;
-    setState(() => urls.add(url));
+    if (mounted) {
+      setState(() => urls.add(url));
+    } else {
+      StorageService.instance.delete(url);
+    }
   }
 }

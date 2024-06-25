@@ -12,7 +12,10 @@
       "flutterMode": "debug",
       "cwd": "apps/buyandsell",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "WHO=song"]
+      "args": [
+        "--dart-define",
+        "WHO=song"
+      ]
     },
     {
       "name": "PhiLov - iPhone 15 Pro Max",
@@ -261,6 +264,16 @@
       ]
     },
     {
+      "name": "Momcafe - iPhone 14 Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
       "name": "Momcafe - iPhone SE",
       "request": "launch",
       "type": "dart",
@@ -305,7 +318,7 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Momcafe - SM A045F (Galaxy A04)",
+      "name": "Momcafe - SM A045F (Galaxy A04) R9ATA00LMJM",
       "request": "launch",
       "type": "dart",
       "deviceId": "R9ATA00LMJM",
@@ -334,6 +347,16 @@
         "--dart-define",
         "locale=en"
       ]
+    },
+    
+    {
+      "name": "Momcafe - Emulator release",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "release",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
     },
     {
       "name": "Momcafe - Chrome",
@@ -570,12 +593,11 @@
       "name": "Momcafe (Chris) TEST - iPhone 15 Pro (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "4EE2C314-5DBF-4992-8246-5B5EC0A38741",
+      "deviceId": "iPhone 15 Pro",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
       "args": [
-        "-v",
         "--dart-define",
         "MODE=test"
       ]
