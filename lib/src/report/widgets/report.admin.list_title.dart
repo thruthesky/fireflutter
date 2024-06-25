@@ -148,8 +148,11 @@ class ReportAdminListTile extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    UserService.instance
-                        .showPublicProfileScreen(context: context, uid: uid);
+                    UserService.instance.showPublicProfileScreen(
+                      context: context,
+                      uid: uid,
+                      user: user,
+                    );
                   },
                   child: const Text('View Profile'),
                 ),

@@ -508,3 +508,19 @@ Blocked(
 ```
 
 Refer to the [widget documentation](widgets.md) for displaying the block button.
+
+## Updating App Specific Value
+
+In each app, there might be other fields that is required for a User. Use `customData` upon updating the user.
+
+```dart
+final user = User.fromSnapshot(snapshot);
+
+user.update(
+  name: "My Name";
+  customData: {
+    "favoriteDog": "Shih Tzu",
+    "favoriteCat": "Tabby",
+  }
+)
+```
