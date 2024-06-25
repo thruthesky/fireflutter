@@ -103,7 +103,17 @@ class _PostBubbleState extends State<PostBubble> {
                   ...content(),
                   if (widget.post.urls.isNotEmpty) ImageDisplay(urls: urls),
                   ...sitePreview(),
-                  if (widget.post.isMine) Text('${T.edit.tr}/${T.delete.tr}'),
+                  if (widget.post.isMine) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (isLongText) _readMore(),
+                        const Spacer(),
+                        Text('${T.edit.tr}/${T.delete.tr}'),
+                      ],
+                    ),
+                  ],
+                  if (!isMine && isLongText) _readMore(),
                 ],
               ),
             ),
@@ -118,11 +128,7 @@ class _PostBubbleState extends State<PostBubble> {
       mainAxisAlignment:
           isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        if (isMine) ...[
-          if (post.content.hasUrl && isLongText) _readMore(),
-          const Spacer(),
-          _dateTime(post, context),
-        ],
+        if (isMine) _dateTime(post, context),
         UserDisplayName(
           uid: post.uid,
           style: Theme.of(context).textTheme.labelSmall!.copyWith(
@@ -130,11 +136,7 @@ class _PostBubbleState extends State<PostBubble> {
                 fontWeight: FontWeight.w600,
               ),
         ),
-        if (!isMine) ...[
-          _dateTime(post, context),
-          const Spacer(),
-          if (post.content.hasUrl && isLongText) _readMore(),
-        ],
+        if (!isMine) _dateTime(post, context),
       ],
     );
   }
@@ -152,12 +154,13 @@ class _PostBubbleState extends State<PostBubble> {
   }
 
   _readMore() {
-    return Text(
-      '   ${isMine ? '${T.edit.tr} ${T.delete.tr}' : ''} ${T.readMore.tr}...   ',
-      style: Theme.of(context)
-          .textTheme
-          .labelSmall!
-          .copyWith(color: Colors.grey.shade600),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: isMine ? 80 : 0,
+      ),
+      child: Text(
+        '   ${T.readMore.tr}...   ',
+      ),
     );
   }
 
