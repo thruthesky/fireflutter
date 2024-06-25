@@ -157,6 +157,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
     try {
       await chat.room.join();
     } on FireFlutterException catch (e) {
+      setState(() => cannotJoin = true);
       if (e.code == Code.chatRoomNotVerified) {
         if (mounted) {
           await error(
@@ -167,6 +168,17 @@ class _ChatRoomState extends State<ChatRoomBody> {
             Navigator.of(context).pop();
           }
         }
+      } else if (e.code == Code.chatRoomNotVerified) {
+        if (mounted) {
+          await error(
+            context: context,
+            message: e.message,
+          );
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        }
+      } else {
         rethrow;
       }
     } catch (e) {
@@ -179,8 +191,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
   joinWithPassword() async {
     final password = await input(
       context: context,
-      title: '비밀번호를 입력해 주세요.',
-      hintText: '비밀번호',
+      title: T.enterPassword.tr,
+      hintText: T.password.tr,
     );
     if (password == null || password == '') {
       Navigator.of(context).pop();

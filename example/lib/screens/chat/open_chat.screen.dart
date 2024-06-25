@@ -15,20 +15,8 @@ class _OpenChatScreenState extends State<OpenChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Open Chat'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => ChatService.instance
-                .showChatRoomCreate(
-                  context: context,
-                )
-                .then(
-                  (room) => ChatService.instance.showChatRoomScreen(
-                    context: context,
-                    room: room,
-                  ),
-                ),
-          ),
+        actions: const [
+          ChatRoomCreateButton(),
         ],
       ),
       body: ChatRoomListView(

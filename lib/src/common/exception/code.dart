@@ -9,6 +9,8 @@ class Code {
   static const String notLoggedIn = 'notLoggedIn';
   static const String chatRoomNotVerified = 'chatRoomNotVerified';
   static const String chatRoomNotExists = 'chatRoomNotExists';
+  static const String chatRoomUserGenderNotAllowed =
+      'chatRoomUserGenderNotAllowed';
   static const String recentLoginRequiredForResign =
       'recentLoginRequiredForResign';
 
