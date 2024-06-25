@@ -180,7 +180,9 @@ class ChatService {
   }) async {
     return await showGeneralDialog<ChatRoom?>(
       context: context,
-      pageBuilder: (_, __, ___) => DefaultChatRoomInviteScreen(room: room),
+            pageBuilder: (_, __, ___) =>
+          customize.chatRoomInviteScreen?.call(room: room) ??
+          DefaultChatRoomInviteScreen(room: room),
     );
   }
 

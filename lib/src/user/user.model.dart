@@ -31,7 +31,7 @@ class User {
   ///
   static DatabaseReference userRef(String uid) => usersRef.child(uid);
   static DatabaseReference userProfilePhotosRef =
-      rootRef.child('profile-photos');
+      rootRef.child(userProfilePhotos);
   static DatabaseReference whoILikeRef = rootRef.child(whoILike);
   static DatabaseReference whoLikeMeRef = rootRef.child(whoLikeMe);
   static DatabaseReference mutualLikeRef = rootRef.child(mutualLike);

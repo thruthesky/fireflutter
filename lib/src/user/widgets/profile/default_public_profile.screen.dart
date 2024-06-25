@@ -59,13 +59,13 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                   icon: const Icon(Icons.settings, color: Colors.white),
                   itemBuilder: (context) {
                     return [
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'edit',
-                        child: Text('프로필 수정'),
+                        child: Text(T.profileUpdate.tr),
                       ),
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'backgroundImage',
-                        child: Text('백그라운드 사진 수정'),
+                        child: Text(T.backgroundUpdate.tr),
                       ),
                     ];
                   },

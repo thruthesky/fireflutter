@@ -20,7 +20,9 @@ class _DefaultProfileScreenState extends State<DefaultProfileUpdateScreen> {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: UserService.instance.customize.profileUpdateForm ??
-              const DefaultProfileUpdateForm(),
+              const DefaultProfileUpdateForm(
+                gender: (display: true, require: true),
+              ),
         ),
       ),
     );

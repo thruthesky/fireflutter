@@ -447,6 +447,13 @@ class T {
     'lo': 'ອັບເດດຂໍ້ມູນຜູ້ໃຊ້',
   };
 
+
+  static Json backgroundUpdate = {
+    'en': 'Background update',
+    'ko': '배경 수정',
+  };
+
+
   static Json contact = {
     'en': 'Contact',
     'ko': '문의하기',
@@ -1222,6 +1229,26 @@ class T {
   static Json chatRoomIsForVerifiedUsersOnly = {
     'en': 'Chat room is for verified users only.',
     'ko': '인증 회원 전용 채팅방입니다.',
+  };
+
+  static Json chatRoomMaleOnlyChatRoom = {
+    'en': 'Only male can enter this chat room',
+    'ko': '남성만 채팅방에 입장할 수 있습니다.',
+  };
+
+  static Json chatRoomFemaleOnlyChatRoom = {
+    'en': 'Only female can enter this chat room',
+    'ko': '여성만 채팅방에 입장할 수 있습니다.',
+  };
+
+  static Json chatRoomYourGenderIsNotAllowed = {
+    'en': 'Your gender is not allowed.',
+    'ko': '성별이 일치하지 않습니다.',
+  };
+
+  static Json enterPassword = {
+    'en': 'Please enter a password.',
+    'ko': '비밀번호를 입력해 주세요.',
   };
 
   // Chat-Setting

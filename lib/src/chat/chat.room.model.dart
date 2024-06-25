@@ -532,6 +532,27 @@ class ChatRoom {
       }
     }
 
+    // if gender is specified check if the join/invite user has valid gender
+    if (gender.isNotEmpty) {
+      String userGender = '';
+      if (uid == myUid) {
+        userGender = my!.gender;
+      } else {
+        userGender = await User.getField(uid, Field.gender) ?? '';
+      }
+
+      if (gender != userGender) {
+        throw FireFlutterException(
+          Code.chatRoomUserGenderNotAllowed,
+          gender == 'M'
+              ? T.chatRoomMaleOnlyChatRoom.tr
+              : gender == 'F'
+                  ? T.chatRoomFemaleOnlyChatRoom.tr
+                  : T.chatRoomYourGenderIsNotAllowed.tr,
+        );
+      }
+    }
+
     /// 내가 이미 방에 들어가 있는 상태이면, 에러 코드를 리턴, 즉, 계속해서 다음 코드가 실행된다.
     if (forceJoin == false && users?.containsKey(uid) == true) {
       return Code.alreadyJoined;

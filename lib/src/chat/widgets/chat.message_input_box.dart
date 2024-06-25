@@ -54,16 +54,15 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
       return const SizedBox.shrink();
     }
 
-    /// If the master set the gender and the gender is not same as mine, then show a warning message.
-    // if (widget.chat.room.gender != null && widget.chat.room.gender.notEmpty) {
-    //   if (my.gender != widget.chat.room.gender) {
-    //     return const SizedBox.shrink();
-    //   }
-    // }
+    // / If the master set the gender and the gender is not same as mine, then show a warning message.
+    if (widget.chat.room.gender.isNotEmpty &&
+        widget.chat.room.gender != my!.gender) {
+      return const SizedBox.shrink();
+    }
 
     /// 1:1 채팅에서 채팅 메시지 입력 박스에 상대방 정보가 없거나, 상대방 정보가 삭제된 경우, 블럭된 경우 등
     if (userDeleted == false &&
-        widget.chat.room.blockedUsers.contains(myUid) == false) {
+        widget.chat.room.blockedUsers.contains(myUid) == true) {
       return const SizedBox.shrink();
     }
 
