@@ -451,6 +451,18 @@ class User {
   ///
   /// [photoUrl] 값이 빈 문자열이면, 해당 필드는 삭제되고, hasPhotoUrl 도 false 로 저장된다.
   ///
+  /// [extra] Use this to update any other fields that are not in the User
+  /// model. For example, if you want to update the user's hair color, you
+  /// can do it like this:
+  /// ```dart
+  /// update(extra: {"hairColor": "black"});
+  /// ```
+  /// To access the hair color, you can do it like this:
+  /// ```dart
+  /// final hairColor = user.data['hairColor'];
+  /// ```
+  ///
+  ///
   /// Note that, this method does not update user's private information like
   /// email, phone number, etc. It only updates public information like
   /// displayName, photoUrl, etc.
