@@ -19,6 +19,11 @@ class _ForumChatViewScreenState extends State<ForumChatViewScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          CategorySubscriptionIcon(
+            category: widget.category,
+          ),
+        ],
       ),
       body: PostListView(
         reverse: true,
@@ -28,12 +33,14 @@ class _ForumChatViewScreenState extends State<ForumChatViewScreen> {
           post: post,
         ),
       ),
-      bottomNavigationBar: Padding(
-        /// This is to display the Textfield above the keyboard
-        /// viewInsets is a space that consumed by the keyboard
-        /// and used as a padding of bottomNavigationBar
-        padding: MediaQuery.of(context).viewInsets,
-        child: ForumChatInput(category: widget.category),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          /// This is to display the Textfield above the keyboard
+          /// viewInsets is a space that consumed by the keyboard
+          /// and used as a padding of bottomNavigationBar
+          padding: MediaQuery.of(context).viewInsets,
+          child: ForumChatInput(category: widget.category),
+        ),
       ),
     );
   }

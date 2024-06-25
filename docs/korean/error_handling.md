@@ -1,6 +1,6 @@
 # 에러 핸들링
 
-앱을 개발하면서 여러가지 형태의 에러(Exception)이 발생하게 됩니다. 그리고 Fireflutter 에서 제공하는 위젯 또는 로직에서 FireFlutterException 을 발생 시키기도 합니다. 이러한 Exception 들에 핸들링을 해 주어야하는데, 때로는 필요한 곳에서 적절히 핸들링되지 못하는 경우가 종종 발생합니다. 이렇게 핸들링되지 않은 Exception 들을 모아서, `runZoneGuarded` 방식으로 관리를 하면 됩니다. 이렇게 에러를 핸들링하는 방법은 FireFlutter 를 사용할 때, 권장하는 방법입니다. 다만, 가능하면 에러는 적절한 곳에서 핸들링하는 것이 좋겠습니다.
+앱을 개발하면서 여러가지 형태의 에러(Exception)이 발생하게 된다. 그리고 Fireflutter 에서 제공하는 위젯 또는 로직에서 FireFlutterException 을 발생 시키기도 한다. 이러한 Exception 들에 핸들링을 해 주어야하는데, 때로는 필요한 곳에서 적절히 핸들링되지 못하는 경우가 종종 발생한다. 이렇게 핸들링되지 않은 Exception 들을 모아서, `runZoneGuarded` 방식으로 관리를 하면 된다. 이렇게 에러를 핸들링하는 방법은 FireFlutter 를 사용할 때, 권장하는 방법이며 이를 `Global Error Handler` 라고 부른다. 물론, 가능하면 에러는 적절한 곳에서 핸들링하는 것이 좋겠다.
 
 아래의 예제는 GlobalKey 에 BuildContext 를 담아서 쓰는 예제이다.
 

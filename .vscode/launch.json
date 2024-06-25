@@ -12,7 +12,10 @@
       "flutterMode": "debug",
       "cwd": "apps/buyandsell",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "WHO=song"]
+      "args": [
+        "--dart-define",
+        "WHO=song"
+      ]
     },
     {
       "name": "PhiLov - iPhone 15 Pro Max",
@@ -259,6 +262,16 @@
         "--dart-define",
         "MODE=test"
       ]
+    },
+    {
+      "name": "Momcafe - iPhone 14 Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
     },
     {
       "name": "Momcafe - iPhone SE",
@@ -580,12 +593,11 @@
       "name": "Momcafe (Chris) TEST - iPhone 15 Pro (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "4EE2C314-5DBF-4992-8246-5B5EC0A38741",
+      "deviceId": "iPhone 15 Pro",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
       "args": [
-        "-v",
         "--dart-define",
         "MODE=test"
       ]

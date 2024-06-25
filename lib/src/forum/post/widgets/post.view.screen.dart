@@ -36,14 +36,13 @@ class _PostViewScreenState extends State<PostViewScreen> {
   /// The [widget.post.urls] only contains the URL of the first photo from the post (as it's sourced from the posts-summary node).
   /// To display all photos in the PostViewScreen, we fetch the complete list of photo URLs from the database.
   final List<String> urls = [];
-
+  final List<String> likes = [];
   @override
   void initState() {
     super.initState();
     if (post.urls.isNotEmpty) {
       urls.addAll(post.urls);
     }
-
     widget.post.urlsRef.once().then((DatabaseEvent event) {
       final value = event.snapshot.value as List<dynamic>?;
 
@@ -55,6 +54,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
         }
       }
     });
+    // scheduleMicrotask(() async {
+    //   final result = await Post.field(
+    //       category: post.category, id: post.id, field: 'likes');
+    //   final t = result as List<String>?;
+    // });
   }
 
   @override
@@ -81,9 +85,10 @@ class _PostViewScreenState extends State<PostViewScreen> {
             ),
             SliverToBoxAdapter(child: PostMeta(post: post)),
             const SliverToBoxAdapter(),
-            if (widget.commentable)
+            if (widget.commentable && widget.post.title.isNotEmpty)
               SliverToBoxAdapter(child: PostTitle(post: post)),
-            SliverToBoxAdapter(child: PostContent(post: post)),
+            if (widget.post.content.isNotEmpty)
+              SliverToBoxAdapter(child: PostContent(post: post)),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
