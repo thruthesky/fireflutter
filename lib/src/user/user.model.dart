@@ -506,6 +506,7 @@ class User {
       if (longitude != null) 'longitude': longitude,
       if (languageCode != null) 'languageCode': languageCode,
       if (ping != null) 'ping': ping,
+      if (customData != null) ...customData,
     };
     if (data.isEmpty) {
       return this;
