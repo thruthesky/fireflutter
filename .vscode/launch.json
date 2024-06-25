@@ -261,6 +261,16 @@
       ]
     },
     {
+      "name": "Momcafe - iPhone 14 Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
       "name": "Momcafe - iPhone SE",
       "request": "launch",
       "type": "dart",
