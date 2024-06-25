@@ -5,10 +5,9 @@
             "source.fixAll": "explicit"
         },
     },
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
     // "problems.decorations.enabled": false,
     // "dart.analysisExcludedFolders": [
     //     "./apps/momcafe"
     // ],
-    
 }
