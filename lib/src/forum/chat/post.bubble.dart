@@ -52,7 +52,6 @@ class _PostBubbleState extends State<PostBubble> {
 
         if (value != null) {
           List<String> newValue = List<String>.from(value);
-          // widget.post.urls;
           if (newValue.isNotEmpty) {
             urls.clear();
             urls.addAll(newValue);
@@ -103,7 +102,7 @@ class _PostBubbleState extends State<PostBubble> {
                   ...content(),
                   if (widget.post.urls.isNotEmpty) ImageDisplay(urls: urls),
                   ...sitePreview(),
-                  if (widget.post.isMine) const Text('수정/삭제'),
+                  if (widget.post.isMine) Text('${T.edit.tr}/${T.delete.tr}'),
                 ],
               ),
             ),

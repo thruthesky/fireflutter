@@ -18,7 +18,7 @@ class _ForumChatViewScreenState extends State<ForumChatViewScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(widget.category),
+        title: Text(widget.title),
         actions: [
           CategorySubscriptionIcon(
             category: widget.category,
