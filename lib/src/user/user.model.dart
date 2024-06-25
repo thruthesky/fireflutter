@@ -478,7 +478,7 @@ class User {
     double? longitude,
     String? languageCode,
     int? ping,
-    Map<String, dynamic>? customData,
+    Map<String, dynamic>? extra,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -506,7 +506,7 @@ class User {
       if (longitude != null) 'longitude': longitude,
       if (languageCode != null) 'languageCode': languageCode,
       if (ping != null) 'ping': ping,
-      if (customData != null) ...customData,
+      if (extra != null) ...extra,
     };
     if (data.isEmpty) {
       return this;
