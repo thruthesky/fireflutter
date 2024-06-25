@@ -33,6 +33,7 @@ dependencies:
   phone_sign_in:
     path: ../apps/phone_sign_in
 
+  rxdart: ^0.27.7
   social_design_system:
     path: ../apps/social_design_system
   typesense: ^0.5.1

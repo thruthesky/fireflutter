@@ -36,7 +36,7 @@ class UserTile extends StatelessWidget {
           ? onTap!.call(user)
           : UserService.instance.showPublicProfileScreen(
               context: context,
-              uid: user.uid,
+              user: user,
             ),
       child: Padding(
         padding: padding ?? const EdgeInsets.all(8.0),
