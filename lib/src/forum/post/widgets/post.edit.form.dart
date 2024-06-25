@@ -37,6 +37,13 @@ class _SimplePostEditFormState extends State<PostEditForm> {
   }
 
   @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

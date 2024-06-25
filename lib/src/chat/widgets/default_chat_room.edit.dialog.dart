@@ -42,7 +42,15 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
     init();
   }
 
-  init() async {
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> init() async {
     if (isEdit) {
       /// 채팅방 수정의 경우, 기존 채팅방 정보를 가져와 초기화 한다.
       room = await ChatRoom.get(widget.roomId!);
