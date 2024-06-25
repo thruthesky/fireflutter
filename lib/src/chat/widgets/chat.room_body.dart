@@ -51,10 +51,10 @@ class ChatRoomBody extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoomBody> {
   ChatModel? _chat;
   ChatModel get chat => _chat!;
-  User? other;
 
-  /// 1:1 채팅방은 존재하는데, 상대 사용자 정보가 존재하지 않는 경우 (어떤 이유로 상대 사용자 정보가 삭제된 경우),
-  bool get userDeleted => chat.room.isSingleChat && other == null;
+  /// [other] is the other user in 1:1 chat. It is null in group chat.
+  /// If [other] is null on 1:1 chat, it means the user is deleted (not exists in the database).
+  User? other;
 
   /// 채팅방 정보가 로드되었는지 여부
   ///
@@ -430,7 +430,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
 
         SizedBox(height: widget.appBarBottomSpacing),
 
-        /// 채팅 메시지
+        /// 채팅 메시지 목록 (Chat message list view)
         Expanded(
           child: ValueListenableBuilder(
             valueListenable: loaded,
@@ -450,14 +450,13 @@ class _ChatRoomState extends State<ChatRoomBody> {
             ),
           ),
 
-        if (userDeleted == false &&
-            chat.room.blockedUsers.contains(myUid) == false)
-          SafeArea(
-            top: false,
-            child: ChatMessageInputBox(
-              chat: chat,
-            ),
+        SafeArea(
+          top: false,
+          child: ChatMessageInputBox(
+            chat: chat,
+            other: other,
           ),
+        ),
       ],
     );
   }

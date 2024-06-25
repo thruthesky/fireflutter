@@ -36,6 +36,9 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   ChatRoom? room;
 
   double? progress;
+
+  String? genderGroupValue = '';
+
   @override
   void initState() {
     super.initState();
@@ -78,6 +81,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
       contentPadding: EdgeInsets.zero,
       content: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 24),
@@ -171,6 +175,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 ),
               ),
             ),
+
+            /// TODO change the term 'auth' to 'verified'.
             if (widget.showAuthRequiredOption)
               SwitchListTile(
                 value: isVerifiedOnly,
@@ -190,6 +196,40 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                   ),
                 ),
               ),
+
+            const SizedBox(height: 16),
+
+            if (isEdit) ...[
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Text('Choose gender'),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Row(
+                  children: [
+                    RadioMenuButton(
+                      value: '',
+                      groupValue: genderGroupValue,
+                      onChanged: (v) => setState(() => genderGroupValue = v),
+                      child: const Text('All'),
+                    ),
+                    RadioMenuButton(
+                      value: 'M',
+                      groupValue: genderGroupValue,
+                      onChanged: (v) => setState(() => genderGroupValue = v),
+                      child: const Text('Male'),
+                    ),
+                    RadioMenuButton(
+                      value: 'F',
+                      groupValue: genderGroupValue,
+                      onChanged: (v) => setState(() => genderGroupValue = v),
+                      child: const Text('Female'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
 
             /// Password
             if (isEdit && room != null)
@@ -314,6 +354,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 description: descriptionController.text,
                 isOpenGroupChat: open,
                 isVerifiedOnly: isVerifiedOnly,
+                // gender: genderGroupValue,
                 urlVerifiedUserOnly: urlVerifiedUserOnly,
                 uploadVerifiedUserOnly: uploadVerifiedUserOnly,
                 hasPassword: passwordController.text.isNotEmpty,

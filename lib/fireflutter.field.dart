@@ -7,6 +7,7 @@ class Field {
   static const String id = 'id';
   static const String uid = 'uid';
   static const String name = 'name';
+  static const String gender = 'gender';
   static const String description = 'description';
   static const String content = 'content';
   static const String email = 'email';
