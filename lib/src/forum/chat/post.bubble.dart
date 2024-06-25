@@ -83,14 +83,15 @@ class _PostBubbleState extends State<PostBubble> {
           children: [
             if (!isMine) ...[
               UserAvatar(
+                uid: widget.post.uid,
+                cacheId: widget.post.uid,
+                size: 32,
+                radius: 13,
+                onTap: () => UserService.instance.showPublicProfileScreen(
+                  context: context,
                   uid: widget.post.uid,
-                  cacheId: widget.post.uid,
-                  size: 32,
-                  radius: 13,
-                  onTap: () => UserService.instance.showPublicProfileScreen(
-                        context: context,
-                        uid: widget.post.uid,
-                      )),
+                ),
+              ),
             ],
             const SizedBox(width: 14),
             Expanded(
