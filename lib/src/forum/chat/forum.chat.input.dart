@@ -28,6 +28,12 @@ class _ForumChatInputState extends State<ForumChatInput> {
   bool get inputCollapsed => inputIsEmpty && hasFocus == false;
 
   @override
+  void dispose() {
+    contentController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
