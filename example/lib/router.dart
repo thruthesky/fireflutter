@@ -8,6 +8,7 @@ import 'package:example/screens/forum/latest.posts.screen.dart';
 import 'package:example/screens/forum/post_list_by_group.screen.dart';
 import 'package:example/screens/home/home.screen.dart';
 import 'package:example/screens/meetup/meetup.screen.dart';
+import 'package:example/screens/user/user.search.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -72,6 +73,10 @@ final router = GoRouter(
     GoRoute(
       path: ForumSearchScreen.routeName,
       builder: (context, state) => const ForumSearchScreen(),
+    ),
+    GoRoute(
+      path: UserSearchScreen.routeName,
+      builder: (context, state) => const UserSearchScreen(),
     ),
   ],
 );

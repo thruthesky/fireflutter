@@ -37,7 +37,6 @@ class DefaultChatRoomMemberDialog extends StatelessWidget {
               await UserService.instance.showPublicProfileScreen(
                 context: context,
                 user: member,
-                // uid: member.uid,
               );
               Navigator.pop(context);
             },

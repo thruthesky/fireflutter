@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:776648753457:android:168e183f3a87d17098f010",
+        "android_client_info": {
+          "package_name": "com.exam12.yo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "776648753457-6j5k5jm5gjd8q04s5f9ceqnt1ai7gs9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXesaf2apZcdDSzlqqQ9Ycou1s1gKNpTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "776648753457-6j5k5jm5gjd8q04s5f9ceqnt1ai7gs9a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "776648753457-2k6anelhhe2fidrndsm1dllu7505e519.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unittesting.example"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:776648753457:android:76c2371b239822a098f010",
         "android_client_info": {
           "package_name": "com.example.app"
@@ -182,6 +218,42 @@
             "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
           }
         },
+        {
+          "client_id": "776648753457-6j5k5jm5gjd8q04s5f9ceqnt1ai7gs9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXesaf2apZcdDSzlqqQ9Ycou1s1gKNpTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "776648753457-6j5k5jm5gjd8q04s5f9ceqnt1ai7gs9a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "776648753457-2k6anelhhe2fidrndsm1dllu7505e519.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unittesting.example"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776648753457:android:599fc9d58e8e5f7b98f010",
+        "android_client_info": {
+          "package_name": "com.t3.app"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "776648753457-6j5k5jm5gjd8q04s5f9ceqnt1ai7gs9a.apps.googleusercontent.com",
           "client_type": 3
