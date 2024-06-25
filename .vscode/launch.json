@@ -333,7 +333,11 @@
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe - Emulator - English(locale=en)",
@@ -345,7 +349,8 @@
       "program": "lib/main.dart",
       "args": [
         "--dart-define",
-        "locale=en"
+        "locale=en",
+        "MODE=test"
       ]
     },
     

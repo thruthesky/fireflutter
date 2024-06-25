@@ -13,6 +13,7 @@ class ChatMessageInputBox extends StatefulWidget {
     this.sendIcon,
     this.onProgress,
     this.onSend,
+    this.other,
   });
 
   final ChatModel chat;
@@ -20,6 +21,7 @@ class ChatMessageInputBox extends StatefulWidget {
   /// TODO - 이 것은 chat customize 로 들어가야 하나?
   final Widget? cameraIcon;
   final Widget? sendIcon;
+  final User? other;
 
   final Function(double?)? onProgress;
 
@@ -34,6 +36,9 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
   final inputController = TextEditingController();
   double? progress;
 
+  /// 1:1 채팅방은 존재하는데, 상대 사용자 정보가 존재하지 않는 경우 (어떤 이유로 상대 사용자 정보가 삭제된 경우),
+  bool get userDeleted => widget.chat.room.isSingleChat && widget.other == null;
+
   @override
   void dispose() {
     inputController.dispose();
@@ -42,8 +47,22 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
 
   @override
   Widget build(BuildContext context) {
+    /// If it's 1:1 chat, and if you have blocked the other user, then show nothing.
+    /// TODO: it should show something. At least a message that "you have blocked the user"
     if (widget.chat.room.isSingleChat &&
         iHave.blocked(widget.chat.room.otherUserUid!)) {
+      return const SizedBox.shrink();
+    }
+
+    // / If the master set the gender and the gender is not same as mine, then show a warning message.
+    if (widget.chat.room.gender.isNotEmpty &&
+        widget.chat.room.gender != my!.gender) {
+      return const SizedBox.shrink();
+    }
+
+    /// 1:1 채팅에서 채팅 메시지 입력 박스에 상대방 정보가 없거나, 상대방 정보가 삭제된 경우, 블럭된 경우 등
+    if (userDeleted == false &&
+        widget.chat.room.blockedUsers.contains(myUid) == true) {
       return const SizedBox.shrink();
     }
 
@@ -147,7 +166,9 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
           },
         ),
         if (progress != null && !progress!.isNaN)
-          LinearProgressIndicator(value: progress),
+          LinearProgressIndicator(
+            value: progress,
+          ),
         const Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),

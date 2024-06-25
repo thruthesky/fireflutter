@@ -755,18 +755,23 @@ ElevatedButton(
 
 만약, 로그인을 했다는 확신이 있다면, `my.toggleBlock` 과 같이 바로 호출해도 된다.
 
-## 앱 특정 값 업데이트
+## UserModel 에 존재하지 않는 필드 값 읽기/쓰기 - extra
 
-각 앱마다 사용자에게 필요한 다른 필드가 있을 수 있습니다. 사용자를 업데이트할 때 `customData` 를 사용하세요.
+
+각 앱마다 사용자에게 필요한 다른 필드가 있을 수 있습니다. 사용자를 업데이트할 때 `extra` 를 사용하세요.
+
+
+Use this to update any other fields that are not in the User model. For example, if you want to update the user's hair color, you  can do it like this:
+
+User 모델에 없는 다른 필드를 저장하고 읽으려면 다음과 같이 extra 를 사용하면 된다. 예를 들어, 사용자의 머리 색깔을 업데이트하고 싶다면 다음과 같이 할 수 있다:
 
 ```dart
 final user = User.fromSnapshot(snapshot);
+user.update(extra: {"hairColor": "black"});
+```
 
-user.update(
-  name: "My Name";
-  customData: {
-    "favoriteDog": "Shih Tzu",
-    "favoriteCat": "Tabby",
-  }
-)
+위와 같이 업데이트 한 사용자의 머리 색깔을 읽으려면 다음과 같이 할 수 있다:
+
+```dart
+final hairColor = user.data['hairColor'];
 ```

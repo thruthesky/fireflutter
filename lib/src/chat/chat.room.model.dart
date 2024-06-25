@@ -61,6 +61,9 @@ class ChatRoom {
   /// 회원 인증한 사용자만 url 입력 가능하도록 하는 옵션
   bool urlVerifiedUserOnly;
 
+  /// Gender. It can be 'M', 'F', or ''.
+  String gender;
+
   /// 회원 인증한 사용자만 업로드 가능하도록 하는 옵션
   bool uploadVerifiedUserOnly;
 
@@ -121,6 +124,7 @@ class ChatRoom {
     this.isVerifiedOnly = false,
     this.urlVerifiedUserOnly = false,
     this.uploadVerifiedUserOnly = false,
+    this.gender = '',
     this.users,
     this.noOfUsers,
     this.blockedUsers = const [],
@@ -187,6 +191,7 @@ class ChatRoom {
       isVerifiedOnly: json['isVerifiedOnly'] ?? false,
       urlVerifiedUserOnly: json['urlVerifiedUserOnly'] ?? false,
       uploadVerifiedUserOnly: json['uploadVerifiedUserOnly'] ?? false,
+      gender: json['gender'] ?? '',
       users:
           json['users'] == null ? null : Map<String, bool>.from(json['users']),
       noOfUsers: json['noOfUsers'] is int
@@ -217,6 +222,7 @@ class ChatRoom {
       'isVerifiedOnly': isVerifiedOnly,
       'urlVerifiedUserOnly': urlVerifiedUserOnly,
       'uploadVerifiedUserOnly': uploadVerifiedUserOnly,
+      'gender': gender,
       'users': users,
       'noOfUsers': noOfUsers,
       'blockedUsers': blockedUsers,
@@ -322,6 +328,7 @@ class ChatRoom {
     isVerifiedOnly = room.isVerifiedOnly;
     urlVerifiedUserOnly = room.urlVerifiedUserOnly;
     uploadVerifiedUserOnly = room.uploadVerifiedUserOnly;
+    gender = room.gender;
     users = room.users;
     noOfUsers = room.noOfUsers;
     blockedUsers = room.blockedUsers;
@@ -370,6 +377,7 @@ class ChatRoom {
     String? description,
     bool? isOpenGroupChat,
     bool? isVerifiedOnly,
+    String? gender,
   }) async {
     DatabaseReference ref;
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
@@ -405,6 +413,7 @@ class ChatRoom {
         Field.createdAt: ServerValue.timestamp,
         Field.users: {myUid!: true},
         Field.isVerifiedOnly: isVerifiedOnly,
+        Field.gender: gender,
         Field.master: myUid!,
       };
       await ref.update(data);
@@ -421,6 +430,7 @@ class ChatRoom {
     bool? urlVerifiedUserOnly,
     bool? uploadVerifiedUserOnly,
     required bool hasPassword,
+    String? gender,
   }) async {
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
     final data = {
@@ -433,6 +443,7 @@ class ChatRoom {
       Field.uploadVerifiedUserOnly: uploadVerifiedUserOnly,
       Field.openGroupChatOrder: isOpenGroupChat == true ? minusTime : null,
       Field.hasPassword: hasPassword,
+      Field.gender: gender,
     };
     return ref.update(data);
   }
@@ -517,6 +528,27 @@ class ChatRoom {
         throw FireFlutterException(
           Code.chatRoomNotVerified,
           T.chatRoomIsForVerifiedUsersOnly.tr,
+        );
+      }
+    }
+
+    // if gender is specified check if the join/invite user has valid gender
+    if (gender.isNotEmpty) {
+      String userGender = '';
+      if (uid == myUid) {
+        userGender = my!.gender;
+      } else {
+        userGender = await User.getField(uid, Field.gender) ?? '';
+      }
+
+      if (gender != userGender) {
+        throw FireFlutterException(
+          Code.chatRoomUserGenderNotAllowed,
+          gender == 'M'
+              ? T.chatRoomMaleOnlyChatRoom.tr
+              : gender == 'F'
+                  ? T.chatRoomFemaleOnlyChatRoom.tr
+                  : T.chatRoomYourGenderIsNotAllowed.tr,
         );
       }
     }

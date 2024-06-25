@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
+import 'package:fireflutter/fireflutter.field.dart';
 import 'package:fireflutter/src/setting/user.setting.model.dart';
 import 'package:fireflutter/src/setting/user.setting.service.dart';
 import 'package:geohash_plus/geohash_plus.dart';
@@ -30,7 +31,7 @@ class User {
   ///
   static DatabaseReference userRef(String uid) => usersRef.child(uid);
   static DatabaseReference userProfilePhotosRef =
-      rootRef.child('profile-photos');
+      rootRef.child(userProfilePhotos);
   static DatabaseReference whoILikeRef = rootRef.child(whoILike);
   static DatabaseReference whoLikeMeRef = rootRef.child(whoLikeMe);
   static DatabaseReference mutualLikeRef = rootRef.child(mutualLike);
@@ -51,6 +52,10 @@ class User {
 
   /// 사용자가 직접 입력하는 별명
   String displayName;
+
+  /// Lower case of [displayName]. And it is coming from database. So, it can
+  /// be used for searching.
+  String displayNameLowerCase;
 
   @Deprecated('email is a private informationn. Use UserPrivate')
   String email;
@@ -185,6 +190,7 @@ class User {
     required this.email,
     required this.phoneNumber,
     required this.displayName,
+    required this.displayNameLowerCase,
     required this.photoUrl,
     required this.profileBackgroundImageUrl,
     required this.photoUrls,
@@ -244,7 +250,8 @@ class User {
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
-      displayName: json['displayName'] ?? '',
+      displayName: (json['displayName'] ?? '').trim(),
+      displayNameLowerCase: (json['displayNameLowerCase'] ?? '').trim(),
       photoUrl: json['photoUrl'] ?? '',
       profileBackgroundImageUrl: json['profileBackgroundImageUrl'] ?? '',
 
@@ -297,6 +304,7 @@ class User {
       'uid': uid,
       'name': name,
       'displayName': displayName,
+      'displayNameLowerCase': displayNameLowerCase,
       'photoUrl': photoUrl,
       'profileBackgroundImageUrl': profileBackgroundImageUrl,
       'photoUrls': photoUrls,
@@ -344,6 +352,7 @@ class User {
     if (user != null) {
       name = user.name;
       displayName = user.displayName;
+      displayNameLowerCase = user.displayNameLowerCase;
       photoUrl = user.photoUrl;
       profileBackgroundImageUrl = user.profileBackgroundImageUrl;
       photoUrls = user.photoUrls;
@@ -431,7 +440,9 @@ class User {
     await ff.set(
       '${ff.User.node}/$uid',
       {
-        'displayName': displayName,
+        if (displayName != null) 'displayName': displayName.trim(),
+        if (displayName != null)
+          Field.displayNameLowerCase: displayName.trim().toLowerCase(),
         'photoUrl': photoUrl,
         'createdAt': ServerValue.timestamp,
         'order': DateTime.now().millisecondsSinceEpoch * -1,
@@ -450,6 +461,18 @@ class User {
   /// hasPhotoUrl is automatically set to true if photoUrl is not null.
   ///
   /// [photoUrl] 값이 빈 문자열이면, 해당 필드는 삭제되고, hasPhotoUrl 도 false 로 저장된다.
+  ///
+  /// [extra] Use this to update any other fields that are not in the User
+  /// model. For example, if you want to update the user's hair color, you
+  /// can do it like this:
+  /// ```dart
+  /// update(extra: {"hairColor": "black"});
+  /// ```
+  /// To access the hair color, you can do it like this:
+  /// ```dart
+  /// final hairColor = user.data['hairColor'];
+  /// ```
+  ///
   ///
   /// Note that, this method does not update user's private information like
   /// email, phone number, etc. It only updates public information like
@@ -478,11 +501,13 @@ class User {
     double? longitude,
     String? languageCode,
     int? ping,
-    Map<String, dynamic>? customData,
+    Map<String, dynamic>? extra,
   }) async {
     final data = {
       if (name != null) 'name': name,
-      if (displayName != null) 'displayName': displayName,
+      if (displayName != null) Field.displayName: displayName.trim(),
+      if (displayName != null)
+        Field.displayNameLowerCase: displayName.toLowerCase().trim(),
       if (photoUrl != null) 'photoUrl': photoUrl,
       if (profileBackgroundImageUrl != null)
         'profileBackgroundImageUrl': profileBackgroundImageUrl,
@@ -506,7 +531,7 @@ class User {
       if (longitude != null) 'longitude': longitude,
       if (languageCode != null) 'languageCode': languageCode,
       if (ping != null) 'ping': ping,
-      if (customData != null) ...customData,
+      if (extra != null) ...extra,
     };
     if (data.isEmpty) {
       return this;

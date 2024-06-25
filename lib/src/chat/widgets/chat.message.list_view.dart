@@ -76,6 +76,7 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
         ),
       );
     }
+
     return FirebaseDatabaseQueryBuilder(
       // 페이지 사이즈(메시지를 가져오는 개수)를 100으로 해서, 자주 가져오지 않도록 한다. 그래서 flickering 을 줄인다.
       pageSize: 100,

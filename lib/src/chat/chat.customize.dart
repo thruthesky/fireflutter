@@ -10,6 +10,7 @@ class ChatCustomize {
     this.messageInputBoxPrefixIconBuilder,
     this.chatRoomUserListScreen,
     this.chatRoomBlockedUserListScreen,
+    this.chatRoomInviteScreen,
   });
 
   /// Customization for chat room menu inside DefaultChatRoomScreen
@@ -30,6 +31,11 @@ class ChatCustomize {
   final Widget Function({
     required ChatRoom room,
   })? chatRoomUserListScreen;
+
+  final Widget Function({
+    required ChatRoom room,
+  })? chatRoomInviteScreen;
+  
 
   /// Customization for chat room blocked user list screen inside DefaultChatRoomScreen
   final Widget Function({

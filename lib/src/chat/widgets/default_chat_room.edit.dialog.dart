@@ -36,6 +36,9 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   ChatRoom? room;
 
   double? progress;
+
+  String? genderGroupValue = '';
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +63,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
       isVerifiedOnly = room?.isVerifiedOnly ?? false;
       urlVerifiedUserOnly = room?.urlVerifiedUserOnly ?? false;
       uploadVerifiedUserOnly = room?.uploadVerifiedUserOnly ?? false;
+      genderGroupValue = room?.gender ?? '';
+
       setState(() {});
     }
   }
@@ -78,12 +83,15 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
       contentPadding: EdgeInsets.zero,
       content: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 24),
-            Text(
-              isCreate ? T.newChat.tr : T.chatRoomSettings.tr,
-              style: Theme.of(context).textTheme.titleLarge,
+            Center(
+              child: Text(
+                isCreate ? T.newChat.tr : T.chatRoomSettings.tr,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
             const SizedBox(height: 32),
             Padding(
@@ -108,26 +116,27 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
             const SizedBox(height: 16),
             if (isEdit)
               Value(
-                // path: "${ChatRoom.node}/${widget.roomId}/${Field.iconUrl}",
                 ref: ChatRoom.iconUrlRef(widget.roomId!),
                 builder: (url) {
                   return url == null
                       ? const SizedBox()
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
-                          child: CachedNetworkImage(
-                            imageUrl: url,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) {
-                              return const Icon(
-                                Icons.error_outline,
-                                color: Colors.red,
-                              );
-                            },
-                            errorListener: (value) => dog(
-                                'default_chat_room.edit.dialog.dart: Image has problem: $value'),
+                      : Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
+                            child: CachedNetworkImage(
+                              imageUrl: url,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                              errorWidget: (context, url, error) {
+                                return const Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                );
+                              },
+                              errorListener: (value) => dog(
+                                  'default_chat_room.edit.dialog.dart: Image has problem: $value'),
+                            ),
                           ),
                         );
                 },
@@ -136,22 +145,27 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
             // 채팅방 아이콘 업로드는 - 채팅방이 먼저 존재해야, 아이콘 URL 을 쉽게 저장 할 수 있다.
             if (isEdit)
               progress == null || progress?.isNaN == true
-                  ? TextButton.icon(
-                      icon: const Icon(Icons.camera_alt),
-                      label: Text(T.uploadChatRoomIcon.tr),
-                      onPressed: () async {
-                        await StorageService.instance.uploadAt(
-                          context: context,
-                          path:
-                              "${ChatRoom.node}/${widget.roomId}/${Field.iconUrl}",
-                          progress: (p) => setState(() => progress = p),
-                          complete: () => setState(() => progress = null),
-                        );
-                      },
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: TextButton.icon(
+                        icon: const Icon(Icons.camera_alt),
+                        label: Text(T.uploadChatRoomIcon.tr),
+                        onPressed: () async {
+                          await StorageService.instance.uploadAt(
+                            context: context,
+                            path:
+                                "${ChatRoom.node}/${widget.roomId}/${Field.iconUrl}",
+                            progress: (p) => setState(() => progress = p),
+                            complete: () => setState(() => progress = null),
+                          );
+                        },
+                      ),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: LinearProgressIndicator(value: progress),
+                  : Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: LinearProgressIndicator(value: progress),
+                      ),
                     ),
             SwitchListTile(
               value: open,
@@ -171,6 +185,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 ),
               ),
             ),
+
+            /// TODO change the term 'auth' to 'verified'.
             if (widget.showAuthRequiredOption)
               SwitchListTile(
                 value: isVerifiedOnly,
@@ -190,6 +206,43 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                   ),
                 ),
               ),
+
+            const SizedBox(height: 16),
+
+            if (isEdit) ...[
+              Padding(
+                padding: const EdgeInsets.only(left: 32.0),
+                child: Text(
+                  T.gender.tr,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, bottom: 8),
+                child: Row(
+                  children: [
+                    RadioMenuButton(
+                      value: '',
+                      groupValue: genderGroupValue,
+                      onChanged: (v) => setState(() => genderGroupValue = v),
+                      child: Text(T.all.tr),
+                    ),
+                    RadioMenuButton(
+                      value: 'M',
+                      groupValue: genderGroupValue,
+                      onChanged: (v) => setState(() => genderGroupValue = v),
+                      child: Text(T.male.tr),
+                    ),
+                    RadioMenuButton(
+                      value: 'F',
+                      groupValue: genderGroupValue,
+                      onChanged: (v) => setState(() => genderGroupValue = v),
+                      child: Text(T.female.tr),
+                    ),
+                  ],
+                ),
+              ),
+            ],
 
             /// Password
             if (isEdit && room != null)
@@ -314,6 +367,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 description: descriptionController.text,
                 isOpenGroupChat: open,
                 isVerifiedOnly: isVerifiedOnly,
+                gender: genderGroupValue,
                 urlVerifiedUserOnly: urlVerifiedUserOnly,
                 uploadVerifiedUserOnly: uploadVerifiedUserOnly,
                 hasPassword: passwordController.text.isNotEmpty,
