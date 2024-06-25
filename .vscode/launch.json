@@ -315,7 +315,7 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Momcafe - SM A045F (Galaxy A04)",
+      "name": "Momcafe - SM A045F (Galaxy A04) R9ATA00LMJM",
       "request": "launch",
       "type": "dart",
       "deviceId": "R9ATA00LMJM",
@@ -344,6 +344,16 @@
         "--dart-define",
         "locale=en"
       ]
+    },
+    
+    {
+      "name": "Momcafe - Emulator release",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "release",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
     },
     {
       "name": "Momcafe - Chrome",
