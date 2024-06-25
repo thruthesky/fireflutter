@@ -20,12 +20,17 @@ class DefaultChatRoomInviteScreen extends StatelessWidget {
         title: Text(T.invitation.tr),
       ),
       body: FirebaseDatabaseListView(
-        query: User.usersRef.orderByChild('order'),
+        query: User.userProfilePhotosRef.orderByChild('updatedAt'),
         itemBuilder: (context, snapshot) {
           final user = User.fromSnapshot(snapshot);
           if (memberUids.contains(user.uid)) {
             return const SizedBox.shrink();
           }
+
+          if (user.photoUrl.isEmpty || user.displayName.isEmpty) {
+            return const SizedBox.shrink();
+          }
+
           return ListTile(
             leading: UserAvatar(uid: user.uid),
             title: Text(user.displayName),
