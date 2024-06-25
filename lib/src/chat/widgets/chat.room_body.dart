@@ -321,7 +321,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
                       await chat.room.toggleNotifications();
                     },
                     icon: Value(
-                      // path: ChatRoom.chatRoomUsersAt(chat.room.id, myUid!),
                       ref: ChatRoom.usersAtRef(chat.room.id, myUid!),
                       builder: (v) => v == true
                           ? const Icon(Icons.notifications_rounded)
