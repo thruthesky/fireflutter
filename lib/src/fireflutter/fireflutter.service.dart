@@ -25,6 +25,12 @@ class FireFlutterService {
 
   String? cloudFunctionRegion;
 
+  /// Set the toastBackgroundColor to give color on fireflutter toast background color
+  Color? toastBackgroundColor;
+
+  // set the toastForegroundColor to give color on fireflutter toast foreground color
+  Color? toastForegroundColor;
+
   /// Confirm Dialog this callback is used to customize all the confirm functions
   /// in fireflutter see `lib/fireflutter.functions.dart`
   Future<bool?> Function({
@@ -63,6 +69,8 @@ class FireFlutterService {
 
   init({
     String? cloudFunctionRegion,
+    Color? toastBackgroundColor,
+    Color? toastForegroundColor,
     BuildContext Function()? globalContext,
     Future<bool?> Function({
       required BuildContext context,
@@ -90,6 +98,8 @@ class FireFlutterService {
     })? inputDialog,
   }) {
     _globalContext = globalContext;
+    this.toastBackgroundColor = toastBackgroundColor;
+    this.toastForegroundColor = toastForegroundColor;
     this.cloudFunctionRegion = cloudFunctionRegion;
     this.confirmDialog = confirmDialog;
     this.errorDialog = errorDialog;

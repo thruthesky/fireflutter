@@ -1155,6 +1155,37 @@
         "MODE=noe"
       ]
     },
+
+    {
+      "name": "MomCafe (noe)- iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
+    {
+      "name": "MomCafe (noe)- SM J737S",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM J737S",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
+    {
+      "name": "MomCafe (noe)- iPhone (2)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone (2)",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
     {
       "name": "Example (noe)- iPhone 15 Pro Max",
       "request": "launch",

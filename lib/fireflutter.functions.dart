@@ -149,17 +149,26 @@ ScaffoldFeatureController toast({
   Color? foregroundColor,
   double runSpacing = 12,
 }) {
-  if (error == true) {
-    backgroundColor ??= Theme.of(context).colorScheme.error;
-    foregroundColor ??= Theme.of(context).colorScheme.onError;
-  }
-  {
-    backgroundColor ??= Theme.of(context).colorScheme.primary;
-    foregroundColor ??= Theme.of(context).colorScheme.onPrimary;
-  }
-
   BuildContext mayBeGlobalContext =
       FireFlutterService.instance.globalContext ?? context;
+
+  if (error == true) {
+    backgroundColor ??= Theme.of(mayBeGlobalContext).colorScheme.error;
+    foregroundColor ??= Theme.of(mayBeGlobalContext).colorScheme.onError;
+  }
+  {
+    /// if the `background` is not set it will use the toastBackgroundcolor from
+    /// `FireflutterService.instance.toastBackgroundColor`and if it also not set
+    ///  it will use `Theme.of(mayBeGlobalContext).colorScheme.onPrimary`
+    ///
+    /// if the `foregroundColor` is not set it will use the toastForegroundColor from
+    /// `FireflutterService.instance.toastForegroundColor`and if it also not set
+    /// it will use `Theme.of(mayBeGlobalContext).colorScheme.onPrimary`
+    backgroundColor ??= FireFlutterService.instance.toastBackgroundColor ??
+        Theme.of(mayBeGlobalContext).colorScheme.primary;
+    foregroundColor ??= FireFlutterService.instance.toastForegroundColor ??
+        Theme.of(mayBeGlobalContext).colorScheme.onPrimary;
+  }
 
   return ScaffoldMessenger.of(mayBeGlobalContext).showSnackBar(
     SnackBar(
@@ -181,7 +190,7 @@ ScaffoldFeatureController toast({
               child: Row(children: [
                 if (icon != null) ...[
                   Theme(
-                    data: Theme.of(context).copyWith(
+                    data: Theme.of(mayBeGlobalContext).copyWith(
                       iconTheme: IconThemeData(color: foregroundColor),
                     ),
                     child: icon,
