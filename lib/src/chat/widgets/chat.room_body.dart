@@ -330,7 +330,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                 ChatService.instance.customize.chatRoomMenu?.call(chat) ??
                     PopupMenuButton<String>(
                       itemBuilder: (_) => [
-                        if (chat.room.isMaster || isAdmin)
+                        if ((chat.room.isMaster || isAdmin) &&
+                            chat.room.isGroupChat)
                           PopupMenuItem(
                             value: 'setting',
                             child: Text(T.setting.tr),
