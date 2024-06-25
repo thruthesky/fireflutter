@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
+import 'package:fireflutter/fireflutter.field.dart';
 import 'package:fireflutter/src/setting/user.setting.model.dart';
 import 'package:fireflutter/src/setting/user.setting.service.dart';
 import 'package:geohash_plus/geohash_plus.dart';
@@ -51,6 +52,10 @@ class User {
 
   /// 사용자가 직접 입력하는 별명
   String displayName;
+
+  /// Lower case of [displayName]. And it is coming from database. So, it can
+  /// be used for searching.
+  String displayNameLowerCase;
 
   @Deprecated('email is a private informationn. Use UserPrivate')
   String email;
@@ -185,6 +190,7 @@ class User {
     required this.email,
     required this.phoneNumber,
     required this.displayName,
+    required this.displayNameLowerCase,
     required this.photoUrl,
     required this.profileBackgroundImageUrl,
     required this.photoUrls,
@@ -244,7 +250,8 @@ class User {
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
-      displayName: json['displayName'] ?? '',
+      displayName: (json['displayName'] ?? '').trim(),
+      displayNameLowerCase: (json['displayNameLowerCase'] ?? '').trim(),
       photoUrl: json['photoUrl'] ?? '',
       profileBackgroundImageUrl: json['profileBackgroundImageUrl'] ?? '',
 
@@ -297,6 +304,7 @@ class User {
       'uid': uid,
       'name': name,
       'displayName': displayName,
+      'displayNameLowerCase': displayNameLowerCase,
       'photoUrl': photoUrl,
       'profileBackgroundImageUrl': profileBackgroundImageUrl,
       'photoUrls': photoUrls,
@@ -344,6 +352,7 @@ class User {
     if (user != null) {
       name = user.name;
       displayName = user.displayName;
+      displayNameLowerCase = user.displayNameLowerCase;
       photoUrl = user.photoUrl;
       profileBackgroundImageUrl = user.profileBackgroundImageUrl;
       photoUrls = user.photoUrls;
@@ -431,7 +440,9 @@ class User {
     await ff.set(
       '${ff.User.node}/$uid',
       {
-        'displayName': displayName,
+        if (displayName != null) 'displayName': displayName.trim(),
+        if (displayName != null)
+          Field.displayNameLowerCase: displayName.trim().toLowerCase(),
         'photoUrl': photoUrl,
         'createdAt': ServerValue.timestamp,
         'order': DateTime.now().millisecondsSinceEpoch * -1,
@@ -494,7 +505,9 @@ class User {
   }) async {
     final data = {
       if (name != null) 'name': name,
-      if (displayName != null) 'displayName': displayName,
+      if (displayName != null) Field.displayName: displayName.trim(),
+      if (displayName != null)
+        Field.displayNameLowerCase: displayName.toLowerCase().trim(),
       if (photoUrl != null) 'photoUrl': photoUrl,
       if (profileBackgroundImageUrl != null)
         'profileBackgroundImageUrl': profileBackgroundImageUrl,

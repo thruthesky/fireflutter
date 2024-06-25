@@ -20,6 +20,7 @@ class Field {
   static const String countryCode = 'countryCode';
 
   static const String displayName = 'displayName';
+  static const String displayNameLowerCase = 'displayNameLowerCase';
   static const String birthDay = 'birthDay';
   static const String birthMonth = 'birthMonth';
   static const String birthYear = 'birthYear';
