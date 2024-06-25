@@ -447,6 +447,13 @@ class T {
     'lo': 'ອັບເດດຂໍ້ມູນຜູ້ໃຊ້',
   };
 
+
+  static Json backgroundUpdate = {
+    'en': 'Background update',
+    'ko': '배경 수정',
+  };
+
+
   static Json contact = {
     'en': 'Contact',
     'ko': '문의하기',
