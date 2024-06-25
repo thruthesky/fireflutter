@@ -315,127 +315,128 @@ class _ChatRoomState extends State<ChatRoomBody> {
                 const SizedBox(width: 8),
 
                 /// add notifications on and off
-                IconButton(
-                  onPressed: () async {
-                    await chat.room.toggleNotifications();
-                  },
-                  icon: Value(
-                    // path: ChatRoom.chatRoomUsersAt(chat.room.id, myUid!),
-                    ref: ChatRoom.usersAtRef(chat.room.id, myUid!),
-                    builder: (v) => v == true
-                        ? const Icon(Icons.notifications_rounded)
-                        : const Icon(Icons.notifications_outlined),
-                  ),
-                ),
-
-                if (chat.room.isGroupChat)
-                  ChatService.instance.customize.chatRoomInviteButton
-                          ?.call(chat.room) ??
-                      IconButton(
-                        onPressed: () async {
-                          ChatService.instance.showInviteScreen(
-                              context: context, room: chat.room);
-                        },
-                        icon: const Icon(Icons.person_add_rounded),
-                      ),
-
-                ChatService.instance.customize.chatRoomMenu?.call(chat) ??
-                    PopupMenuButton<String>(
-                      itemBuilder: (_) => [
-                        if ((chat.room.isMaster || isAdmin) &&
-                            chat.room.isGroupChat)
-                          PopupMenuItem(
-                            value: 'setting',
-                            child: Text(T.setting.tr),
-                          ),
-                        if (chat.room.isGroupChat)
-                          PopupMenuItem(
-                            child: Text(T.share.tr),
-                            value: 'share',
-                          ),
-                        PopupMenuItem(
-                          value: 'members',
-                          child: Text(
-                            T.members.tr,
-                          ),
-                        ),
-                        if (chat.room.isGroupChat &&
-                            (isAdmin || chat.room.isMaster))
-                          PopupMenuItem(
-                            value: Field.blockedUsers,
-                            child: Text(T.blockedUsers.tr),
-                          ),
-                        if (chat.room.isSingleChat)
-                          PopupMenuItem(
-                            value: 'block',
-                            child: MyDoc(
-                              builder: (my) => my == null
-                                  ? const SizedBox.shrink()
-                                  // : T.block.orBlocked(chat.room.otherUserUid!, T.unblock.tr),
-                                  : Text(!my.blocked(chat.room.otherUserUid!)
-                                      ? T.block.tr
-                                      : T.unblock.tr),
-                            ),
-                          ),
-                        PopupMenuItem(
-                          value: 'report',
-                          child: Text(T.report.tr),
-                        ),
-                        if (widget.leave &&
-                            !chat.room.isMaster &&
-                            chat.room.isGroupChat)
-                          PopupMenuItem(
-                              value: 'leave', child: Text(T.leave.tr)),
-                      ],
-                      onSelected: (v) async {
-                        if (v == 'setting') {
-                          /// 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
-                          /// 이에 대한 내용은, ko/chat.md 를 한다.
-                          await ChatService.instance.showChatRoomSettings(
-                            context: context,
-                            roomId: chat.room.id,
-                          );
-                          setState(() {});
-                        } else if (v == 'share') {
-                          await Share.shareUri(
-                            LinkService.instance.generateChatRoomLink(
-                              chat.room.id,
-                            ),
-                          );
-                        } else if (v == 'members') {
-                          await ChatService.instance.showUserListScreen(
-                            context: context,
-                            room: chat.room,
-                          );
-                        } else if (v == Field.blockedUsers) {
-                          await ChatService.instance.showBlockedUserListScreen(
-                            context: context,
-                            room: chat.room,
-                          );
-                        } else if (v == 'block') {
-                          /// 1:1 채팅 방의 경우, 차단 & 해제
-                          // final re =
-                          await UserService.instance.block(
-                              context: context,
-                              otherUserUid: chat.room.otherUserUid!);
-                        } else if (v == 'report') {
-                          final re = await input(
-                            context: context,
-                            title: T.reportInputTitle.tr,
-                            subtitle: T.reportInputMessage.tr,
-                            hintText: T.reportInputHint.tr,
-                          );
-                          if (re == null || re == '') return;
-                          await Report.create(
-                              chatRoomId: chat.room.id, reason: re);
-                        } else if (v == 'leave') {
-                          await chat.room.leave();
-                          if (context.mounted) Navigator.of(context).pop();
-                        }
-                      },
-                      tooltip: T.chatRoomSettings.tr,
-                      icon: const Icon(Icons.menu_rounded),
+                if (cannotJoin == false) ...[
+                  IconButton(
+                    onPressed: () async {
+                      await chat.room.toggleNotifications();
+                    },
+                    icon: Value(
+                      // path: ChatRoom.chatRoomUsersAt(chat.room.id, myUid!),
+                      ref: ChatRoom.usersAtRef(chat.room.id, myUid!),
+                      builder: (v) => v == true
+                          ? const Icon(Icons.notifications_rounded)
+                          : const Icon(Icons.notifications_outlined),
                     ),
+                  ),
+                  if (chat.room.isGroupChat)
+                    ChatService.instance.customize.chatRoomInviteButton
+                            ?.call(chat.room) ??
+                        IconButton(
+                          onPressed: () async {
+                            ChatService.instance.showInviteScreen(
+                                context: context, room: chat.room);
+                          },
+                          icon: const Icon(Icons.person_add_rounded),
+                        ),
+                  ChatService.instance.customize.chatRoomMenu?.call(chat) ??
+                      PopupMenuButton<String>(
+                        itemBuilder: (_) => [
+                          if ((chat.room.isMaster || isAdmin) &&
+                              chat.room.isGroupChat)
+                            PopupMenuItem(
+                              value: 'setting',
+                              child: Text(T.setting.tr),
+                            ),
+                          if (chat.room.isGroupChat)
+                            PopupMenuItem(
+                              child: Text(T.share.tr),
+                              value: 'share',
+                            ),
+                          PopupMenuItem(
+                            value: 'members',
+                            child: Text(
+                              T.members.tr,
+                            ),
+                          ),
+                          if (chat.room.isGroupChat &&
+                              (isAdmin || chat.room.isMaster))
+                            PopupMenuItem(
+                              value: Field.blockedUsers,
+                              child: Text(T.blockedUsers.tr),
+                            ),
+                          if (chat.room.isSingleChat)
+                            PopupMenuItem(
+                              value: 'block',
+                              child: MyDoc(
+                                builder: (my) => my == null
+                                    ? const SizedBox.shrink()
+                                    // : T.block.orBlocked(chat.room.otherUserUid!, T.unblock.tr),
+                                    : Text(!my.blocked(chat.room.otherUserUid!)
+                                        ? T.block.tr
+                                        : T.unblock.tr),
+                              ),
+                            ),
+                          PopupMenuItem(
+                            value: 'report',
+                            child: Text(T.report.tr),
+                          ),
+                          if (widget.leave &&
+                              !chat.room.isMaster &&
+                              chat.room.isGroupChat)
+                            PopupMenuItem(
+                                value: 'leave', child: Text(T.leave.tr)),
+                        ],
+                        onSelected: (v) async {
+                          if (v == 'setting') {
+                            /// 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
+                            /// 이에 대한 내용은, ko/chat.md 를 한다.
+                            await ChatService.instance.showChatRoomSettings(
+                              context: context,
+                              roomId: chat.room.id,
+                            );
+                            setState(() {});
+                          } else if (v == 'share') {
+                            await Share.shareUri(
+                              LinkService.instance.generateChatRoomLink(
+                                chat.room.id,
+                              ),
+                            );
+                          } else if (v == 'members') {
+                            await ChatService.instance.showUserListScreen(
+                              context: context,
+                              room: chat.room,
+                            );
+                          } else if (v == Field.blockedUsers) {
+                            await ChatService.instance
+                                .showBlockedUserListScreen(
+                              context: context,
+                              room: chat.room,
+                            );
+                          } else if (v == 'block') {
+                            /// 1:1 채팅 방의 경우, 차단 & 해제
+                            // final re =
+                            await UserService.instance.block(
+                                context: context,
+                                otherUserUid: chat.room.otherUserUid!);
+                          } else if (v == 'report') {
+                            final re = await input(
+                              context: context,
+                              title: T.reportInputTitle.tr,
+                              subtitle: T.reportInputMessage.tr,
+                              hintText: T.reportInputHint.tr,
+                            );
+                            if (re == null || re == '') return;
+                            await Report.create(
+                                chatRoomId: chat.room.id, reason: re);
+                          } else if (v == 'leave') {
+                            await chat.room.leave();
+                            if (context.mounted) Navigator.of(context).pop();
+                          }
+                        },
+                        tooltip: T.chatRoomSettings.tr,
+                        icon: const Icon(Icons.menu_rounded),
+                      ),
+                ]
               ],
             ),
           ),
