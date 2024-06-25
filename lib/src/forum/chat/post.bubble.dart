@@ -108,7 +108,7 @@ class _PostBubbleState extends State<PostBubble> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (isLongText) _readMore(),
-                        const Spacer(),
+                        const SizedBox(width: 14),
                         Text('${T.edit.tr}/${T.delete.tr}'),
                       ],
                     ),
@@ -154,13 +154,8 @@ class _PostBubbleState extends State<PostBubble> {
   }
 
   _readMore() {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: isMine ? 80 : 0,
-      ),
-      child: Text(
-        '   ${T.readMore.tr}...   ',
-      ),
+    return Text(
+      '${T.readMore.tr}...   ',
     );
   }
 
@@ -242,7 +237,6 @@ class _PostBubbleState extends State<PostBubble> {
                               ? Colors.blue.withGreen(200)
                               : Colors.blue,
                           fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.underline,
                         ),
                   ),
                 ),
