@@ -22,24 +22,43 @@ class ForumService {
   Function(Post)? onPostCreate;
   Function(Post)? onPostUpdate;
   Function(Post)? onPostDelete;
+  Function(Post)? beforePostCreate;
+  Function(Post)? beforePostUpdate;
+  Function(Post)? beforePostDelete;
   Function(Comment)? onCommentCreate;
   Function(Comment)? onCommentUpdate;
   Function(Comment)? onCommentDelete;
+  Function(Comment)? beforeCommentCreate;
+  Function(Comment)? beforeCommentUpdate;
+  Function(Comment)? beforeCommentDelete;
 
   init({
     Function(Post post)? onPostCreate,
     Function(Post post)? onPostUpdate,
     Function(Post post)? onPostDelete,
+    Function(Post post)? beforePostCreate,
+    Function(Post post)? beforePostUpdate,
+    Function(Post post)? beforePostDelete,
     Function(Comment comment)? onCommentCreate,
     Function(Comment comment)? onCommentUpdate,
     Function(Comment comment)? onCommentDelete,
+    Function(Comment comment)? beforeCommentCreate,
+    Function(Comment comment)? beforeCommentUpdate,
+    Function(Comment comment)? beforeCommentDelete,
   }) {
     this.onPostCreate = onPostCreate;
     this.onPostUpdate = onPostUpdate;
     this.onPostDelete = onPostDelete;
+    this.beforePostCreate = beforePostCreate;
+    this.beforePostUpdate = beforePostUpdate;
+    this.beforePostDelete = beforePostDelete;
+
     this.onCommentCreate = onCommentCreate;
     this.onCommentUpdate = onCommentUpdate;
     this.onCommentDelete = onCommentDelete;
+    this.beforeCommentCreate = beforeCommentCreate;
+    this.beforeCommentUpdate = beforeCommentUpdate;
+    this.beforeCommentDelete = beforeCommentDelete;
   }
 
   showForumChatScreen(

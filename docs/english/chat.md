@@ -10,12 +10,12 @@
 - `/chat-messages` stores chat messages.
 - `/chat-joins` indicates who is participating in which chat room. Both `/chat-rooms` and `/chat-joins` use the `ChatRoom`.
 - `noOfUsers` is updated in `/chat-rooms` when a new user joins or leaves a group chat room,
-    - and is updated in `/chat-joins` when a chat message is sent.
+  - and is updated in `/chat-joins` when a chat message is sent.
 - When sending a chat message, if the text contains a URL, information for previewing the URL is extracted. The appropriate values are stored in the following fields below the message:
-    - `previewUrl` - URL
-    - `previewTitle` - Title
-    - `previewDescription` - Description
-    - `previewImageUrl` - Image
+  - `previewUrl` - URL
+  - `previewTitle` - Title
+  - `previewDescription` - Description
+  - `previewImageUrl` - Image
 
 ### Chat Rooms
 
@@ -56,18 +56,18 @@ if (snapshot.exists) {
 ### Get ChatRoom from ChatModel
 
 - The `ChatModel` instance is needed before displaying the chat room message.
-    - to check if the user is in the room,
-    - to check if site preview displaying or image displaying options,
-    - to show password input box based on the chat room settings,
-    - etc
+  - to check if the user is in the room,
+  - to check if site preview displaying or image displaying options,
+  - to show password input box based on the chat room settings,
+  - etc
 
-To clarify, `ChatRoom` and `ChatModel` are two different models. The `ChatRoom` is the model that holds some details of the chat room. The `ChatModel` is the complete model that holds all the details of the chat room and the chat messages. In short, the `ChatRoom` is accessible  `ChatModel.chatRoom`.
+To clarify, `ChatRoom` and `ChatModel` are two different models. The `ChatRoom` is the model that holds some details of the chat room. The `ChatModel` is the complete model that holds all the details of the chat room and the chat messages. In short, the `ChatRoom` is accessible `ChatModel.chatRoom`.
 
 ### Order
 
 - Chat message order is sorted by the last message's `order` field.
-    - The later message must have a smaller value than the previous message. Meaning the latest message always have the smallest value.
-    - When you send a chat message programatically without `order`, the message may be shown at the wrong place (at the top).
+  - The later message must have a smaller value than the previous message. Meaning the latest message always have the smallest value.
+  - When you send a chat message programatically without `order`, the message may be shown at the wrong place (at the top).
 
 ### Creating Chat Room
 
@@ -219,6 +219,40 @@ ChatService.instance.showChatRoomSettings(
   context: context,
   roomId: chat.room.id,
 );
+```
+
+#### Gender options in Chatroom settings.
+
+Gender can be `All`, `Male` or `Female`.
+Gender options allows `master` to limit the users who can join the chatroom.
+To set the this, you can call `ChatService.instance.showChatRoomSettings` to show the chatroom settings.
+Under the gender options select the gender that will be allowed to join the chatroom then save.
+
+If the user already joined the chatroom before it was change. Then they can still join the chatroom normally.
+For new users that will join the chatroom that has different gender,
+There will be a `FireFlutterException` with code `Code.chatRoomUserGenderNotAllowed`.
+
+This will allow the developer to catch the error and display a message to the user.
+You can do `try catch` or you can catch it on the `runZonedGuarded` like the following code.
+
+```dart
+void main() async {
+  runZonedGuarded(
+    () async {
+      runApp(
+        MyApp(),
+      );
+    },
+    zoneErrorHandler(e, stackTrace) {
+      if (e is FireFlutterException) {
+        if(e.code == Code.chatRoomUserGenderNotAllowed)
+          error(context: context, message: e.message);
+      }
+      debugPrintStack(stackTrace: stackTrace);
+    },
+  );
+}
+
 ```
 
 ### Chat Room List
@@ -590,13 +624,13 @@ The Chat Bubble widget is a child of ChatBubblePopupMenuButton in the default ch
 The dropdown may show the following callbacks:
 
 - onViewProfile
-    - View the Users Profile
+  - View the Users Profile
 - onReply
-    - Reply on the message.
+  - Reply on the message.
 - onDeleteMessage
-    - Delete the Message
+  - Delete the Message
 - onBlock
-    - Block the user from the group chat
+  - Block the user from the group chat
 
 ## Replying on a message
 
