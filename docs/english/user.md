@@ -511,16 +511,31 @@ Refer to the [widget documentation](widgets.md) for displaying the block button.
 
 ## Updating App Specific Value
 
-In each app, there might be other fields that is required for a User. Use `customData` upon updating the user.
+In each app, there might be other fields that is required for a User. Use `extra` upon updating the user.
 
 ```dart
 final user = User.fromSnapshot(snapshot);
 
 user.update(
   name: "My Name";
-  customData: {
+  extra: {
     "favoriteDog": "Shih Tzu",
     "favoriteCat": "Tabby",
   }
 )
 ```
+
+To access the extra data, you can code like below,
+
+```dart
+user.data['favoriteDog'];
+```
+
+
+If you add a field name that is already existing in user property like `name`, then you may get an unexpected result. Do not use the existing field names.
+
+
+
+
+
+

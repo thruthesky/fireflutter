@@ -31,7 +31,7 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                 height: 8,
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {}, // AdminService.instance.showReport(),
                 title: const Text('신고목록'),
               ),
               const SizedBox(
