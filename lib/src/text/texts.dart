@@ -447,12 +447,10 @@ class T {
     'lo': 'ອັບເດດຂໍ້ມູນຜູ້ໃຊ້',
   };
 
-
   static Json backgroundUpdate = {
     'en': 'Background update',
     'ko': '배경 수정',
   };
-
 
   static Json contact = {
     'en': 'Contact',
@@ -2007,5 +2005,53 @@ class T {
   static const Json confirmMirrorUserDataToFirestoreMessage = {
     'en': 'Warning!!! Are you sure you want to mirror user data to firestore?',
     'ko': '경고!!! Firestore에 사용자 데이터를 복사하시겠습니까?',
+  };
+
+  static const Json request = {
+    'en': 'Request',
+    'ko': '요구',
+  };
+  static const Json rejected = {
+    'en': 'Rejected',
+    'ko': '거부됨',
+  };
+  static const Json accepted = {
+    'en': 'Accepted',
+    'ko': '수락됨',
+  };
+
+  static const Json noReportsFound = {
+    'en': 'No report found',
+    'ko': '보고서를 찾을 수 없습니다.',
+  };
+
+  static const Json adminDashboard = {
+    'en': 'Admin Dashboard',
+    'ko': '관리 대시 보드'
+  };
+
+  static const Json fullUserList = {
+    'en': 'Full User List',
+    'ko': '전체 사용자 목록',
+  };
+
+  static const Json reportList = {
+    'en': 'Report List',
+    'ko': '신고목록',
+  };
+
+  static const Json sendPushMessageToAllUser = {
+    'en': 'Send push message to all users',
+    'ko': '모든 사용자에게 푸시 메시지 보내기',
+  };
+
+  static const Json mirrorUserDataToFiresotre = {
+    'en': 'Mirror User Data to Firestore',
+    'ko': ' Firestore에 사용자 데이터 미러링',
+  };
+
+  static const Json manageMeetup = {
+    'en': 'Manage Meetup',
+    'ko': '모임 관리',
   };
 }

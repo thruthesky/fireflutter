@@ -13,7 +13,7 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin DashBoard'),
+        title: Text(T.adminDashboard.tr),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -25,14 +25,16 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                 onTap: () {
                   AdminService.instance.showUserList(context: context);
                 },
-                title: const Text('전체 사용자 목록'),
+                title: Text(T.fullUserList.tr),
               ),
               const SizedBox(
                 height: 8,
               ),
               ListTile(
-                onTap: () {}, // AdminService.instance.showReport(),
-                title: const Text('신고목록'),
+                onTap: () {
+                  AdminService.instance.showAdminReportScreen(context: context);
+                },
+                title: Text(T.reportList.tr),
               ),
               const SizedBox(
                 height: 8,
@@ -50,7 +52,7 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                     body: 'this is the content of the message',
                   );
                 },
-                title: const Text('Send push messages to all users'),
+                title: Text(T.sendPushMessageToAllUser.tr),
               ),
               const SizedBox(
                 height: 8,
@@ -66,9 +68,11 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                   final result = await AdminService.instance
                       .mirrorUserBackfillRtdbToFirestore();
                   final response = result.data;
-                  print(response.toString());
+                  print(
+                    response.toString(),
+                  );
                 },
-                title: const Text('Mirror User Data To Firestore'),
+                title: Text(T.mirrorUserDataToFiresotre.tr),
               ),
               const SizedBox(
                 height: 8,
@@ -80,7 +84,7 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                       pageBuilder: (_, __, ___) =>
                           const AdminMeetupListScreen());
                 },
-                title: const Text('Meetup Management'),
+                title: Text(T.manageMeetup.tr),
               ),
             ],
           ),
