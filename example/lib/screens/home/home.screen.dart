@@ -7,6 +7,7 @@ import 'package:example/screens/forum/forum_search.screen.dart';
 import 'package:example/screens/forum/latest.posts.screen.dart';
 import 'package:example/screens/forum/post_list_by_group.screen.dart';
 import 'package:example/screens/meetup/meetup.screen.dart';
+import 'package:example/screens/password_reset/password_reset.screen.dart';
 import 'package:example/screens/user/user.search.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -109,6 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           _backfillSearchValue();
                         },
                         child: const Text("Backfill Search Value"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(PasswordResetScreen.routeName),
+                        child: const Text("Reset password"),
                       ),
                     ],
                   ),
