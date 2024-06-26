@@ -83,6 +83,9 @@ chat.sendMessage(
 ```dart
 IsAdmin(
     builder: () => DefaultAdminReportScreen(),
-    notAdminBuilder: ()=> Text('Not an Admin'),
+    notAdminBuilder: () => Scafold(
+        body:Center (child: Text('Not an Admin'),
+        ),
+    ),
 );
 ```
