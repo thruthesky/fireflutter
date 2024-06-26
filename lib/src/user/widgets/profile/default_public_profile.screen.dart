@@ -44,6 +44,9 @@ class DefaultPublicProfileScreen extends StatelessWidget {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(

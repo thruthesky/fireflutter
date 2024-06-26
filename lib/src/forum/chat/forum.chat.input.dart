@@ -157,11 +157,11 @@ class _ForumChatInputState extends State<ForumChatInput> {
 
   onChanged(String value) {
     dog("onChanged: $value");
-    // setState(() {});
     if (!_checkLogin()) {
       contentController.clear();
       return;
     }
+    setState(() {});
   }
 
   onSubmitted([String? value]) async {
