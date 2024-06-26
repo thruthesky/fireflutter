@@ -59,7 +59,10 @@ class DefaultPublicProfileScreen extends StatelessWidget {
             actions: [
               if (userUid == myUid)
                 PopupMenuButton(
-                  icon: const Icon(Icons.settings, color: Colors.white),
+                  icon: const Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                  ),
                   itemBuilder: (context) {
                     return [
                       PopupMenuItem(
