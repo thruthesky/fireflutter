@@ -5,9 +5,11 @@ class ForumChatInput extends StatefulWidget {
   const ForumChatInput({
     super.key,
     required this.category,
+    this.requireLogin,
   });
 
   final String category;
+  final Future<void> Function()? requireLogin;
 
   @override
   State<ForumChatInput> createState() => _ForumChatInputState();
@@ -65,7 +67,6 @@ class _ForumChatInputState extends State<ForumChatInput> {
             child: TextField(
               focusNode: focusNode,
               controller: contentController,
-              autofocus: inputCollapsed ? false : true,
               decoration: InputDecoration(
                 hintText: T.inputContentHere.tr,
                 prefixIcon: inputCollapsed
@@ -85,10 +86,19 @@ class _ForumChatInputState extends State<ForumChatInput> {
               maxLines: 6,
               onChanged: onChanged,
               onSubmitted: onSubmitted,
+              onTap: () {
+                dog("onTap: $hasFocus");
+                if (my == null) {
+                  widget.requireLogin?.call() ?? _showLoginRequiredDialog();
+                  focusNode.unfocus();
+                  return;
+                }
+              },
             ),
-            onFocusChange: (hasFocus) => setState(
-              () => this.hasFocus = hasFocus,
-            ),
+            onFocusChange: (hasFocus) {
+              dog("onFocusChange: $hasFocus");
+              setState(() => this.hasFocus = hasFocus);
+            },
           ),
           if (inputExpanded) ...[
             const SizedBox(height: 8),
@@ -102,9 +112,10 @@ class _ForumChatInputState extends State<ForumChatInput> {
                 IconButton(
                   onPressed: () async {
                     final re = await confirm(
-                        context: context,
-                        title: T.cancel.tr,
-                        message: T.doYouWanToCancel.tr);
+                      context: context,
+                      title: T.cancel.tr,
+                      message: T.doYouWanToCancel.tr,
+                    );
                     if (re == false) return;
                     urls.map((url) => StorageService.instance.delete(url));
                     setState(() {
@@ -131,7 +142,8 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   onChanged(String value) {
-    setState(() {});
+    dog("onChanged: $value");
+    // setState(() {});
   }
 
   onSubmitted([String? value]) async {
@@ -158,6 +170,11 @@ class _ForumChatInputState extends State<ForumChatInput> {
       });
       FocusScope.of(context).unfocus();
     }
+  }
+
+  _showLoginRequiredDialog() {
+    // TODO trs
+    error(context: context, message: "Login is required to use this feature.");
   }
 
   Future<void> onUpload() async {
