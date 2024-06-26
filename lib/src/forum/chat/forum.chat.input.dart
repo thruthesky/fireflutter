@@ -9,7 +9,7 @@ class ForumChatInput extends StatefulWidget {
   });
 
   final String category;
-  final Future<void> Function()? requireLogin;
+  final Function()? requireLogin;
 
   @override
   State<ForumChatInput> createState() => _ForumChatInputState();
@@ -88,11 +88,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
               onSubmitted: onSubmitted,
               onTap: () {
                 dog("onTap: $hasFocus");
-                if (my == null) {
-                  widget.requireLogin?.call() ?? _showLoginRequiredDialog();
-                  focusNode.unfocus();
-                  return;
-                }
+                _checkLogin();
               },
             ),
             onFocusChange: (hasFocus) {
@@ -141,12 +137,35 @@ class _ForumChatInputState extends State<ForumChatInput> {
     );
   }
 
+  /// Shows a dialog with the login required message if
+  /// the user is not logged in.
+  ///
+  /// Returns true if a user is logged in, false otherwise.
+  bool _checkLogin() {
+    if (my == null) {
+      focusNode.unfocus();
+      if (widget.requireLogin != null) {
+        widget.requireLogin?.call();
+      } else {
+        _showLoginRequiredDialog();
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   onChanged(String value) {
     dog("onChanged: $value");
     // setState(() {});
+    if (!_checkLogin()) {
+      contentController.clear();
+      return;
+    }
   }
 
   onSubmitted([String? value]) async {
+    if (!_checkLogin()) return;
     if (contentController.text.length <= 30) {
       toast(context: context, message: T.contentIsTooShort.tr);
       // setState(() {
@@ -178,6 +197,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   Future<void> onUpload() async {
+    if (!_checkLogin()) return;
     final url = await StorageService.instance.upload(
       context: context,
       progress: (p) => setState(() => progress = p),

@@ -32,6 +32,9 @@ class Login extends StatelessWidget {
     return StreamBuilder<String?>(
       stream: FirebaseAuth.instance.authStateChanges().map((user) => user?.uid),
       builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          return yes?.call(snapshot.data!) ?? const SizedBox.shrink();
+        }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return loadingBuider?.call() ??
               const Center(child: CircularProgressIndicator.adaptive());
@@ -39,10 +42,7 @@ class Login extends StatelessWidget {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
-        if (snapshot.data == null) {
-          return no != null ? no!() : const SizedBox.shrink();
-        }
-        return yes?.call(snapshot.data!) ?? const SizedBox.shrink();
+        return no != null ? no!() : const SizedBox.shrink();
       },
     );
   }
