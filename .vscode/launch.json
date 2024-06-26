@@ -18,6 +18,15 @@
       ]
     },
     {
+      "name": "Buy & Sell - iPhone 15 Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/buyandsell",
+      "program": "lib/main.dart",
+    },
+    {
       "name": "PhiLov - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
@@ -271,7 +280,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe - iPhone SE",
@@ -353,7 +365,6 @@
         "MODE=test"
       ]
     },
-    
     {
       "name": "Momcafe - Emulator release",
       "request": "launch",
@@ -1160,7 +1171,6 @@
         "MODE=noe"
       ]
     },
-
     {
       "name": "MomCafe (noe)- iPhone 15 Pro Max",
       "request": "launch",
@@ -1169,7 +1179,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "MomCafe (noe)- SM J737S",
@@ -1179,7 +1192,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "MomCafe (noe)- iPhone (2)",
@@ -1189,7 +1205,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "Example (noe)- iPhone 15 Pro Max",
