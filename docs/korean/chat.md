@@ -1,6 +1,48 @@
 # 채팅
 
 
+- [채팅](#채팅)
+  - [TODO](#todo)
+  - [참고](#참고)
+  - [Chat 데이터베이스 구조](#chat-데이터베이스-구조)
+    - [Chat Rooms 구조](#chat-rooms-구조)
+    - [Chat Messages 구조](#chat-messages-구조)
+    - [채팅방 설정](#채팅방-설정)
+      - [채팅방 설정과 비밀번호](#채팅방-설정과-비밀번호)
+  - [1:1 채팅방에 상대방의 사진와 이름이 나오는 로직](#11-채팅방에-상대방의-사진와-이름이-나오는-로직)
+  - [코딩 기법](#코딩-기법)
+    - [채팅 방에서 사용자의 전체 채팅 메시지 가져오기](#채팅-방에서-사용자의-전체-채팅-메시지-가져오기)
+    - [채팅방에서 로그인한 사용자의 메시지 한 개만 가져오기](#채팅방에서-로그인한-사용자의-메시지-한-개만-가져오기)
+    - [ChatModel에서 ChatRoom 가져오기](#chatmodel에서-chatroom-가져오기)
+    - [Order](#order)
+    - [채팅방 만들기](#채팅방-만들기)
+    - [채팅방 입장](#채팅방-입장)
+    - [Updating Chat Room](#updating-chat-room)
+    - [Sending Chat Messages](#sending-chat-messages)
+    - [Getting Chat Messages in a Room](#getting-chat-messages-in-a-room)
+    - [Opening the Settings for the Chat Room](#opening-the-settings-for-the-chat-room)
+    - [채팅방 목록 (Chat Room List)](#채팅방-목록-chat-room-list)
+      - [DefaultChatRoomListView Widget](#defaultchatroomlistview-widget)
+      - [ChatRoomListView](#chatroomlistview)
+      - [오픈 챗 목록하기](#오픈-챗-목록하기)
+      - [직접 데이터베이스에 쿼리하여 채팅방 목록하기](#직접-데이터베이스에-쿼리하여-채팅방-목록하기)
+        - [Chat Rooms not Necessarily Joined by the Currently Logged in User (roomsRef)](#chat-rooms-not-necessarily-joined-by-the-currently-logged-in-user-roomsref)
+  - [Toggling Notifications](#toggling-notifications)
+  - [Group Chat Room](#group-chat-room)
+    - [Creating a Group Chat](#creating-a-group-chat)
+    - [사용자 초대](#사용자-초대)
+    - [Group Chat Members](#group-chat-members)
+    - [Removing a Group Chat Member](#removing-a-group-chat-member)
+  - [Management](#management)
+  - [채팅 메시지 전송 콜백 - beforeMessageSent, afterMessageSent](#채팅-메시지-전송-콜백---beforemessagesent-aftermessagesent)
+  - [채팅 방 생성 다이얼로그 UI 변경](#채팅-방-생성-다이얼로그-ui-변경)
+  - [채팅방 입장했는데 로그인을 하지 않은 경우](#채팅방-입장했는데-로그인을-하지-않은-경우)
+  - [채팅 메시지 수 표시](#채팅-메시지-수-표시)
+  - [채팅 메시지 삭제](#채팅-메시지-삭제)
+  - [그룹 채팅 사용자 차단](#그룹-채팅-사용자-차단)
+  - [성별 설정](#성별-설정)
+  - [알려진 문제](#알려진-문제)
+
 
 ## TODO
 
@@ -1026,6 +1068,13 @@ NavigationDestination(
 - 차단된 상태에서 차단 해제되면, 사용자는 에러 없이, 채팅메시지를 전송할 수 있다.
   - 하지만, 메시지 목록에는 여전히 permission denied 로 나올 수 있는데, 이것은 커스텀 코딩으로 수정 할 수 있다.
   기본적으로는 `차단된 상태에서 차단 해제되면` 채팅방을 나갔다가 다시 들어와야 채팅 메시지가 올바로 보인다.
+
+
+## 성별 설정
+
+- 채팅방을 생성/수정 할 때, 성별을 지정하여 해당 성별의 사용자만 입장하게 할 수 있다.
+- 이 때, verified user 옵션을 같이 사용해야, 성별을 정확하게 판단 할 수 있다.
+
 
 
 ## 알려진 문제
