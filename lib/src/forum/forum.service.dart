@@ -26,20 +26,51 @@ class ForumService {
   Function(Comment)? onCommentUpdate;
   Function(Comment)? onCommentDelete;
 
+  /// hooks for post create/update/delete
+  Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> data, String category)? beforePostCreate;
+  Future<Map<String, dynamic>> Function(Map<String, dynamic> data)?
+      beforePostUpdate;
+  Function(Post)? beforePostDelete;
+
+  /// hooks for comment create/update/delete
+  Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> data, Comment comment)? beforeCommentCreate;
+  Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> data, Comment comment)? beforeCommentUpdate;
+  Function(Comment)? beforeCommentDelete;
+
   init({
     Function(Post post)? onPostCreate,
     Function(Post post)? onPostUpdate,
     Function(Post post)? onPostDelete,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>, String)?
+        beforePostCreate,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>)?
+        beforePostUpdate,
+    Function(Post post)? beforePostDelete,
     Function(Comment comment)? onCommentCreate,
     Function(Comment comment)? onCommentUpdate,
     Function(Comment comment)? onCommentDelete,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>, Comment)?
+        beforeCommentCreate,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>, Comment)?
+        beforeCommentUpdate,
+    Function(Comment comment)? beforeCommentDelete,
   }) {
     this.onPostCreate = onPostCreate;
     this.onPostUpdate = onPostUpdate;
     this.onPostDelete = onPostDelete;
+    this.beforePostCreate = beforePostCreate;
+    this.beforePostUpdate = beforePostUpdate;
+    this.beforePostDelete = beforePostDelete;
+
     this.onCommentCreate = onCommentCreate;
     this.onCommentUpdate = onCommentUpdate;
     this.onCommentDelete = onCommentDelete;
+    this.beforeCommentCreate = beforeCommentCreate;
+    this.beforeCommentUpdate = beforeCommentUpdate;
+    this.beforeCommentDelete = beforeCommentDelete;
   }
 
   showForumChatScreen(
