@@ -28,11 +28,11 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                   ///
                   /// if it is being handled in app, this will be
                   /// the parameter in the deep link of the Dynamic Link
-                  url: 'https://withcenter-test-3.firebaseapp.com',
+                  url: 'https://withcenter-test-3.firebaseapp.com/path',
 
                   /// if true, the url will be sent as a universal link
                   /// and can be open by app
-                  handleCodeInApp: false,
+                  // handleCodeInApp: false,
 
                   /// if set, this will be used as the domain (or subdomain) of the link
                   /// since many dynamic links can be configure per project this will ONLY
@@ -41,19 +41,19 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
 
                   /// if true, it will install the app if the
                   /// device supports the app requirements
-                  androidInstallApp: false,
+                  // androidInstallApp: false,
 
                   /// bundleId of the app
-                  iOSBundleId: 'com.withcenter.test3',
+                  // iOSBundleId: 'com.withcenter.test3',
 
                   /// if the androidInstallApp is true, the package name
                   /// is required and if not provided it will throw an error
-                  androidPackageName: 'com.withcenter.test3',
+                  // androidPackageName: 'com.withcenter.test3',
 
                   /// if this is provided, and if the app from the user's device
                   /// are an olderVersion it will redirect to
                   /// PlayStore/AppStore to update the app before proceeding
-                  androidMinimumVersion: '24',
+                  // androidMinimumVersion: '24',
                 );
 
                 try {
