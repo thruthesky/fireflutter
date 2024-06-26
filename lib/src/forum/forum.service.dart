@@ -22,28 +22,40 @@ class ForumService {
   Function(Post)? onPostCreate;
   Function(Post)? onPostUpdate;
   Function(Post)? onPostDelete;
-  Function(Post)? beforePostCreate;
-  Function(Post)? beforePostUpdate;
-  Function(Post)? beforePostDelete;
   Function(Comment)? onCommentCreate;
   Function(Comment)? onCommentUpdate;
   Function(Comment)? onCommentDelete;
-  Function(Comment)? beforeCommentCreate;
-  Function(Comment)? beforeCommentUpdate;
+
+  /// hooks for post create/update/delete
+  Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> data, String category)? beforePostCreate;
+  Future<Map<String, dynamic>> Function(Map<String, dynamic> data)?
+      beforePostUpdate;
+  Function(Post)? beforePostDelete;
+
+  /// hooks for comment create/update/delete
+  Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> data, Comment comment)? beforeCommentCreate;
+  Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> data, Comment comment)? beforeCommentUpdate;
   Function(Comment)? beforeCommentDelete;
 
   init({
     Function(Post post)? onPostCreate,
     Function(Post post)? onPostUpdate,
     Function(Post post)? onPostDelete,
-    Function(Post post)? beforePostCreate,
-    Function(Post post)? beforePostUpdate,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>, String)?
+        beforePostCreate,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>)?
+        beforePostUpdate,
     Function(Post post)? beforePostDelete,
     Function(Comment comment)? onCommentCreate,
     Function(Comment comment)? onCommentUpdate,
     Function(Comment comment)? onCommentDelete,
-    Function(Comment comment)? beforeCommentCreate,
-    Function(Comment comment)? beforeCommentUpdate,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>, Comment)?
+        beforeCommentCreate,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>, Comment)?
+        beforeCommentUpdate,
     Function(Comment comment)? beforeCommentDelete,
   }) {
     this.onPostCreate = onPostCreate;

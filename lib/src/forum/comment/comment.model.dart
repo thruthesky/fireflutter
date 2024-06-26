@@ -363,6 +363,11 @@ class Comment {
       'urls': urls,
     };
 
+    /// before comment create hook
+    if (ForumService.instance.beforeCommentCreate != null) {
+      data = await ForumService.instance.beforeCommentCreate!(data, this);
+    }
+
     await ref.set(data);
 
     /// Don't wait for calling onCommentCreate.
@@ -385,11 +390,18 @@ class Comment {
     List<String>? urls,
     bool? deleted,
   }) async {
-    await ref.update({
-      if (content != null) 'content': content,
-      'urls': urls,
-      if (deleted != null) 'deleted': deleted,
-    });
+    Map<String, Object?> data = {
+      if (content != null) Field.content: content,
+      if (deleted != null) Field.deleted: deleted,
+      Field.urls: urls,
+    };
+
+    /// before comment update hook
+    if (ForumService.instance.beforeCommentUpdate != null) {
+      data = await ForumService.instance.beforeCommentUpdate!(data, this);
+    }
+
+    await ref.update(data);
 
     /// Update the current content of the comment.
     if (content != null) this.content = content;
@@ -462,6 +474,7 @@ class Comment {
       );
       if (re != true) return;
     }
+    ForumService.instance.beforeCommentDelete?.call(this);
 
     await update(
       content: Code.deleted,

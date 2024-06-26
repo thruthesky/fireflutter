@@ -294,7 +294,7 @@ class Post {
     final order = DateTime.now().millisecondsSinceEpoch * -1;
 
     /// Update url preview
-    final data = {
+    Map<String, dynamic> data = {
       'uid': myUid,
       'title': title,
       'content': content,
@@ -303,6 +303,11 @@ class Post {
       Field.order: order,
       if (group != null) 'group': group,
     };
+
+    /// before post create hook
+    if (ForumService.instance.beforePostCreate != null) {
+      data = await ForumService.instance.beforePostCreate!(data, category);
+    }
 
     final DatabaseReference ref = Post.categoryRef(category).push();
 
@@ -366,7 +371,7 @@ class Post {
     bool? deleted,
     Map<String, dynamic>? otherData,
   }) async {
-    final Map<String, Object?> data = {
+    Map<String, Object?> data = {
       if (otherData != null) ...otherData,
       if (title != null) Field.title: title,
       if (content != null) Field.content: content,
@@ -376,6 +381,10 @@ class Post {
     };
 
     if (data.isEmpty) return this;
+
+    if (ForumService.instance.beforePostUpdate != null) {
+      data = await ForumService.instance.beforePostUpdate!(data);
+    }
 
     await ref.update(data);
 
@@ -403,6 +412,9 @@ class Post {
     //           to check if there are comments?
     final snapshot = await Comment.postComments(id).limitToFirst(1).get();
     final doesCommentsExist = snapshot.exists;
+
+    _beforeDelete();
+
     if (doesCommentsExist) {
       await update(
         otherData: {
@@ -417,6 +429,10 @@ class Post {
     }
     deleted = true;
     _afterDelete();
+  }
+
+  _beforeDelete() async {
+    ForumService.instance.onPostDelete?.call(this);
   }
 
   _afterDelete() async {
