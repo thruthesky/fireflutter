@@ -177,7 +177,6 @@ class ChatService {
     return await showDialog<ChatRoom?>(
         context: context,
         builder: (_) {
-          dog('showChatroom ${chatRoomSettings.enableGenderOption} ${chatRoomSettings.enableGenderOption}');
           return customize.chatRoomEditDialogBuilder
                   ?.call(context: context, roomId: roomId) ??
               DefaultChatRoomEditDialog(roomId: roomId);

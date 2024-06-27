@@ -11,8 +11,9 @@ class ChatRoomSettings {
   /// [enableVerifiedUserOption] enable verifeid user option
   ///
   /// [enableGenderOption] enable gender user option
-  const ChatRoomSettings(
-      {this.enableVerifiedUserOption = true,
-      this.enableGenderOption = true,
-      this.domain});
+  const ChatRoomSettings({
+    this.enableVerifiedUserOption = true,
+    this.enableGenderOption = true,
+    this.domain,
+  });
 }

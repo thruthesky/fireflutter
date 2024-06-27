@@ -104,7 +104,16 @@ class ChatRoom {
   /// [hasPassword] tells whether a password is set for the group chat room
   bool hasPassword;
 
+  /// There might be an instance when you are using same firebase database for  two project and
+  ///  you want to only display the open chat separately for instance you want to show
+  /// all the chat list on open chat A and hide the open chat list B. you can use the field below
+  ///
+  /// [domain] domain of the chat room eg. app-test, my-app
   String? domain;
+
+  /// [domainChatOrder] order of the chat room in the domain. domainChatOrder is same order with
+  /// openChatOrder. This field is only exist if you set a `domain` in `chatRoomSettings` in
+  /// `ChatService.instance.init()`
   int? domainChatOrder;
 
   ChatRoom({
@@ -433,7 +442,10 @@ class ChatRoom {
         Field.master: myUid!,
         Field.domain: chatSettingDomain,
       };
-      data[Field.domainOrder] =
+
+      /// domain is only set once when the group chat is created
+      /// domain is set in `ChatService.intance.init(chatRoomSettings)`
+      data[Field.domainChatOrder] =
           chatSettingDomain != null ? data[Field.openGroupChatOrder] : null;
 
       dog('test : $data');
@@ -469,7 +481,7 @@ class ChatRoom {
     };
 
     //
-    data[Field.domainOrder] =
+    data[Field.domainChatOrder] =
         ChatService.instance.chatRoomSettings.domain != null
             ? data[Field.openGroupChatOrder]
             : null;
