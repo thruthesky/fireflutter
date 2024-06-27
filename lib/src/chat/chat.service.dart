@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/chat/widgets/chat.room_settings.dart';
 import 'package:flutter/material.dart';
 
 /// Chat
@@ -55,14 +56,22 @@ class ChatService {
       Map<String, dynamic> message, ChatModel chatModel)? beforeMessageSent;
   Function(ChatMessage)? afterMessageSent;
 
+  /// gives chatroomsetting option
+  /// by default enableVerifiedUserOption and enableGenderOption is set to true
+  ChatRoomSettings chatRoomSettings = const ChatRoomSettings();
+
   /// init
+  /// [chatRoomSettings] give chat room settings to enable verification and gender option
+  /// [customize] give customize option to customize chat room screen
   init({
+    ChatRoomSettings? chatRoomSettings,
     ChatCustomize? customize,
     Future<Map<String, dynamic>> Function(Map<String, dynamic>, ChatModel)?
         beforeMessageSent,
     Function(ChatMessage)? afterMessageSent,
   }) {
     // dog('--> ChatService.init()');
+    this.chatRoomSettings = chatRoomSettings ?? this.chatRoomSettings;
     this.customize = customize ?? this.customize;
 
     this.afterMessageSent = afterMessageSent;
@@ -154,9 +163,10 @@ class ChatService {
       context: context,
       builder: (_) =>
           customize.chatRoomEditDialogBuilder?.call(context: context) ??
-          DefaultChatRoomEditDialog(
-            showAuthRequiredOption: showAuthRequiredOption,
-          ),
+          const DefaultChatRoomEditDialog(
+              // showAuthRequiredOption: showAuthRequiredOption ||
+              //     chatRoomSettings.enableVerifiedUserOption!,
+              ),
     );
   }
 
@@ -165,12 +175,13 @@ class ChatService {
     required String roomId,
   }) async {
     return await showDialog<ChatRoom?>(
-      context: context,
-      builder: (_) =>
-          customize.chatRoomEditDialogBuilder
-              ?.call(context: context, roomId: roomId) ??
-          DefaultChatRoomEditDialog(roomId: roomId),
-    );
+        context: context,
+        builder: (_) {
+          dog('showChatroom ${chatRoomSettings.enableGenderOption} ${chatRoomSettings.enableGenderOption}');
+          return customize.chatRoomEditDialogBuilder
+                  ?.call(context: context, roomId: roomId) ??
+              DefaultChatRoomEditDialog(roomId: roomId);
+        });
   }
 
   /// Display a dialog to invite a user to a chat room.
@@ -180,7 +191,7 @@ class ChatService {
   }) async {
     return await showGeneralDialog<ChatRoom?>(
       context: context,
-            pageBuilder: (_, __, ___) =>
+      pageBuilder: (_, __, ___) =>
           customize.chatRoomInviteScreen?.call(room: room) ??
           DefaultChatRoomInviteScreen(room: room),
     );

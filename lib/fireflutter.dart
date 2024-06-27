@@ -37,6 +37,7 @@ export 'src/chat/widgets/chat.new_message.dart';
 export 'src/chat/widgets/chat.room_avatar.dart';
 export 'src/chat/widgets/chat.room_body.dart';
 export 'src/chat/widgets/chat.room_list_tile.dart';
+export 'src/chat/widgets/chat.room_settings.dart';
 export 'src/chat/widgets/chat_room.list_view.dart';
 export 'src/chat/widgets/chat.total_no_of_new_message.dart';
 export 'src/chat/widgets/default_chat_room.blocked_user_list.screen.dart';

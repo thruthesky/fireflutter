@@ -71,6 +71,13 @@ class _MainAppState extends State<MainApp> {
 
     initFirstInternetConnection();
 
+    ChatService.instance.init(
+        chatRoomSettings: const ChatRoomSettings(
+      enableGenderOption: false,
+      enableVerifiedUserOption: false,
+      domain: 'test-domain',
+    ));
+
     // DO Unit tests
 
     // Timer(const Duration(microseconds: 500), () async {

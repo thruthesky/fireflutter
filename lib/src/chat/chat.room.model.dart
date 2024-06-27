@@ -104,6 +104,9 @@ class ChatRoom {
   /// [hasPassword] tells whether a password is set for the group chat room
   bool hasPassword;
 
+  String? domain;
+  int? domainChatOrder;
+
   ChatRoom({
     required this.ref,
     required this.key,
@@ -129,6 +132,8 @@ class ChatRoom {
     this.noOfUsers,
     this.blockedUsers = const [],
     this.hasPassword = false,
+    this.domain,
+    this.domainChatOrder,
   });
 
   /// [fromSnapshot] It creates a [ChatRoom] from a [DataSnapshot].
@@ -201,6 +206,8 @@ class ChatRoom {
           ? []
           : List<String>.from((json['blockedUsers'] as Map).keys.toList()),
       hasPassword: json['hasPassword'] ?? false,
+      domain: json['domain'] as String?,
+      domainChatOrder: json['domainChatOrder'] as int?,
     );
   }
   Map<String, dynamic> toJson() {
@@ -227,6 +234,8 @@ class ChatRoom {
       'noOfUsers': noOfUsers,
       'blockedUsers': blockedUsers,
       'hasPassword': hasPassword,
+      'domain': domain,
+      'domainChatOrder': domainChatOrder,
     };
   }
 
@@ -334,6 +343,8 @@ class ChatRoom {
     blockedUsers = room.blockedUsers;
 
     hasPassword = room.hasPassword;
+    domain = room.domain;
+    domainChatOrder = room.domainChatOrder;
 
     return this;
   }
@@ -404,6 +415,11 @@ class ChatRoom {
       } else {
         ref = ChatService.instance.roomsRef.child(roomId);
       }
+
+      final String? chatSettingDomain =
+          ChatService.instance.chatRoomSettings.domain;
+
+      dog('$chatSettingDomain');
       final data = {
         Field.name: name,
         Field.iconUrl: iconUrl,
@@ -415,7 +431,13 @@ class ChatRoom {
         Field.isVerifiedOnly: isVerifiedOnly,
         Field.gender: gender,
         Field.master: myUid!,
+        Field.domain: chatSettingDomain,
       };
+      data[Field.domainOrder] =
+          chatSettingDomain != null ? data[Field.openGroupChatOrder] : null;
+
+      dog('test : $data');
+
       await ref.update(data);
     }
     return fromReference(ref);
@@ -445,6 +467,13 @@ class ChatRoom {
       Field.hasPassword: hasPassword,
       Field.gender: gender,
     };
+
+    //
+    data[Field.domainOrder] =
+        ChatService.instance.chatRoomSettings.domain != null
+            ? data[Field.openGroupChatOrder]
+            : null;
+
     return ref.update(data);
   }
 

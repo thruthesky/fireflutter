@@ -17,6 +17,9 @@ enum ChatRoomList {
 
   /// [open] means the open group chat room whether I belong or not
   open,
+
+  /// [domain] means the open group chat room in a specific domain
+  domain,
 }
 
 /// Chat Room List View
@@ -99,6 +102,9 @@ class ChatRoomListView extends StatelessWidget {
             .startAt(false),
         ChatRoomList.open => ChatService.instance.roomsRef
             .orderByChild(Field.openGroupChatOrder)
+            .startAt(false),
+        ChatRoomList.domain => ChatService.instance.roomsRef
+            .orderByChild(Field.domainChatOrder)
             .startAt(false),
       };
 
