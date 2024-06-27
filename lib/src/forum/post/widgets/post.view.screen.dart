@@ -219,7 +219,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                             } else if (value == 'edit') {
                               await ForumService.instance.showPostUpdateScreen(
                                 context: context,
-                                post: await post.reload(),
+                                post: post,
                                 displayTitle: widget.commentable,
                               );
                               await post.reload();

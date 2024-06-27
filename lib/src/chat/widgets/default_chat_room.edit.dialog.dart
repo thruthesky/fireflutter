@@ -73,7 +73,6 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   Widget build(BuildContext context) {
     if (isEdit && room?.isMaster == false && isAdmin == false) {
       return ErrorDialog(
-        // title: '권한 없음',
         title: T.noPermission.tr,
         message: T.noPermissionModifyChatRoom.tr,
       );

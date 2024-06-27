@@ -41,18 +41,30 @@ class _PostEditScreenState extends State<PostEditScreen> {
 
   EdgeInsets get viewInsets => MediaQuery.of(context).viewInsets;
 
+  // for edit we show loading first until the updated post is loaded from the server
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
 
-    if (widget.post != null) {
+    if (isUpdate) {
+      isLoading = true;
       _post = widget.post;
+      getPost();
     } else {
       _post = Post.fromCategory(widget.category!);
     }
+  }
 
-    titleController.text = post.title;
-    contentController.text = post.content;
+  /// get the updated post and patch
+  getPost() async {
+    _post = await post.reload();
+    setState(() {
+      titleController.text = post.title;
+      contentController.text = post.content;
+      isLoading = false;
+    });
   }
 
   @override
@@ -67,7 +79,6 @@ class _PostEditScreenState extends State<PostEditScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// user meta
               Row(
                 children: [
                   UserAvatar(
@@ -92,63 +103,77 @@ class _PostEditScreenState extends State<PostEditScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 24),
+              if (isLoading)
+                Container(
+                  height: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(T.loadingPost.tr),
+                    ],
+                  ),
+                )
+              else ...[
+                if (widget.displayTitle!) ...[
+                  _textTitle(T.title.tr),
+                  TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      hintText: T.inputTitle.tr, // 'Title',
 
-              if (widget.displayTitle!) ...[
-                _textTitle(T.title.tr),
+                      hintStyle: _hintTextStyle(),
+                    ),
+                    onTapOutside: (event) => FocusManager.instance.primaryFocus
+                        ?.unfocus(), // to remove keyboard on tap outside
+                    // style: Theme.of(context).textTheme.titleMedium,
+                    minLines: 1,
+                    maxLines: 3,
+                  ),
+                ],
+                const SizedBox(height: 16),
+                _textTitle(T.content.tr),
                 TextField(
-                  controller: titleController,
+                  controller: contentController,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    hintText: T.inputTitle.tr, // 'Title',
-
+                    hintText: T.inputContent.tr,
                     hintStyle: _hintTextStyle(),
                   ),
                   onTapOutside: (event) => FocusManager.instance.primaryFocus
                       ?.unfocus(), // to remove keyboard on tap outside
-                  // style: Theme.of(context).textTheme.titleMedium,
-                  minLines: 1,
-                  maxLines: 3,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  minLines: 6,
+                  maxLines: 15,
                 ),
-              ],
-              const SizedBox(height: 16),
-              _textTitle(T.content.tr),
-              TextField(
-                controller: contentController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: T.inputContent.tr,
-                  hintStyle: _hintTextStyle(),
-                ),
-                onTapOutside: (event) => FocusManager.instance.primaryFocus
-                    ?.unfocus(), // to remove keyboard on tap outside
-                style: Theme.of(context).textTheme.bodyMedium,
-                minLines: 6,
-                maxLines: 15,
-              ),
-              const SizedBox(height: 16),
-              if (progress != null && progress?.isNaN == false)
-                LinearProgressIndicator(
-                  value: progress,
-                ),
-              const SizedBox(height: 8),
-              EditUploads(
-                urls: post.urls,
-                onDelete: (url) async {
-                  setState(() => post.urls.remove(url));
+                const SizedBox(height: 16),
+                if (progress != null && progress?.isNaN == false)
+                  LinearProgressIndicator(
+                    value: progress,
+                  ),
+                const SizedBox(height: 8),
+                EditUploads(
+                  urls: post.urls,
+                  onDelete: (url) async {
+                    setState(() => post.urls.remove(url));
 
-                  /// If isUpdate then delete the url silently from the server
-                  /// sometimes the user delete a url from post/comment but didnt save the post. so the url still exist but the actual image is already deleted
-                  /// so we need to update the post to remove the url from the server
-                  /// this will prevent error like the url still exist but the image is already deleted
-                  if (isUpdate) {
-                    await post.update(
-                      urls: post.urls,
-                    );
-                  }
-                },
-              ),
+                    /// If isUpdate then delete the url silently from the server
+                    /// sometimes the user delete a url from post/comment but didnt save the post. so the url still exist but the actual image is already deleted
+                    /// so we need to update the post to remove the url from the server
+                    /// this will prevent error like the url still exist but the image is already deleted
+                    if (isUpdate) {
+                      await post.update(
+                        urls: post.urls,
+                      );
+                    }
+                  },
+                ),
+              ]
             ],
           ),
         ),
@@ -183,15 +208,6 @@ class _PostEditScreenState extends State<PostEditScreen> {
                   ),
                 ),
                 ElevatedButton(
-                  // commenting this code because we should not give style inside
-                  // we can just do theme in the app projects
-                  // style: ButtonStyle(
-                  //   elevation: const WidgetStatePropertyAll(0),
-                  //   backgroundColor: WidgetStatePropertyAll(
-                  //       Theme.of(context).colorScheme.primary),
-                  //   foregroundColor: WidgetStatePropertyAll(
-                  //       Theme.of(context).colorScheme.onPrimary),
-                  // ),
                   onPressed: () async {
                     Post? newPost;
                     if (isCreate) {
@@ -220,7 +236,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
                   },
                   child: Text(
                     isCreate ? T.postCreate.tr : T.postUpdate.tr,
-                  ), // 'CREATE' : 'UPDATE'),
+                  ),
                 ),
               ],
             ),

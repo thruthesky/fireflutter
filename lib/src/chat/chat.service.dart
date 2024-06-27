@@ -55,18 +55,35 @@ class ChatService {
       Map<String, dynamic> message, ChatModel chatModel)? beforeMessageSent;
   Function(ChatMessage)? afterMessageSent;
 
+  /// Before the Single Chat Room create
+  ///
+  /// You can intercept/do something before the user create the single chat room.
+  ///
+  /// [otherUid] is the other user uid the user is trying to chat with.
+  Future<void> Function(String otherUid)? beforeSingleChatRoomCreate;
+
+  /// Before the  user join the Group Chat Room
+  ///
+  /// You can intercept/do something before the user join the group chat room.
+  Future<void> Function(ChatRoom room)? beforeGroupChatRoomJoin;
+
   /// init
   init({
     ChatCustomize? customize,
     Future<Map<String, dynamic>> Function(Map<String, dynamic>, ChatModel)?
         beforeMessageSent,
     Function(ChatMessage)? afterMessageSent,
+    Future<void> Function(String)? beforeSingleChatRoomCreate,
+    Future<void> Function(ChatRoom)? beforeGroupChatRoomJoin,
   }) {
     // dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;
 
     this.afterMessageSent = afterMessageSent;
     this.beforeMessageSent = beforeMessageSent;
+
+    this.beforeSingleChatRoomCreate = beforeSingleChatRoomCreate;
+    this.beforeGroupChatRoomJoin = beforeGroupChatRoomJoin;
   }
 
   Future createRoom({
@@ -180,7 +197,7 @@ class ChatService {
   }) async {
     return await showGeneralDialog<ChatRoom?>(
       context: context,
-            pageBuilder: (_, __, ___) =>
+      pageBuilder: (_, __, ___) =>
           customize.chatRoomInviteScreen?.call(room: room) ??
           DefaultChatRoomInviteScreen(room: room),
     );
