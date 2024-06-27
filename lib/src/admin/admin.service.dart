@@ -2,6 +2,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/meetup/widgets/meetup.admin_settings.screen.dart';
+import 'package:fireflutter/src/report/default_admin_report.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -70,6 +71,23 @@ class AdminService {
 
       isAdminStream.add(isAdmin);
     });
+  }
+
+  // Use `AdminService.instance.showAdminReportScreen()` to display a admin report
+  // screen where you can view the list of unviewed report , rejected and accpeted
+  showAdminReportScreen({required BuildContext context}) {
+    dog('--> AdminService.showAdminReportScreen()');
+    return showGeneralDialog(
+        context: context,
+        pageBuilder: (_, __, ___) {
+          // return Scaffold(
+          //   appBar: AppBar(
+          //     title: Text(T.report.tr),
+          //   ),
+          //   body: const ReportAdminListView(),
+          // );
+          return const DefaultAdminReportScreen();
+        });
   }
 
   showDashboard({required BuildContext context}) {

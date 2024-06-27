@@ -34,6 +34,9 @@ class _ForumChatViewScreenState extends State<ForumChatViewScreen> {
         ),
       ),
       bottomNavigationBar: SafeArea(
+        // add minimum padding for the safeare when there is no notch on the device it's to
+        // close and dont have space
+        minimum: const EdgeInsets.only(bottom: 8),
         child: Padding(
           /// This is to display the Textfield above the keyboard
           /// viewInsets is a space that consumed by the keyboard

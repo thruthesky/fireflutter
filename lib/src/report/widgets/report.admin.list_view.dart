@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 ///
 /// 1. all, unviewed, rejected, accepted, blocked list.
 class ReportAdminListView extends StatelessWidget {
-  const ReportAdminListView({super.key});
-
+  const ReportAdminListView({super.key, this.padding});
+  final EdgeInsetsGeometry? padding;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,38 +16,49 @@ class ReportAdminListView extends StatelessWidget {
           child: Column(
             children: [
               TabBar(tabs: [
-                Tab(text: 'unviewed'.tr),
-                Tab(text: 'rejected'.tr),
-                Tab(text: 'accepted'.tr),
+                Tab(text: T.request.tr),
+                Tab(text: T.rejected.tr),
+                Tab(text: T.accepted.tr),
               ]),
               Expanded(
                 child: TabBarView(
                   children: [
                     FirebaseDatabaseListView(
-                      query: Report.unviewedRef,
-                      errorBuilder: (context, error, stackTrace) {
-                        dog("Error: $error");
-                        return Center(
-                          child: Text('Error: $error'),
-                        );
-                      },
-                      itemBuilder: (context, snapshot) => ReportAdminListTile(
-                        snapshot: snapshot,
-                      ),
-                    ),
+                        padding: padding ??
+                            const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 8,
+                            ),
+                        query: Report.unviewedRef,
+                        errorBuilder: (context, error, stackTrace) {
+                          dog("Error: $error");
+                          return Center(
+                            child: Text('Error: $error'),
+                          );
+                        },
+                        itemBuilder: (context, snapshot) =>
+                            ReportAdminListTile(snapshot: snapshot)),
                     FirebaseDatabaseListView(
-                      query: Report.rejectedRef,
-                      errorBuilder: (context, error, stackTrace) {
-                        dog("Error: $error");
-                        return Center(
-                          child: Text('Error: $error'),
-                        );
-                      },
-                      itemBuilder: (context, snapshot) => ReportAdminListTile(
-                        snapshot: snapshot,
-                      ),
-                    ),
+                        padding: padding ??
+                            const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 8,
+                            ),
+                        query: Report.rejectedRef,
+                        errorBuilder: (context, error, stackTrace) {
+                          dog("Error: $error");
+                          return Center(
+                            child: Text('Error: $error'),
+                          );
+                        },
+                        itemBuilder: (context, snapshot) =>
+                            ReportAdminListTile(snapshot: snapshot)),
                     FirebaseDatabaseListView(
+                      padding: padding ??
+                          const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 8,
+                          ),
                       query: Report.acceptedRef,
                       errorBuilder: (context, error, stackTrace) {
                         dog("Error: $error");

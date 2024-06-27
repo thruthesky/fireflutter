@@ -121,6 +121,12 @@ export 'src/forum/chat/post.bubble.dart';
 export 'src/forum/category/widgets/category.subscription.icon.dart';
 export 'src/forum/chat/forum.chat.view.screen.dart';
 
+export 'src/friend/friend.model.dart';
+export 'src/friend/friend.service.dart';
+export 'src/friend/widgets/friend.list_view.dart';
+export 'src/friend/widgets/friend.list_tile.dart';
+export 'src/friend/widgets/friend.list.screen.dart';
+
 export 'src/functions/locale.functions.dart';
 
 export 'src/meetup/meetup_event/meetup_event.model.dart';
@@ -180,6 +186,7 @@ export 'src/user/widgets/block/blocked.dart';
 export 'src/user/widgets/buttons/block_button.dart';
 export 'src/user/widgets/buttons/bookmark_button.dart';
 export 'src/user/widgets/buttons/chat_button.dart';
+export 'src/user/widgets/buttons/friend_request_button.dart';
 export 'src/user/widgets/buttons/like_button.dart';
 export 'src/user/widgets/buttons/report_button.dart';
 export 'src/user/widgets/login/simple_email_password_login.form.dart';
