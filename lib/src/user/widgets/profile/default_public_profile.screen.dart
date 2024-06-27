@@ -4,11 +4,13 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/user/widgets/buttons/share_button.dart';
 import 'package:flutter/material.dart';
 
+/// [chatButton] appears only if they are mutual friends.
 class DefaultPublicProfileScreen extends StatelessWidget {
   const DefaultPublicProfileScreen({
     super.key,
     this.uid,
     this.user,
+    this.friendRequestButton = true,
     this.chatButton = true,
     this.likeButton = true,
     this.bookmarkButton = true,
@@ -20,6 +22,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
   final String? uid;
   final User? user;
 
+  final bool friendRequestButton;
   final bool chatButton;
   final bool likeButton;
   final bool bookmarkButton;
@@ -116,6 +119,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                       spacing: 6,
                       runSpacing: 6,
                       children: [
+                        if (friendRequestButton)
+                          FriendRequestButton(uid: userUid),
                         if (chatButton) ChatButton(otherUid: userUid),
                         if (likeButton) LikeButton(uid: userUid, user: user),
                         if (bookmarkButton) BookmarkButton(uid: userUid),

@@ -116,6 +116,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             context.push(PasswordResetScreen.routeName),
                         child: const Text("Reset password"),
                       ),
+                      ElevatedButton(
+                        onPressed: () => FriendService.instance
+                            .showFriendScreen(context: context),
+                        child: const Text("Friend List"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => FriendService.instance
+                            .showFriendScreen(context: context),
+                        child: const Text("Friend Request list for Requester"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => FriendService.instance
+                            .showFriendScreen(context: context),
+                        child: const Text("Friend Request list for Receiver"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => FriendService.instance
+                            .showFriendScreen(context: context),
+                        child: const Text("Friend Reject list for Requester"),
+                      ),
                     ],
                   ),
                 ],
