@@ -158,7 +158,7 @@ class Friend {
     // TODO make it one transaction
     final requestData = {
       FriendField.createdAt: ServerValue.timestamp,
-      FriendField.rejectedAt: 0,
+      // FriendField.rejectedAt: 0,
       // 'name': '',
     };
     await mySentRequestRef(uid).set(requestData);
