@@ -59,63 +59,63 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: const Text('Sign Out'),
                       ),
-                      ElevatedButton(
-                        onPressed: () => context.push(ChatScreen.routeName),
-                        child: const Text('Chat'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => context.push(OpenChatScreen.routeName),
-                        child: const Text('Open Chat'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => context.push(ForumScreen.routeName),
-                        child: const Text('Forum'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.push(PostListByGroupScreen.routeName),
-                        child: const Text('Post list by group'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.push(LatestPostsScreen.routeName),
-                        child: const Text('Latest Posts'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.push(ForumSearchScreen.routeName),
-                        child: const Text('Forum Search'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => context.push(MeetupScreen.routeName),
-                        child: const Text('Meetup'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.push(BuyAndSellScreen.routeName),
-                        child: const Text('Buy & Sell'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => AdminService.instance
-                            .showDashboard(context: context),
-                        child: const Text('Admin dashboard'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.push(UserSearchScreen.routeName),
-                        child: const Text('User Search'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _backfillSearchValue();
-                        },
-                        child: const Text("Backfill Search Value"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.push(PasswordResetScreen.routeName),
-                        child: const Text("Reset password"),
-                      ),
+                      // ElevatedButton(
+                      //   onPressed: () => context.push(ChatScreen.routeName),
+                      //   child: const Text('Chat'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () => context.push(OpenChatScreen.routeName),
+                      //   child: const Text('Open Chat'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () => context.push(ForumScreen.routeName),
+                      //   child: const Text('Forum'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () =>
+                      //       context.push(PostListByGroupScreen.routeName),
+                      //   child: const Text('Post list by group'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () =>
+                      //       context.push(LatestPostsScreen.routeName),
+                      //   child: const Text('Latest Posts'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () =>
+                      //       context.push(ForumSearchScreen.routeName),
+                      //   child: const Text('Forum Search'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () => context.push(MeetupScreen.routeName),
+                      //   child: const Text('Meetup'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () =>
+                      //       context.push(BuyAndSellScreen.routeName),
+                      //   child: const Text('Buy & Sell'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () => AdminService.instance
+                      //       .showDashboard(context: context),
+                      //   child: const Text('Admin dashboard'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () =>
+                      //       context.push(UserSearchScreen.routeName),
+                      //   child: const Text('User Search'),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     _backfillSearchValue();
+                      //   },
+                      //   child: const Text("Backfill Search Value"),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () =>
+                      //       context.push(PasswordResetScreen.routeName),
+                      //   child: const Text("Reset password"),
+                      // ),
                       ElevatedButton(
                         onPressed: () => FriendService.instance
                             .showFriendScreen(context: context),
@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () => FriendService.instance
-                            .showFriendScreen(context: context),
+                            .showReceivedRequestScreen(context: context),
                         child: const Text("Friend Request list for Requester"),
                       ),
                       ElevatedButton(
@@ -152,21 +152,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// This will add searchValue field in all users under users node
-  _backfillSearchValue() async {
-    // Get all users
-    final users = FirebaseDatabase.instance.ref('users');
-    final snapshot = await users.get();
-    final usersMapList = snapshot.children.map((e) {
-      // e.value!.["displayName"];
-      final user = Map<String, dynamic>.from(e.value! as Map<dynamic, dynamic>);
-      final searchValue = ((user["displayName"] ?? "") as String)
-          .trim()
-          .replaceAll(' ', '')
-          .toLowerCase();
-      e.ref.child('searchValue').set(searchValue);
-      return e.value;
-    }).toList();
-    dog("Snapshot: $usersMapList");
-    // On each user set searchValue: ""
-  }
+  // _backfillSearchValue() async {
+  //   // Get all users
+  //   final users = FirebaseDatabase.instance.ref('users');
+  //   final snapshot = await users.get();
+  //   final usersMapList = snapshot.children.map((e) {
+  //     // e.value!.["displayName"];
+  //     final user = Map<String, dynamic>.from(e.value! as Map<dynamic, dynamic>);
+  //     final searchValue = ((user["displayName"] ?? "") as String)
+  //         .trim()
+  //         .replaceAll(' ', '')
+  //         .toLowerCase();
+  //     e.ref.child('searchValue').set(searchValue);
+  //     return e.value;
+  //   }).toList();
+  //   dog("Snapshot: $usersMapList");
+  //   // On each user set searchValue: ""
+  // }
 }

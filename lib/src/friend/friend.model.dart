@@ -2,19 +2,72 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+class FriendsNode {
+  static const String friends = 'friends';
+  static const String friendsRequestReceived = 'friends-request-received';
+  static const String friendsRequestSent = 'friends-request-sent';
+}
+
+class FriendField {
+  static const String name = 'name';
+  static const String createdAt = 'createdAt';
+  static const String rejectedAt = 'rejectedAt';
+  static const String acceptedAt = 'acceptedAt';
+}
+
 class Friend {
   static DatabaseReference get rootRef => FirebaseDatabase.instance.ref('/');
 
-  /// [myRef] is the reference to the current user's friends list. That is /friends/{myUid}/...
-  static DatabaseReference get listRef =>
-      rootRef.child('friends').child(myUid!);
+  /// [listRef] is the reference to a users friends list. That is /friends/{uid}/...
+  static DatabaseReference listRef(String uid) =>
+      rootRef.child(FriendsNode.friends).child(uid);
 
-  ///
-  static DatabaseReference receivedRef(String uid) =>
-      rootRef.child('friends-request-received').child(uid).child(myUid!);
+  /// [myListRef] is the reference to the current user's friends list.
+  /// That is /friends/{myUid}/...
+  static DatabaseReference get myListRef => listRef(myUid!);
 
-  static DatabaseReference get sentRef =>
-      rootRef.child('friends-request-sent').child(myUid!);
+  /// [myRequestListRef] is the reference to the current user's request list.
+  /// That is /friends-request-received/{myUid}/...
+  static DatabaseReference get myReceivedRequestListRef =>
+      rootRef.child(FriendsNode.friendsRequestReceived).child(myUid!);
+
+  /// [receivedRequestRef] is the reference of the specific request by a sender to a receiver.
+  /// That is /friends-request-received/{receiverUid}/{senderUid}/...
+  static DatabaseReference receivedRequestRef(
+    String senderUid,
+    String receiverUid,
+  ) =>
+      rootRef
+          .child(FriendsNode.friendsRequestReceived)
+          .child(receiverUid)
+          .child(senderUid);
+
+  /// [myReceivedRequestRef] is the reference to the current user's received request to other users.
+  /// That is /friends-request-received/{myUid}/{senderUid}/...
+  static DatabaseReference myReceivedRequestRef(String senderUid) =>
+      receivedRequestRef(senderUid, myUid!);
+
+  /// [mySentListRef] is the reference to the current user's send requests list to other users.
+  /// The current user is the sender in the list.
+  /// That is /friends-request-sent/{myUid}/...
+  static DatabaseReference get mySentRequestListRef =>
+      rootRef.child(FriendsNode.friendsRequestSent).child(myUid!);
+
+  /// [sendRequestRef] is the reference of the specific request by a receiver to a sender.
+  /// That is /friends-request-sent/{senderUid}/{receiverUid}/...
+  static DatabaseReference sentRequestRef(
+    String senderUid,
+    String receiverUid,
+  ) =>
+      rootRef
+          .child(FriendsNode.friendsRequestSent)
+          .child(senderUid)
+          .child(receiverUid);
+
+  /// [mySentRequestRef] is the reference to a current user's sent request to other users.
+  /// That is /friends-request-sent/{myUid}/{senderUid}/...
+  static DatabaseReference mySentRequestRef(String receiverUid) =>
+      sentRequestRef(myUid!, receiverUid);
 
   /// [ref] is the reference of the data in the database.
   final DatabaseReference ref;
@@ -28,22 +81,25 @@ class Friend {
   /// It's like a name how you want to call your friend. And this name is not available to the other user.
   final String name;
 
+  final int createdAt;
+  final int? rejectedAt;
+  final int? acceptedAt;
+
   Friend({
     required this.ref,
     required this.uid,
     required this.name,
+    required this.createdAt,
+    required this.rejectedAt,
+    required this.acceptedAt,
   });
 
-  /// Take note of the category node. Check the snapshot ref parent
-  /// because in `post-all-summaries`, category is part of the field.
-  /// Since this model is shared by `post-all-summary` and `post-summary`,
-  /// we need to check if category is included in the snapshot.
   factory Friend.fromSnapshot(DataSnapshot snapshot) {
     if (snapshot.exists == false) {
       throw FireFlutterException('Friend.fromSnapshot/snapshot-not-exists',
           'Friend.fromSnapshot: snapshot does not exist');
     }
-    final value = snapshot.value as Map<String, dynamic>;
+    final value = Map<String, dynamic>.from(snapshot.value as Map);
     return Friend.fromJson(
       value,
       snapshot.ref,
@@ -58,6 +114,9 @@ class Friend {
       ref: ref,
       uid: ref.key!,
       name: json['name'] ?? '',
+      createdAt: json['createdAt'],
+      rejectedAt: json['rejectedAt'],
+      acceptedAt: json['acceptedAt'],
     );
   }
 
@@ -90,24 +149,80 @@ class Friend {
     required BuildContext context,
     required String uid,
   }) async {
-    final snapshotReject = await sentRef.child(uid).get();
-    if (snapshotReject.exists) {
+    final snapshotRequestHistory = await mySentRequestRef(uid).get();
+    if (snapshotRequestHistory.exists) {
       toast(context: context, message: "You have requested already");
       return;
     }
 
-    await sentRef.child(uid).set({
-      'createdAt': ServerValue.timestamp,
-      'rejectedAt': 0,
-      'name': '',
-    });
+    // TODO make it one transaction
+    final requestData = {
+      FriendField.createdAt: ServerValue.timestamp,
+      FriendField.rejectedAt: 0,
+      // 'name': '',
+    };
+    await mySentRequestRef(uid).set(requestData);
+    await receivedRequestRef(myUid!, uid).set(requestData);
 
-    await receivedRef(uid).set({
-      'createdAt': ServerValue.timestamp,
-      'rejectedAt': 0,
-      'name': '',
-    });
+    if (!context.mounted) return;
+    toast(context: context, message: "You have sent a friend request.");
+  }
 
-    toast(context: context, message: "You have send a friend requested.");
+  /// Accept a friend request
+  ///
+  /// This will remove the request from current user's received request, and from other user's sent request.
+  /// This will add friend dart to
+  static Future<void> acceptRequest({
+    required BuildContext context,
+    required String uid,
+  }) async {
+    // TODO make it one transaction
+    // await myReceivedRequestRef(uid).set(null);
+    // await sentRequestRef(uid, myUid!).set(null);
+    await myReceivedRequestRef(uid)
+        .child(FriendField.acceptedAt)
+        .set(ServerValue.timestamp);
+    await sentRequestRef(uid, myUid!)
+        .child(FriendField.acceptedAt)
+        .set(ServerValue.timestamp);
+
+    final newFriendData = {
+      FriendField.createdAt: ServerValue.timestamp,
+      // FriendField.name: '',
+    };
+    // Set the other person as my friend in my friend list
+    await myListRef.child(uid).set(newFriendData);
+    // Set myself to the other person's friend list
+    await listRef(uid).child(myUid!).set(newFriendData);
+
+    if (!context.mounted) return;
+    toast(context: context, message: "You have accepted a friend request.");
+  }
+
+  static Future<void> rejectRequest({
+    required BuildContext context,
+    required String uid,
+  }) async {
+    const String rejectedAt = 'rejectedAt';
+    // TODO make it one transaction
+    await sentRequestRef(uid, myUid!)
+        .child(rejectedAt)
+        .set(ServerValue.timestamp);
+    await myReceivedRequestRef(uid)
+        .child(rejectedAt)
+        .set(ServerValue.timestamp);
+    if (!context.mounted) return;
+    toast(context: context, message: "You have rejected a friend request.");
+  }
+
+  static Future<void> cancelRequest({
+    required BuildContext context,
+    required String uid,
+  }) async {
+    await mySentRequestRef(uid).set(null);
+    await receivedRequestRef(myUid!, uid).set(null);
+
+    if (!context.mounted) return;
+    toast(context: context, message: "You have cancelled a friend request.");
   }
 }

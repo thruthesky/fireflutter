@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/friend/widgets/friend.request.received.screen.dart';
 import 'package:flutter/material.dart';
 
 class FriendService {
@@ -7,9 +8,21 @@ class FriendService {
 
   FriendService._();
 
-  Future showFriendScreen({required BuildContext context}) {
+  Future<void> showFriendScreen({
+    required BuildContext context,
+  }) {
     return showGeneralDialog(
-        context: context,
-        pageBuilder: ($, $$, $$$) => const FriendListScreen());
+      context: context,
+      pageBuilder: ($, $$, $$$) => const FriendListScreen(),
+    );
+  }
+
+  Future<void> showReceivedRequestScreen({
+    required BuildContext context,
+  }) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: ($, $$, $$$) => const FriendRequestReceivedScreen(),
+    );
   }
 }

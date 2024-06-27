@@ -1,13 +1,26 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/friend/widgets/friend.request.list_tile.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class FriendListView extends StatelessWidget {
-  const FriendListView({
+enum FriendRequestList {
+  /// The list for the requests that was received.
+  ///
+  /// Coming from `friends-requests-received/{uid}/...`
+  received,
+
+  /// The list for the requests that was sent.
+  ///
+  /// Coming from `friends-requests-sent/{uid}/...`
+  sent,
+}
+
+class FriendRequestListView extends StatelessWidget {
+  FriendRequestListView({
     super.key,
-    this.uid,
+    this.list = FriendRequestList.received,
     this.separatorBuilder,
     this.scrollDirection = Axis.vertical,
     this.reverse = false,
@@ -27,10 +40,7 @@ class FriendListView extends StatelessWidget {
     this.itemBuilder,
   });
 
-  /// The uid of the user.
-  ///
-  /// [myUid] is the default value
-  final String? uid;
+  final FriendRequestList list;
   final Widget Function(BuildContext, int)? separatorBuilder;
   final Axis scrollDirection;
   final bool reverse;
@@ -49,7 +59,10 @@ class FriendListView extends StatelessWidget {
   final Clip clipBehavior;
   final Widget Function(Friend, int)? itemBuilder;
 
-  Query get _query => uid != null ? Friend.listRef(uid!) : Friend.myListRef;
+  Query get _query => switch (list) {
+        FriendRequestList.received => Friend.myReceivedRequestListRef,
+        FriendRequestList.sent => Friend.mySentRequestListRef,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +112,9 @@ class FriendListView extends StatelessWidget {
               }
 
               final friend = Friend.fromSnapshot(snapshot.docs[index]);
-
+              // TODO friend request sent list tile
               return itemBuilder?.call(friend, index) ??
-                  FriendListTile(
+                  FriendRequestReceivedListTile(
                     friend: friend,
                   );
             },
