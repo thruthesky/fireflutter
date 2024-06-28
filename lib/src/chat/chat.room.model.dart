@@ -448,9 +448,14 @@ class ChatRoom {
       ///
       /// domainChatOrder is a String combination of the domain by a large
       /// number minus the current time in milliseconds. so they can be order since it's a string
-      data[Field.domainChatOrder] = chatSettingDomain != null
-          ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
-          : null;
+      ///
+      if (isOpenGroupChat == true) {
+        data[Field.domainChatOrder] = chatSettingDomain != null
+            ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
+            : null;
+      } else {
+        data[Field.domainChatOrder] = null;
+      }
 
       dog('test : $data');
 
@@ -487,9 +492,13 @@ class ChatRoom {
     final String? chatSettingDomain =
         ChatService.instance.chatRoomSettings.domain;
     // update domain chat order when the chatroom is updated
-    data[Field.domainChatOrder] = chatSettingDomain != null
-        ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
-        : null;
+    if (isOpenGroupChat == true) {
+      data[Field.domainChatOrder] = chatSettingDomain != null
+          ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
+          : null;
+    } else {
+      data[Field.domainChatOrder] = null;
+    }
 
     return ref.update(data);
   }
