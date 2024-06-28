@@ -19,11 +19,15 @@ class Friend {
   static DatabaseReference get rootRef => FirebaseDatabase.instance.ref('/');
 
   /// [listRef] is the reference to a users friends list. That is /friends/{uid}/...
+  ///
+  /// Use this to get the reference to the friend list of a user.
   static DatabaseReference listRef(String uid) =>
       rootRef.child(FriendsNode.friends).child(uid);
 
   /// [myListRef] is the reference to the current user's friends list.
   /// That is /friends/{myUid}/...
+  ///
+  /// Use this to get the reference to the friend list of the current user.
   static DatabaseReference get myListRef => listRef(myUid!);
 
   /// [myRequestListRef] is the reference to the current user's request list.
@@ -33,19 +37,22 @@ class Friend {
 
   /// [receivedRequestRef] is the reference of the specific request by a sender to a receiver.
   /// That is /friends-request-received/{receiverUid}/{senderUid}/...
-  static DatabaseReference receivedRequestRef(
-    String senderUid,
-    String receiverUid,
-  ) =>
+  static DatabaseReference receivedRequestRef({
+    required String receiverUid,
+    required String senderUid,
+  }) =>
       rootRef
           .child(FriendsNode.friendsRequestReceived)
           .child(receiverUid)
           .child(senderUid);
 
-  /// [myReceivedRequestRef] is the reference to the current user's received request to other users.
+  /// [myReceivedRequestRef] is the reference to the current user's received request from other users.
   /// That is /friends-request-received/{myUid}/{senderUid}/...
   static DatabaseReference myReceivedRequestRef(String senderUid) =>
-      receivedRequestRef(senderUid, myUid!);
+      receivedRequestRef(
+        receiverUid: myUid!,
+        senderUid: senderUid,
+      );
 
   /// [mySentListRef] is the reference to the current user's send requests list to other users.
   /// The current user is the sender in the list.
@@ -55,10 +62,10 @@ class Friend {
 
   /// [sendRequestRef] is the reference of the specific request by a receiver to a sender.
   /// That is /friends-request-sent/{senderUid}/{receiverUid}/...
-  static DatabaseReference sentRequestRef(
-    String senderUid,
-    String receiverUid,
-  ) =>
+  static DatabaseReference sentRequestRef({
+    required String senderUid,
+    required String receiverUid,
+  }) =>
       rootRef
           .child(FriendsNode.friendsRequestSent)
           .child(senderUid)
@@ -67,7 +74,10 @@ class Friend {
   /// [mySentRequestRef] is the reference to a current user's sent request to other users.
   /// That is /friends-request-sent/{myUid}/{senderUid}/...
   static DatabaseReference mySentRequestRef(String receiverUid) =>
-      sentRequestRef(myUid!, receiverUid);
+      sentRequestRef(
+        senderUid: myUid!,
+        receiverUid: receiverUid,
+      );
 
   /// [ref] is the reference of the data in the database.
   final DatabaseReference ref;
@@ -162,7 +172,8 @@ class Friend {
       // 'name': '',
     };
     await mySentRequestRef(uid).set(requestData);
-    await receivedRequestRef(myUid!, uid).set(requestData);
+    await receivedRequestRef(senderUid: myUid!, receiverUid: uid)
+        .set(requestData);
 
     if (!context.mounted) return;
     toast(context: context, message: "You have sent a friend request.");
@@ -182,7 +193,8 @@ class Friend {
     await myReceivedRequestRef(uid)
         .child(FriendField.acceptedAt)
         .set(ServerValue.timestamp);
-    await sentRequestRef(uid, myUid!)
+
+    await sentRequestRef(senderUid: uid, receiverUid: myUid!)
         .child(FriendField.acceptedAt)
         .set(ServerValue.timestamp);
 
