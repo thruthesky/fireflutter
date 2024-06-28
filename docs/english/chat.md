@@ -351,6 +351,29 @@ ChatRoomListView(
 ),
 ```
 
+You can display chat rooms of a specific domain. by Using the `widget`
+```dart
+ChatRoomListView(
+  chatRoomList: ChatRoomList.domain,
+)
+```
+or 
+```dart
+FirebaseDatabaseQueryBuilder(
+  query: ChatService.instance.joinsRef
+      .child(myUid!)
+      .orderByChild(Field.domainChatOrder)
+      .startAt('my-domain'),
+      .endAt('my-domain\uf8ff')
+  pageSize: 50,
+  builder: (context, snapshot, _) {
+    ...
+  },
+);
+```
+
+
+
 
 #### Querying Specific Type of Chat Rooms
 

@@ -75,7 +75,7 @@ class _MainAppState extends State<MainApp> {
         chatRoomSettings: const ChatRoomSettings(
       enableGenderOption: false,
       enableVerifiedUserOption: false,
-      // domain: 'test-domain',
+      domain: 'test-domain',
     ));
 
     MeetupService.instance.init(

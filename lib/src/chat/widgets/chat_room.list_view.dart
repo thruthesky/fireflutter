@@ -105,7 +105,8 @@ class ChatRoomListView extends StatelessWidget {
             .startAt(false),
         ChatRoomList.domain => ChatService.instance.roomsRef
             .orderByChild(Field.domainChatOrder)
-            .startAt(false),
+            .startAt(ChatService.instance.chatRoomSettings.domain ?? false)
+            .endAt('${ChatService.instance.chatRoomSettings.domain}\uf8ff'),
       };
 
   @override

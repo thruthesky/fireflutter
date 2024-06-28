@@ -114,7 +114,7 @@ class ChatRoom {
   /// [domainChatOrder] order of the chat room in the domain. domainChatOrder is same order with
   /// openChatOrder. This field is only exist if you set a `domain` in `chatRoomSettings` in
   /// `ChatService.instance.init()`
-  int? domainChatOrder;
+  String? domainChatOrder;
 
   ChatRoom({
     required this.ref,
@@ -216,7 +216,7 @@ class ChatRoom {
           : List<String>.from((json['blockedUsers'] as Map).keys.toList()),
       hasPassword: json['hasPassword'] ?? false,
       domain: json['domain'] as String?,
-      domainChatOrder: json['domainChatOrder'] as int?,
+      domainChatOrder: json['domainChatOrder'] ?? '',
     );
   }
   Map<String, dynamic> toJson() {
@@ -445,8 +445,12 @@ class ChatRoom {
 
       /// domain is only set once when the group chat is created
       /// domain is set in `ChatService.intance.init(chatRoomSettings)`
-      data[Field.domainChatOrder] =
-          chatSettingDomain != null ? data[Field.openGroupChatOrder] : null;
+      ///
+      /// domainChatOrder is a String combination of the domain by a large
+      /// number minus the current time in milliseconds. so they can be order since it's a string
+      data[Field.domainChatOrder] = chatSettingDomain != null
+          ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
+          : null;
 
       dog('test : $data');
 
@@ -480,11 +484,12 @@ class ChatRoom {
       Field.gender: gender,
     };
 
-    //
-    data[Field.domainChatOrder] =
-        ChatService.instance.chatRoomSettings.domain != null
-            ? data[Field.openGroupChatOrder]
-            : null;
+    final String? chatSettingDomain =
+        ChatService.instance.chatRoomSettings.domain;
+    // update domain chat order when the chatroom is updated
+    data[Field.domainChatOrder] = chatSettingDomain != null
+        ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
+        : null;
 
     return ref.update(data);
   }
