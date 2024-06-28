@@ -351,7 +351,8 @@ ChatRoomListView(
 ),
 ```
 
-You can display chat rooms of a specific domain. by Using the `widget`
+You can display chat rooms of a specific domain. by Using the widget `ChatRoomListView()` 
+
 ```dart
 ChatRoomListView(
   chatRoomList: ChatRoomList.domain,
