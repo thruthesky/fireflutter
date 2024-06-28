@@ -91,6 +91,7 @@ class Friend {
   final String name;
 
   final int createdAt;
+  final int order;
   final int? rejectedAt;
   final int? acceptedAt;
 
@@ -104,6 +105,7 @@ class Friend {
     required this.createdAt,
     required this.rejectedAt,
     required this.acceptedAt,
+    required this.order,
   });
 
   factory Friend.fromSnapshot(DataSnapshot snapshot) {
@@ -129,6 +131,7 @@ class Friend {
       createdAt: json[Field.createdAt],
       rejectedAt: json[Field.rejectedAt],
       acceptedAt: json[Field.acceptedAt],
+      order: json[Field.order],
     );
   }
 
@@ -170,11 +173,12 @@ class Friend {
       return;
     }
 
+    final int minusTimeTimes10 = DateTime.now().millisecondsSinceEpoch * -10;
+
     // TODO make it one transaction
     final requestData = {
       Field.createdAt: ServerValue.timestamp,
-      // FriendField.rejectedAt: 0,
-      // 'name': '',
+      Field.order: minusTimeTimes10,
     };
     await mySent(otherUid: uid).set(requestData);
     await otherReceivedFromMe(otherUid: uid).set(requestData);
@@ -195,17 +199,18 @@ class Friend {
     required String uid,
   }) async {
     // TODO make it one transaction
-    // await myReceivedRequestRef(uid).set(null);
-    // await sentRequestRef(uid, myUid!).set(null);
+
+    final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
     await myReceived(otherUid: uid)
         .child(Field.acceptedAt)
         .set(ServerValue.timestamp);
-
-    // myReceived(otherUid: uid).child(FriendField.acceptedAt);
+    await myReceived(otherUid: uid).child(Field.order).set(minusTime);
 
     await otherSentToMe(otherUid: uid)
         .child(Field.acceptedAt)
         .set(ServerValue.timestamp);
+
+    await otherSentToMe(otherUid: uid).child(Field.order).set(minusTime);
 
     final newFriendData = {
       Field.createdAt: ServerValue.timestamp,

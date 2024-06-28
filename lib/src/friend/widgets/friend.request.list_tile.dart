@@ -39,15 +39,15 @@ class FriendRequestReceivedListTile extends StatelessWidget {
           final snapshotData = Map<String, dynamic>.from(snapshot);
           final friendData = Friend.fromJson(snapshotData, friend.ref);
           if (friendData.acceptedAt != null) {
-            return const Padding(
-              padding: EdgeInsets.only(right: 12.0),
-              child: Text("Accepted"),
+            return Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Text(T.accepted.tr),
             );
           }
           if (friendData.rejectedAt != null) {
-            return const Padding(
-              padding: EdgeInsets.only(right: 12.0),
-              child: Text("Rejected"),
+            return Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Text(T.rejected.tr),
             );
           }
           return Row(

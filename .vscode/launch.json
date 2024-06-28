@@ -411,6 +411,24 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Example - All - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone 15 Plus",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Plus",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Example - iPad Air(5th generation",
       "request": "launch",
       "type": "dart",
