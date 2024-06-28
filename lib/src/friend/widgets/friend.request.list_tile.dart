@@ -55,7 +55,7 @@ class FriendRequestReceivedListTile extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  Friend.acceptRequest(
+                  Friend.accept(
                     context: context,
                     uid: friendData.uid,
                   );
@@ -66,7 +66,7 @@ class FriendRequestReceivedListTile extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  Friend.rejectRequest(
+                  Friend.reject(
                     context: context,
                     uid: friendData.uid,
                   );

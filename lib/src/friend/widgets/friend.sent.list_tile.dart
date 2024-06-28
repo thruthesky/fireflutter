@@ -52,7 +52,7 @@ class FriendRequestSentListTile extends StatelessWidget {
                 message: "Are you sure you want to cancel the friend request?",
               );
               if (re == true) {
-                Friend.cancelRequest(
+                Friend.cancel(
                   context: context,
                   uid: friendData.uid,
                 );

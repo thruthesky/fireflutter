@@ -32,7 +32,7 @@ class FriendRequestButton extends StatelessWidget {
                       T.alreadyRejectedAcceptRequestInsteadConfirmMessage.tr,
                 );
                 if (re == true) {
-                  Friend.acceptRequest(context: context, uid: uid);
+                  Friend.accept(context: context, uid: uid);
                 }
               },
               child: Text(T.friendRequest.tr),
@@ -42,9 +42,9 @@ class FriendRequestButton extends StatelessWidget {
             onPressed: () async {
               final re = await _showRespondRequestDialog(context);
               if (re == true) {
-                await Friend.acceptRequest(context: context, uid: uid);
+                await Friend.accept(context: context, uid: uid);
               } else if (re == false) {
-                await Friend.rejectRequest(context: context, uid: uid);
+                await Friend.reject(context: context, uid: uid);
               }
             },
             child: Text(T.respondRequest.tr),
@@ -84,7 +84,7 @@ class FriendRequestButton extends StatelessWidget {
                         T.alreadyRequestedCancelRequestInsteadConfirmMessage.tr,
                   );
                   if (re == true) {
-                    await Friend.cancelRequest(context: context, uid: uid);
+                    await Friend.cancel(context: context, uid: uid);
                   }
                 },
                 child: Text(T.requested.tr),

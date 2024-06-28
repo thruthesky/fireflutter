@@ -54,59 +54,59 @@ class FriendListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseQueryBuilder(
-        query: _query,
-        builder: (context, snapshot, widget) {
-          if (snapshot.isFetching) {
-            return const Center(child: CircularProgressIndicator.adaptive());
-          }
-          if (snapshot.hasError) {
-            dog('Error: ${snapshot.error}');
-            return Text('${T.somethingWentWrong.tr} ${snapshot.error}');
-          }
+      query: _query,
+      builder: (context, snapshot, widget) {
+        if (snapshot.isFetching) {
+          return const Center(child: CircularProgressIndicator.adaptive());
+        }
+        if (snapshot.hasError) {
+          dog('Error: ${snapshot.error}');
+          return Text('${T.somethingWentWrong.tr} ${snapshot.error}');
+        }
 
-          if (snapshot.hasData && snapshot.docs.isEmpty && !snapshot.hasMore) {
-            return Center(
-              child: Text(T.noFriendYet.tr),
-            );
-          }
-
-          return ListView.separated(
-            itemCount: snapshot.docs.length,
-            separatorBuilder: (context, index) =>
-                separatorBuilder?.call(context, index) ??
-                const SizedBox.shrink(),
-            scrollDirection: scrollDirection,
-            reverse: reverse,
-            controller: controller,
-            primary: primary,
-            physics: physics,
-            shrinkWrap: shrinkWrap,
-            padding: padding,
-            addAutomaticKeepAlives: addAutomaticKeepAlives,
-            addRepaintBoundaries: addRepaintBoundaries,
-            addSemanticIndexes: addSemanticIndexes,
-            cacheExtent: cacheExtent,
-            dragStartBehavior: dragStartBehavior,
-            keyboardDismissBehavior: keyboardDismissBehavior,
-            restorationId: restorationId,
-            clipBehavior: clipBehavior,
-            itemBuilder: (context, index) {
-              // if we reached the end of the currently obtained items, we try to
-              // obtain more items
-              if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-                // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
-                // It is safe to call this function from within the build method.
-                snapshot.fetchMore();
-              }
-
-              final friend = Friend.fromSnapshot(snapshot.docs[index]);
-
-              return itemBuilder?.call(friend, index) ??
-                  FriendListTile(
-                    friend: friend,
-                  );
-            },
+        if (snapshot.hasData && snapshot.docs.isEmpty && !snapshot.hasMore) {
+          return Center(
+            child: Text(T.noFriendYet.tr),
           );
-        });
+        }
+
+        return ListView.separated(
+          itemCount: snapshot.docs.length,
+          separatorBuilder: (context, index) =>
+              separatorBuilder?.call(context, index) ?? const SizedBox.shrink(),
+          scrollDirection: scrollDirection,
+          reverse: reverse,
+          controller: controller,
+          primary: primary,
+          physics: physics,
+          shrinkWrap: shrinkWrap,
+          padding: padding,
+          addAutomaticKeepAlives: addAutomaticKeepAlives,
+          addRepaintBoundaries: addRepaintBoundaries,
+          addSemanticIndexes: addSemanticIndexes,
+          cacheExtent: cacheExtent,
+          dragStartBehavior: dragStartBehavior,
+          keyboardDismissBehavior: keyboardDismissBehavior,
+          restorationId: restorationId,
+          clipBehavior: clipBehavior,
+          itemBuilder: (context, index) {
+            // if we reached the end of the currently obtained items, we try to
+            // obtain more items
+            if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+              // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
+              // It is safe to call this function from within the build method.
+              snapshot.fetchMore();
+            }
+
+            final friend = Friend.fromSnapshot(snapshot.docs[index]);
+
+            return itemBuilder?.call(friend, index) ??
+                FriendListTile(
+                  friend: friend,
+                );
+          },
+        );
+      },
+    );
   }
 }

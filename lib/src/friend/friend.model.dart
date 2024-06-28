@@ -190,7 +190,7 @@ class Friend {
   ///
   /// This will remove the request from current user's received request, and from other user's sent request.
   /// This will add friend dart to
-  static Future<void> acceptRequest({
+  static Future<void> accept({
     required BuildContext context,
     required String uid,
   }) async {
@@ -223,7 +223,8 @@ class Friend {
     );
   }
 
-  static Future<void> rejectRequest({
+  /// [reject] is used to reject the Request
+  static Future<void> reject({
     required BuildContext context,
     required String uid,
   }) async {
@@ -242,7 +243,8 @@ class Friend {
     );
   }
 
-  static Future<void> cancelRequest({
+  /// [cancel] is used to cancel the Request
+  static Future<void> cancel({
     required BuildContext context,
     required String uid,
   }) async {
