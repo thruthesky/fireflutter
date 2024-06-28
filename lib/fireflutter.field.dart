@@ -82,4 +82,7 @@ class Field {
 
   static const String postId = 'postId';
   static const String senderUid = 'senderUid';
+
+  static const String rejectedAt = 'rejectedAt';
+  static const String acceptedAt = 'acceptedAt';
 }

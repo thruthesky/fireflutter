@@ -2,13 +2,18 @@ import 'package:fireflutter/src/friend/widgets/friend.request.list_view.dart';
 import 'package:flutter/material.dart';
 
 class FriendRequestReceivedScreen extends StatelessWidget {
-  const FriendRequestReceivedScreen({super.key});
+  const FriendRequestReceivedScreen({
+    super.key,
+    this.title,
+  });
+
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Recevied Requests'),
+        title: Text(title ?? 'My Recevied Requests'),
       ),
       body: FriendRequestListView(),
     );

@@ -102,6 +102,24 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                 ),
+                Value(
+                  ref: Friend.myListRef.child(userUid),
+                  builder: (
+                    friend,
+                  ) {
+                    if (friend != null) {
+                      return Text(
+                        'Friends',
+                        style:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
                 UserStateMessage.sync(
                   uid: userUid,
                   user: user,

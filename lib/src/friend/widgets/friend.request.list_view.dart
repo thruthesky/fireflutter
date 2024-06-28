@@ -61,8 +61,8 @@ class FriendRequestListView extends StatelessWidget {
   final Widget Function(Friend, int)? itemBuilder;
 
   Query get _query => switch (list) {
-        FriendRequestList.received => Friend.myReceivedRequestListRef,
-        FriendRequestList.sent => Friend.mySentRequestListRef,
+        FriendRequestList.received => Friend.myReceivedListRef,
+        FriendRequestList.sent => Friend.mySentListRef,
       };
 
   @override

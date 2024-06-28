@@ -12,15 +12,37 @@ class FriendRequestSentListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const Icon(Icons.people),
-      title: Text('Friends: ${friend.uid}'),
+      contentPadding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
+      onTap: () {
+        UserService.instance.showPublicProfileScreen(
+          context: context,
+          uid: friend.uid,
+        );
+      },
+      leading: UserAvatar(
+        uid: friend.uid,
+        cacheId: friend.uid,
+      ),
+      title: UserDisplayName(
+        uid: friend.uid,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      subtitle: UserDoc(
+        uid: friend.uid,
+        builder: (user) {
+          return Text(user.stateMessage);
+        },
+      ),
       trailing: Value(
         ref: friend.ref,
         builder: (snapshot) {
           final snapshotData = Map<String, dynamic>.from(snapshot);
           final friendData = Friend.fromJson(snapshotData, friend.ref);
           if (friendData.acceptedAt != null) {
-            return const Text("Accepted");
+            return const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Text("Accepted"),
+            );
           }
           return IconButton(
             onPressed: () async {

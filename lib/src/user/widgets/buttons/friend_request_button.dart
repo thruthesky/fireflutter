@@ -12,9 +12,32 @@ class FriendRequestButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Value(
-      ref: Friend.myReceivedRequestRef(uid),
+      ref: Friend.myReceived(otherUid: uid),
       builder: (myReceivedRequest) {
         if (myReceivedRequest != null) {
+          final request = Friend.fromJson(
+            Map<String, dynamic>.from(myReceivedRequest),
+            Friend.myReceived(otherUid: uid),
+          );
+          if (request.isAccepted) {
+            return const SizedBox.shrink();
+          }
+          if (request.isRejected) {
+            return ElevatedButton(
+              onPressed: () async {
+                final re = await confirm(
+                  context: context,
+                  title: "Already Rejected",
+                  message:
+                      "You have already rejected this user. Do you want to accept the request instead?",
+                );
+                if (re == true) {
+                  Friend.acceptRequest(context: context, uid: uid);
+                }
+              },
+              child: const Text("Friend Request"),
+            );
+          }
           return ElevatedButton(
             onPressed: () async {
               final re = await _showRespondRequestDialog(context);
@@ -28,11 +51,18 @@ class FriendRequestButton extends StatelessWidget {
           );
         }
         return Value(
-          ref: Friend.mySentRequestRef(uid),
+          ref: Friend.mySent(otherUid: uid),
           builder: (mySentRequest) {
             if (mySentRequest == null) {
               return ElevatedButton(
                 onPressed: () async {
+                  if (uid == myUid) {
+                    toast(
+                      context: context,
+                      message: "You can't add yourself as friend.",
+                    );
+                    return;
+                  }
                   await Friend.request(context: context, uid: uid);
                 },
                 child: const Text('Friend Request'),
@@ -112,20 +142,6 @@ class FriendRequestButton extends StatelessWidget {
               ),
             ],
           ),
-          // actions: <Widget>[
-          //   TextButton(
-          //     onPressed: () => Navigator.pop(context, true),
-          //     child: const Text("Accept"),
-          //   ),
-          //   TextButton(
-          //     onPressed: () => Navigator.pop(context, false),
-          //     child: const Text("Reject"),
-          //   ),
-          //   TextButton(
-          //     onPressed: () => Navigator.pop(context, null),
-          //     child: const Text("Cancel"),
-          //   ),
-          // ],
         );
       },
     );
