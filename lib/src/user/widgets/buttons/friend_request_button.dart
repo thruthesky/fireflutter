@@ -27,15 +27,15 @@ class FriendRequestButton extends StatelessWidget {
               onPressed: () async {
                 final re = await confirm(
                   context: context,
-                  title: "Already Rejected",
+                  title: T.alreadyRejected.tr,
                   message:
-                      "You have already rejected this user. Do you want to accept the request instead?",
+                      T.alreadyRejectedAcceptRequestInsteadConfirmMessage.tr,
                 );
                 if (re == true) {
                   Friend.acceptRequest(context: context, uid: uid);
                 }
               },
-              child: const Text("Friend Request"),
+              child: Text(T.friendRequest.tr),
             );
           }
           return ElevatedButton(
@@ -47,7 +47,7 @@ class FriendRequestButton extends StatelessWidget {
                 await Friend.rejectRequest(context: context, uid: uid);
               }
             },
-            child: const Text('Respond Request'),
+            child: Text(T.respondRequest.tr),
           );
         }
         return Value(
@@ -57,15 +57,15 @@ class FriendRequestButton extends StatelessWidget {
               return ElevatedButton(
                 onPressed: () async {
                   if (uid == myUid) {
-                    toast(
+                    errorToast(
                       context: context,
-                      message: "You can't add yourself as friend.",
+                      message: T.youCantAddYourselfAsFriend.tr,
                     );
                     return;
                   }
                   await Friend.request(context: context, uid: uid);
                 },
-                child: const Text('Friend Request'),
+                child: Text(T.friendRequest.tr),
               );
             } else {
               final request = Friend.fromJson(
@@ -79,15 +79,15 @@ class FriendRequestButton extends StatelessWidget {
                 onPressed: () async {
                   final re = await confirm(
                     context: context,
-                    title: "Already Requested",
+                    title: T.alreadyRequested.tr,
                     message:
-                        "You have already requested this user. Do you want to cancel the request?",
+                        T.alreadyRequestedCancelRequestInsteadConfirmMessage.tr,
                   );
                   if (re == true) {
                     await Friend.cancelRequest(context: context, uid: uid);
                   }
                 },
-                child: const Text('Requested'),
+                child: Text(T.requested.tr),
               );
             }
           },
@@ -96,7 +96,8 @@ class FriendRequestButton extends StatelessWidget {
     );
   }
 
-  /// Shows Accept, Reject, or Cancel
+  /// Shows Accept, Reject, or Cancel dialog.
+  ///
   /// Accept = true
   /// Reject = false
   /// Cancel = null
@@ -106,8 +107,7 @@ class FriendRequestButton extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: const EdgeInsets.only(top: 16.0),
-          title: const Text("Respond Request"),
-          // content: const Text("Do you want to accept, reject the request?"),
+          title: Text(T.respondRequest.tr),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -118,7 +118,7 @@ class FriendRequestButton extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Text(
-                      "Accept",
+                      T.accept.tr,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Colors.green,
                           ),
@@ -132,7 +132,7 @@ class FriendRequestButton extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Text(
-                      "Reject",
+                      T.reject.tr,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Colors.red,
                           ),
@@ -142,9 +142,13 @@ class FriendRequestButton extends StatelessWidget {
               ),
               InkWell(
                 onTap: () => Navigator.pop(context, null),
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Center(child: Text("Cancel")),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text(
+                      T.cancel.tr,
+                    ),
+                  ),
                 ),
               ),
             ],
