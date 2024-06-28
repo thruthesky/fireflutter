@@ -8,7 +8,7 @@ class FriendRequestReceivedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Friend Request Received'),
+        title: const Text('My Recevied Requests'),
       ),
       body: FriendRequestListView(),
     );

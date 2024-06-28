@@ -1,3 +1,4 @@
+import 'package:fireflutter/src/friend/widgets/friend.request.list_view.dart';
 import 'package:flutter/material.dart';
 
 class FriendRequesetSentScreen extends StatefulWidget {
@@ -13,12 +14,10 @@ class _FriendRequesetSentScreenState extends State<FriendRequesetSentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My sent requests'),
+        title: const Text('My Sent Requests'),
       ),
-      body: const Column(
-        children: [
-          Text("WhoIRequestedTo"),
-        ],
+      body: FriendRequestListView(
+        list: FriendRequestList.sent,
       ),
     );
   }

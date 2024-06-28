@@ -30,7 +30,10 @@ class FriendRequestReceivedListTile extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  Friend.acceptRequest(context: context, uid: friendData.uid);
+                  Friend.acceptRequest(
+                    context: context,
+                    uid: friendData.uid,
+                  );
                 },
                 icon: const Icon(
                   Icons.check,
@@ -38,7 +41,10 @@ class FriendRequestReceivedListTile extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  Friend.rejectRequest(context: context, uid: friendData.uid);
+                  Friend.rejectRequest(
+                    context: context,
+                    uid: friendData.uid,
+                  );
                 },
                 icon: const Icon(
                   Icons.close,

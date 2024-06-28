@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/friend/widgets/friend.request.list_tile.dart';
+import 'package:fireflutter/src/friend/widgets/friend.sent.list_tile.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -112,11 +113,18 @@ class FriendRequestListView extends StatelessWidget {
               }
 
               final friend = Friend.fromSnapshot(snapshot.docs[index]);
-              // TODO friend request sent list tile
-              return itemBuilder?.call(friend, index) ??
-                  FriendRequestReceivedListTile(
-                    friend: friend,
-                  );
+              if (itemBuilder != null) {
+                return itemBuilder!(friend, index);
+              }
+              if (list == FriendRequestList.received) {
+                return FriendRequestReceivedListTile(
+                  friend: friend,
+                );
+              } else {
+                return FriendRequestSentListTile(
+                  friend: friend,
+                );
+              }
             },
           );
         });
