@@ -2,21 +2,19 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-// TODO move inside Friend
-class FriendsNode {
+class Friend {
+  // Nodes. for the database.
   static const String friends = 'friends';
   static const String friendsRequestReceived = 'friends-received';
   static const String friendsRequestSent = 'friends-sent';
-}
 
-class Friend {
   static DatabaseReference get rootRef => FirebaseDatabase.instance.ref('/');
 
   /// [listRef] is the reference to a users friends list. That is /friends/{uid}/...
   ///
   /// Use this to get the reference to the friend list of a user.
   static DatabaseReference listRef(String uid) =>
-      rootRef.child(FriendsNode.friends).child(uid);
+      rootRef.child(friends).child(uid);
 
   /// [myListRef] is the reference to the current user's friends list.
   /// That is /friends/{myUid}/...
@@ -27,7 +25,7 @@ class Friend {
   /// [myReceivedListRef] is the reference to the current user's request list.
   /// That is /friends-received/{myUid}/...
   static DatabaseReference get myReceivedListRef =>
-      rootRef.child(FriendsNode.friendsRequestReceived).child(myUid!);
+      rootRef.child(friendsRequestReceived).child(myUid!);
 
   /// [received] is the reference of the specific request by a sender to a receiver.
   /// That is /friends-received/{receiverUid}/{senderUid}/...
@@ -35,10 +33,7 @@ class Friend {
     required String receiverUid,
     required String senderUid,
   }) =>
-      rootRef
-          .child(FriendsNode.friendsRequestReceived)
-          .child(receiverUid)
-          .child(senderUid);
+      rootRef.child(friendsRequestReceived).child(receiverUid).child(senderUid);
 
   /// [myReceived] is the reference to the current user's received request from other user.
   /// That is /friends-received/{myUid}/{otherUid}/...
@@ -59,7 +54,7 @@ class Friend {
   /// The current user is the sender in the list.
   /// That is /friends-sent/{myUid}/...
   static DatabaseReference get mySentListRef =>
-      rootRef.child(FriendsNode.friendsRequestSent).child(myUid!);
+      rootRef.child(friendsRequestSent).child(myUid!);
 
   /// [send] is the reference of the specific request by a receiver to a sender.
   /// That is /friends-sent/{senderUid}/{receiverUid}/...
@@ -67,10 +62,7 @@ class Friend {
     required String senderUid,
     required String receiverUid,
   }) =>
-      rootRef
-          .child(FriendsNode.friendsRequestSent)
-          .child(senderUid)
-          .child(receiverUid);
+      rootRef.child(friendsRequestSent).child(senderUid).child(receiverUid);
 
   /// [mySent] is the reference to a current user's sent request to other users.
   /// That is /friends-sent/{myUid}/{otherUid}/...
