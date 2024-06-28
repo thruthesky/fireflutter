@@ -68,6 +68,13 @@ class FriendRequestButton extends StatelessWidget {
                 child: const Text('Friend Request'),
               );
             } else {
+              final request = Friend.fromJson(
+                Map<String, dynamic>.from(mySentRequest),
+                Friend.myReceived(otherUid: uid),
+              );
+              if (request.isAccepted) {
+                return const SizedBox.shrink();
+              }
               return ElevatedButton(
                 onPressed: () async {
                   final re = await confirm(

@@ -125,10 +125,10 @@ class Friend {
     return Friend(
       ref: ref,
       uid: ref.key!,
-      name: json['name'] ?? '',
-      createdAt: json['createdAt'],
-      rejectedAt: json['rejectedAt'],
-      acceptedAt: json['acceptedAt'],
+      name: json[Field.name] ?? '',
+      createdAt: json[Field.createdAt],
+      rejectedAt: json[Field.rejectedAt],
+      acceptedAt: json[Field.acceptedAt],
     );
   }
 
