@@ -42,3 +42,10 @@ In Fireflutter, the system uses the `Friend` as the data models.
 
 ### Request to be a Friend
 
+The `Friend` class can be used to request to be a friend. To request to be a friend, use the code below:
+
+```dart
+Friend.request(uid: "other-uid");
+```
+
+This code will 
