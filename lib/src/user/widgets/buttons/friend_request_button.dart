@@ -112,6 +112,13 @@ class FriendRequestButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Text(T.thisUserWantsToAddYouAsFriend.tr),
+              ),
+              const Divider(
+                height: 0,
+              ),
               InkWell(
                 onTap: () => Navigator.pop(context, true),
                 child: Padding(
@@ -126,6 +133,9 @@ class FriendRequestButton extends StatelessWidget {
                   ),
                 ),
               ),
+              const Divider(
+                height: 0,
+              ),
               InkWell(
                 onTap: () => Navigator.pop(context, false),
                 child: Padding(
@@ -139,6 +149,9 @@ class FriendRequestButton extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+              const Divider(
+                height: 0,
               ),
               InkWell(
                 onTap: () => Navigator.pop(context, null),

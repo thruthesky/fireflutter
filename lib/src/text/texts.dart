@@ -1446,6 +1446,11 @@ class T {
     'ko': '친구가 없습니다.',
   };
 
+  static const Json thisUserWantsToAddYouAsFriend = {
+    'en': 'This user wants to add you as a friend.',
+    'ko': '이 사용자는 당신을 친구로 추가하고 싶습니다.',
+  };
+
   // ----> Friends
 
   // static const String inputTitle = 'Input title';
