@@ -163,7 +163,10 @@ class Friend {
   }) async {
     final requestHistory = await mySent(otherUid: uid).get();
     if (requestHistory.exists) {
-      toast(context: context, message: "You have requested already");
+      toast(
+        context: context,
+        message: T.youHaveRequestedAlready.tr,
+      );
       return;
     }
 
@@ -177,7 +180,10 @@ class Friend {
     await otherReceivedFromMe(otherUid: uid).set(requestData);
 
     if (!context.mounted) return;
-    toast(context: context, message: "You have sent a friend request.");
+    toast(
+      context: context,
+      message: T.youHaveSentAFriendRequest.tr,
+    );
   }
 
   /// Accept a friend request
@@ -211,7 +217,10 @@ class Friend {
     await listRef(uid).child(myUid!).set(newFriendData);
 
     if (!context.mounted) return;
-    toast(context: context, message: "You have accepted a friend request.");
+    toast(
+      context: context,
+      message: T.youHaveAcceptedAFriendRequest.tr,
+    );
   }
 
   static Future<void> rejectRequest({
@@ -227,7 +236,10 @@ class Friend {
         .child(rejectedAt)
         .set(ServerValue.timestamp);
     if (!context.mounted) return;
-    toast(context: context, message: "You have rejected a friend request.");
+    toast(
+      context: context,
+      message: T.youHaveRejectedAFriendRequest.tr,
+    );
   }
 
   static Future<void> cancelRequest({
@@ -238,6 +250,9 @@ class Friend {
     await otherReceivedFromMe(otherUid: uid).set(null);
 
     if (!context.mounted) return;
-    toast(context: context, message: "You have cancelled a friend request.");
+    toast(
+      context: context,
+      message: T.youHaveCancelledAFriendRequest.tr,
+    );
   }
 }

@@ -1349,6 +1349,33 @@ class T {
     'ko': '내가 보낸 친구 요청',
   };
 
+  static const Json youHaveRequestedAlready = {
+    'en': 'You have requested already.',
+    'ko': '이미 친구 요청을 보냈습니다.',
+  };
+
+  static const Json youHaveSentAFriendRequest = {
+    'en': 'You have sent a friend request.',
+    'ko': '친구 요청을 보냈습니다.',
+  };
+
+  static const Json youHaveAcceptedAFriendRequest = {
+    'en': 'You have accepted a friend request.',
+    'ko': '친구 요청을 수락했습니다.',
+  };
+
+  static const Json youHaveRejectedAFriendRequest = {
+    'en': 'You have rejected a friend request.',
+    'ko': '친구 요청을 거절했습니다.',
+  };
+
+  static const Json youHaveCancelledAFriendRequest = {
+    'en': 'You have cancelled a friend request.',
+    'ko': '친구 요청을 취소했습니다.',
+  };
+
+  // ----> Friends
+
   // static const String inputTitle = 'Input title';
   static const Json inputTitle = {
     'en': 'Input title',
