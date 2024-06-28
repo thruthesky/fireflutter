@@ -1431,6 +1431,21 @@ class T {
     'ko': '거절',
   };
 
+  static const Json noReceivedRequestYet = {
+    'en': 'No received request yet.',
+    'ko': '받은 요청이 없습니다.',
+  };
+
+  static const Json noSentRequestYet = {
+    'en': 'No sent request yet.',
+    'ko': '보낸 요청이 없습니다.',
+  };
+
+  static const Json noFriendYet = {
+    'en': 'No friend yet.',
+    'ko': '친구가 없습니다.',
+  };
+
   // ----> Friends
 
   // static const String inputTitle = 'Input title';

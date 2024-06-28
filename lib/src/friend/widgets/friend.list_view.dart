@@ -61,12 +61,13 @@ class FriendListView extends StatelessWidget {
           }
           if (snapshot.hasError) {
             dog('Error: ${snapshot.error}');
-            return Text('Something went wrong! ${snapshot.error}');
+            return Text('${T.somethingWentWrong.tr} ${snapshot.error}');
           }
 
           if (snapshot.hasData && snapshot.docs.isEmpty && !snapshot.hasMore) {
-            return const Center(
-                child: Text('@TODO - Display empty list message'));
+            return Center(
+              child: Text(T.noFriendYet.tr),
+            );
           }
 
           return ListView.separated(
