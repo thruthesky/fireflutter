@@ -1389,12 +1389,18 @@ class T {
     'ko': '이미 요청했습니다.',
   };
 
+  static const Json alreadyRequestedCancelRequestInsteadConfirmMessage = {
+    'en':
+        "You have already requested this user. Do you want to cancel the request instead?",
+    'ko': "이 사용자의 요청을 이미 보냈습니다. 그 요청을 대신 취소하시겠습니까?",
+  };
+
   static const Json requested = {
     'en': 'Requested',
     'ko': '요청',
   };
 
-  static const Json alreadyRejectedAcceptRequestInsteadConfirm = {
+  static const Json alreadyRejectedAcceptRequestInsteadConfirmMessage = {
     'en':
         "You have already rejected this user. Do you want to accept the request instead?",
     'ko': "이 사용자의 요청을 이미 거절했습니다. 그 요청을 대신 수락하시겠습니까?",
