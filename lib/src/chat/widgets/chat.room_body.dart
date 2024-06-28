@@ -64,6 +64,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
 
   /// if there is an error while joining the chat room
   bool cannotJoin = false;
+  bool get canChat => cannotJoin == false;
 
   @override
   void initState() {
@@ -168,7 +169,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
             Navigator.of(context).pop();
           }
         }
-      } else if (e.code == Code.chatRoomNotVerified) {
+      } else if (e.code == Code.chatRoomUserGenderNotAllowed) {
         if (mounted) {
           await error(
             context: context,
@@ -461,14 +462,14 @@ class _ChatRoomState extends State<ChatRoomBody> {
               child: Text(T.cannotJoinChatRoomError.tr),
             ),
           ),
-
-        SafeArea(
-          top: false,
-          child: ChatMessageInputBox(
-            chat: chat,
-            other: other,
+        if (canChat)
+          SafeArea(
+            top: false,
+            child: ChatMessageInputBox(
+              chat: chat,
+              other: other,
+            ),
           ),
-        ),
       ],
     );
   }

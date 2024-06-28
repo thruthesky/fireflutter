@@ -21,6 +21,54 @@
 
 - `blocks`: Administrators manage the block list of chat rooms here. Users whose UIDs added here cannot enter the chat room. Additionally, they are automatically ejected from the chat room. (**TODO: Functionality not implemented as of 2024-02-22.**)
 
+#### Chat Room hook
+
+Hooks available before joining group chat or creating single chat room
+
+- beforeSingleChatRoomCreate
+- beforeGroupChatRoomJoin
+
+You can use the `beforeSingleChatRoomCreate` hook to do something before the room is created.
+You can use this hook if you have a condition like the dont let the room be created if current/other User is not verified.
+You can also intercept the creation of the room by throwing an exception.
+
+```dart
+    ChatService.instance.init(
+      beforeSingleChatRoomCreate: (String otherUid) async {
+        if(iam.notVerified) {
+          await error(
+            context: context,
+            title: 'Not Verified',
+            message: 'Not verified user.....',
+          );
+          throw T.iamNotVerified.tr;
+        }
+        User? otherUser = await User.get(otherUid);
+        if (otherUser == null) {
+          // show error message
+          throw T.noUserFound.tr;
+        }
+        if (otherUser.notVerified) {
+          // show error message
+          throw T.otherUserNotVerified.tr;
+        }
+      },
+    )
+```
+
+You can also use `beforeGroupChatRoomJoin` hook to do something before joining a group.
+But since group master already have restriction setting,
+You can use this hook if you have special condition before joining the group.
+You can also Intercept the joining of the room by throwing an exception.
+
+```dart
+    ChatService.instance.init(
+      beforeGroupChatRoomJoin: (ChatRoom room) async {
+        /// do something before the current user id will be inserted into the chatroom users
+      },
+    )
+```
+
 ### Structure of Chat Messages
 
 - uid: The UID of the user who sent the message.
@@ -535,23 +583,7 @@ TextButton(
 
 - You can use the default admin screen. Just call `AdminService.instance.showDashboard()`.
 
-## Changing logic before sending chat messages
 
-If you want to add logic before sending chat messages (or photos), you can use `testBeforeSendMessage`.
-
-For example, if you don't want to send a chat message if the member doesn't have a photo or name, you can do the following.
-
-```dart
-ChatService.instance.init(testBeforeSendMessage: (chat) {
-  if (my!.photoUrl.isEmpty || my!.displayName.isEmpty) {
-    error(
-        context: context,
-        title: 'Incomplete Profile',
-        message: 'Please fill in all missing profile information.');
-    throw 'The profile is incomplete.';
-  }
-});
-```
 
 ## Chat Message Sent Hook
 
@@ -579,6 +611,26 @@ void initChatService() {
     },
   );
 }
+```
+
+## Changing logic before sending chat messages
+
+If you want to add logic before sending chat messages (or photos), you can use `beforeMessageSent`.
+
+For example, if you don't want to send a chat message if the member doesn't have a photo or name, you can do the following.
+
+```dart
+ChatService.instance.init(
+  beforeMessageSent: (Map<String, dynamic> data, ChatModel chat) {
+  if (my!.photoUrl.isEmpty || my!.displayName.isEmpty) {
+    error(
+      context: context,
+      title: 'Incomplete Profile',
+      message: 'Please fill in all missing profile information.',
+    );
+    throw 'The profile is incomplete.';
+  }
+});
 ```
 
 ## Blocking users
