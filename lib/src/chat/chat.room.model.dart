@@ -104,6 +104,18 @@ class ChatRoom {
   /// [hasPassword] tells whether a password is set for the group chat room
   bool hasPassword;
 
+  /// There might be an instance when you are using same firebase database for  two project and
+  ///  you want to only display the open chat separately for instance you want to show
+  /// all the chat list on open chat A and hide the open chat list B. you can use the field below
+  ///
+  /// [domain] domain of the chat room eg. app-test, my-app
+  String? domain;
+
+  /// [domainChatOrder] order of the chat room in the domain. domainChatOrder is same order with
+  /// openChatOrder. This field is only exist if you set a `domain` in `chatRoomSettings` in
+  /// `ChatService.instance.init()`
+  String? domainChatOrder;
+
   ChatRoom({
     required this.ref,
     required this.key,
@@ -129,6 +141,8 @@ class ChatRoom {
     this.noOfUsers,
     this.blockedUsers = const [],
     this.hasPassword = false,
+    this.domain,
+    this.domainChatOrder,
   });
 
   /// [fromSnapshot] It creates a [ChatRoom] from a [DataSnapshot].
@@ -201,6 +215,8 @@ class ChatRoom {
           ? []
           : List<String>.from((json['blockedUsers'] as Map).keys.toList()),
       hasPassword: json['hasPassword'] ?? false,
+      domain: json['domain'] as String?,
+      domainChatOrder: json['domainChatOrder'] ?? '',
     );
   }
   Map<String, dynamic> toJson() {
@@ -227,6 +243,8 @@ class ChatRoom {
       'noOfUsers': noOfUsers,
       'blockedUsers': blockedUsers,
       'hasPassword': hasPassword,
+      'domain': domain,
+      'domainChatOrder': domainChatOrder,
     };
   }
 
@@ -334,6 +352,8 @@ class ChatRoom {
     blockedUsers = room.blockedUsers;
 
     hasPassword = room.hasPassword;
+    domain = room.domain;
+    domainChatOrder = room.domainChatOrder;
 
     return this;
   }
@@ -404,6 +424,11 @@ class ChatRoom {
       } else {
         ref = ChatService.instance.roomsRef.child(roomId);
       }
+
+      final String? chatSettingDomain =
+          ChatService.instance.chatRoomSettings.domain;
+
+      dog('$chatSettingDomain');
       final data = {
         Field.name: name,
         Field.iconUrl: iconUrl,
@@ -415,7 +440,25 @@ class ChatRoom {
         Field.isVerifiedOnly: isVerifiedOnly,
         Field.gender: gender,
         Field.master: myUid!,
+        Field.domain: chatSettingDomain,
       };
+
+      /// domain is only set once when the group chat is created
+      /// domain is set in `ChatService.intance.init(chatRoomSettings)`
+      ///
+      /// domainChatOrder is a String combination of the domain by a large
+      /// number minus the current time in milliseconds. so they can be order since it's a string
+      ///
+      if (isOpenGroupChat == true) {
+        data[Field.domainChatOrder] = chatSettingDomain != null
+            ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
+            : null;
+      } else {
+        data[Field.domainChatOrder] = null;
+      }
+
+      dog('test : $data');
+
       await ref.update(data);
     }
     return fromReference(ref);
@@ -445,6 +488,18 @@ class ChatRoom {
       Field.hasPassword: hasPassword,
       Field.gender: gender,
     };
+
+    final String? chatSettingDomain =
+        ChatService.instance.chatRoomSettings.domain;
+    // update domain chat order when the chatroom is updated
+    if (isOpenGroupChat == true) {
+      data[Field.domainChatOrder] = chatSettingDomain != null
+          ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
+          : null;
+    } else {
+      data[Field.domainChatOrder] = null;
+    }
+
     return ref.update(data);
   }
 

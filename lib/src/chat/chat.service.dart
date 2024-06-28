@@ -55,6 +55,10 @@ class ChatService {
       Map<String, dynamic> message, ChatModel chatModel)? beforeMessageSent;
   Function(ChatMessage)? afterMessageSent;
 
+  /// gives chatroomsetting option
+  /// by default enableVerifiedUserOption and enableGenderOption is set to true
+  ChatRoomSettings chatRoomSettings = const ChatRoomSettings();
+
   /// Before the Single Chat Room create
   ///
   /// You can intercept/do something before the user create the single chat room.
@@ -68,7 +72,10 @@ class ChatService {
   Future<void> Function(ChatRoom room)? beforeGroupChatRoomJoin;
 
   /// init
+  /// [chatRoomSettings] give chat room settings to enable verification and gender option
+  /// [customize] give customize option to customize chat room screen
   init({
+    ChatRoomSettings? chatRoomSettings,
     ChatCustomize? customize,
     Future<Map<String, dynamic>> Function(Map<String, dynamic>, ChatModel)?
         beforeMessageSent,
@@ -77,6 +84,7 @@ class ChatService {
     Future<void> Function(ChatRoom)? beforeGroupChatRoomJoin,
   }) {
     // dog('--> ChatService.init()');
+    this.chatRoomSettings = chatRoomSettings ?? this.chatRoomSettings;
     this.customize = customize ?? this.customize;
 
     this.afterMessageSent = afterMessageSent;
@@ -171,9 +179,10 @@ class ChatService {
       context: context,
       builder: (_) =>
           customize.chatRoomEditDialogBuilder?.call(context: context) ??
-          DefaultChatRoomEditDialog(
-            showAuthRequiredOption: showAuthRequiredOption,
-          ),
+          const DefaultChatRoomEditDialog(
+              // showAuthRequiredOption: showAuthRequiredOption ||
+              //     chatRoomSettings.enableVerifiedUserOption!,
+              ),
     );
   }
 
@@ -182,12 +191,12 @@ class ChatService {
     required String roomId,
   }) async {
     return await showDialog<ChatRoom?>(
-      context: context,
-      builder: (_) =>
-          customize.chatRoomEditDialogBuilder
-              ?.call(context: context, roomId: roomId) ??
-          DefaultChatRoomEditDialog(roomId: roomId),
-    );
+        context: context,
+        builder: (_) {
+          return customize.chatRoomEditDialogBuilder
+                  ?.call(context: context, roomId: roomId) ??
+              DefaultChatRoomEditDialog(roomId: roomId);
+        });
   }
 
   /// Display a dialog to invite a user to a chat room.

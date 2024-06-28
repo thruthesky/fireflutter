@@ -387,11 +387,42 @@ ChatRoomListView(
   chatRoomList: ChatRoomList.group,
 ),
 
-// Listong of all open group chat rooms (whether the user is joined or not)
+// Listing of all open group chat rooms (whether the user is joined or not)
 ChatRoomListView(
   chatRoomList: ChatRoomList.open,
 ),
+
+
+// Listing of all open group chat rooms base on the domain set in `ChatService.intance.chatRoomSettings.domain`
+ChatRoomListView(
+  chatRoomList: ChatRoomList.domain,
+),
 ```
+
+You can display chat rooms of a specific domain. by Using the widget `ChatRoomListView()` 
+
+```dart
+ChatRoomListView(
+  chatRoomList: ChatRoomList.domain,
+)
+```
+or 
+```dart
+FirebaseDatabaseQueryBuilder(
+  query: ChatService.instance.joinsRef
+      .child(myUid!)
+      .orderByChild(Field.domainChatOrder)
+      .startAt('my-domain'),
+      .endAt('my-domain\uf8ff')
+  pageSize: 50,
+  builder: (context, snapshot, _) {
+    ...
+  },
+);
+```
+
+
+
 
 #### Querying Specific Type of Chat Rooms
 
@@ -424,6 +455,12 @@ The `Field.order` is the same with 'order'. This can be used to get all the grou
    - All single chat room
 3. `Field.groupChatOrder` - same as 'groupChatOrder'.
    - All group chat room
+4. `Field.openChatOrder` - same as 'openChatOrder'.
+   - All open chat room 
+4. `Field.domainChatOrder` - same as 'domainChatOrder'.
+   - All open chat room base on the domain set in `ChatService.intance.chatRoomSettings.domain`
+
+
 
 ##### Chat Rooms not Necessarily Joined by the Currently Logged in User (roomsRef)
 
@@ -491,6 +528,21 @@ IconButton(
 ),
 
 ```
+
+#### ChatRoomEditDialog
+By Default chat edit dialog display all the options including name, description, and password and verification options. and for instance your app does not support verification and gender option things you can hide the options by doing the code below. 
+
+```dart
+ChatService.instance.init(
+  chatRoomSettings: ChatRoomSettings(
+    enebaleVerifiedUserOption:false,
+    enableGenderOption: false,
+    domain: 'my-app'
+  )
+)
+```
+
+for instance you have two apps and using one database projects as your project
 
 Automatically, creator of the room will join to the newly created room after submitting.
 

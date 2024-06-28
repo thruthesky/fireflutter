@@ -11,11 +11,9 @@ class DefaultChatRoomEditDialog extends StatefulWidget {
   const DefaultChatRoomEditDialog({
     super.key,
     this.roomId,
-    this.showAuthRequiredOption = false,
   });
 
   final String? roomId;
-  final bool showAuthRequiredOption;
 
   @override
   State<DefaultChatRoomEditDialog> createState() =>
@@ -186,7 +184,9 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
             ),
 
             /// TODO change the term 'auth' to 'verified'.
-            if (widget.showAuthRequiredOption)
+            if (ChatService
+                    .instance.chatRoomSettings.enableVerifiedUserOption ==
+                true)
               SwitchListTile(
                 value: isVerifiedOnly,
                 onChanged: (v) => setState(() => isVerifiedOnly = v),
@@ -208,7 +208,9 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
 
             const SizedBox(height: 16),
 
-            if (isEdit) ...[
+            if (isEdit &&
+                ChatService.instance.chatRoomSettings.enableGenderOption ==
+                    true) ...[
               Padding(
                 padding: const EdgeInsets.only(left: 32.0),
                 child: Text(
@@ -276,7 +278,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               ),
             const SizedBox(height: 16),
 
-            if (isEdit)
+            if (isEdit &&
+                ChatService.instance.chatRoomSettings.enableVerifiedUserOption)
               SwitchListTile(
                 value: urlVerifiedUserOnly,
                 onChanged: (v) => setState(() => urlVerifiedUserOnly = v),
@@ -295,7 +298,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                   ),
                 ),
               ),
-            if (isEdit)
+            if (isEdit &&
+                ChatService.instance.chatRoomSettings.enableVerifiedUserOption)
               ListTileTheme(
                 child: SwitchListTile(
                   value: uploadVerifiedUserOnly,
