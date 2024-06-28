@@ -566,46 +566,54 @@ class ChatRoom {
   /// 채팅방에 사용자를 초대하면, 채팅방 목록에 사용자가 나타나지 않을 수 있다. 그래서, 채팅방 목록을 다시 읽어야 한다.
   ///
   Future<String?> invite(String uid, {bool forceJoin = false}) async {
-    /// 채팅방 설정이 인증 회원 전용 입장 체크
-    ///
-    /// 인증 회원이 아니면 Issue 발생.
-    /// 단, master 는 인증 안되어도 그냥 통과.
-    if (master != uid && // 마스터가 아니고,
-            isVerifiedOnly // 인증 회원 전용 옵션이 켜져 있는 경우,
-        ) {
-      bool verified = false;
-      if (uid == myUid) {
-        verified = my!.isVerified;
-      } else {
-        verified = await User.getField(uid, Field.isVerified) ?? false;
-      }
-      if (verified == false) {
-        throw FireFlutterException(
-          Code.chatRoomNotVerified,
-          T.chatRoomIsForVerifiedUsersOnly.tr,
-        );
-      }
-    }
-
-    // if gender is specified check if the join/invite user has valid gender
-    if (gender.isNotEmpty) {
-      String userGender = '';
-      if (uid == myUid) {
-        userGender = my!.gender;
-      } else {
-        userGender = await User.getField(uid, Field.gender) ?? '';
+    if (isGroupChat) {
+      /// 채팅방 설정이 인증 회원 전용 입장 체크
+      ///
+      /// 인증 회원이 아니면 Issue 발생.
+      /// 단, master 는 인증 안되어도 그냥 통과.
+      if (master != uid && // 마스터가 아니고,
+              isVerifiedOnly // 인증 회원 전용 옵션이 켜져 있는 경우,
+          ) {
+        bool verified = false;
+        if (uid == myUid) {
+          verified = my!.isVerified;
+        } else {
+          verified = await User.getField(uid, Field.isVerified) ?? false;
+        }
+        if (verified == false) {
+          throw FireFlutterException(
+            Code.chatRoomNotVerified,
+            T.chatRoomIsForVerifiedUsersOnly.tr,
+          );
+        }
       }
 
-      if (gender != userGender) {
-        throw FireFlutterException(
-          Code.chatRoomUserGenderNotAllowed,
-          gender == 'M'
-              ? T.chatRoomMaleOnlyChatRoom.tr
-              : gender == 'F'
-                  ? T.chatRoomFemaleOnlyChatRoom.tr
-                  : T.chatRoomYourGenderIsNotAllowed.tr,
-        );
+      // if gender is specified check if the join/invite user has valid gender
+      if (gender.isNotEmpty) {
+        String userGender = '';
+        if (uid == myUid) {
+          userGender = my!.gender;
+        } else {
+          userGender = await User.getField(uid, Field.gender) ?? '';
+        }
+
+        if (gender != userGender) {
+          throw FireFlutterException(
+            Code.chatRoomUserGenderNotAllowed,
+            gender == 'M'
+                ? T.chatRoomMaleOnlyChatRoom.tr
+                : gender == 'F'
+                    ? T.chatRoomFemaleOnlyChatRoom.tr
+                    : T.chatRoomYourGenderIsNotAllowed.tr,
+          );
+        }
       }
+
+      /// hook before the user joins the group chat
+      await ChatService.instance.beforeGroupChatRoomJoin?.call(this);
+    } else if (isSingleChat) {
+      /// hook before the user create a chat room with other user uid
+      await ChatService.instance.beforeSingleChatRoomCreate?.call(uid);
     }
 
     /// 내가 이미 방에 들어가 있는 상태이면, 에러 코드를 리턴, 즉, 계속해서 다음 코드가 실행된다.
