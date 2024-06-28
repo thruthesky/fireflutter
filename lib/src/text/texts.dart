@@ -399,6 +399,11 @@ class T {
     'ko': '친구',
   };
 
+  static Json friends = {
+    'en': 'Friends',
+    'ko': '친구',
+  };
+
   static Json gallery = {
     'en': 'Gallery',
     'ko': '사진첩',
@@ -1331,6 +1336,17 @@ class T {
   static const Json thereAreNoBookmarksInTheList = {
     'en': 'There are no bookmarks in the list.',
     'ko': '북마크가 없습니다.',
+  };
+
+// Friends
+  static const Json myReceivedFriendRequests = {
+    'en': 'My Received Requests',
+    'ko': '내가 받은 친구 요청',
+  };
+
+  static const Json mySentFriendRequests = {
+    'en': 'My Sent Requests',
+    'ko': '내가 보낸 친구 요청',
   };
 
   // static const String inputTitle = 'Input title';

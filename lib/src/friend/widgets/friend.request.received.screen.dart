@@ -1,3 +1,4 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/friend/widgets/friend.request.list_view.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class FriendRequestReceivedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title ?? 'My Recevied Requests'),
+        title: Text(title ?? T.myReceivedFriendRequests.tr),
       ),
       body: FriendRequestListView(),
     );
