@@ -609,8 +609,8 @@ class ChatRoom {
         }
       }
 
-      /// hook before the user joins the group chat
-      await ChatService.instance.beforeGroupChatRoomJoin?.call(this);
+      /// hook before the user joins the group chat or user invites to group chat
+      await ChatService.instance.beforeGroupChatRoomJoinOrInvite?.call(this);
     } else if (isSingleChat) {
       /// hook before the user create a chat room with other user uid
       await ChatService.instance.beforeSingleChatRoomCreate?.call(uid);

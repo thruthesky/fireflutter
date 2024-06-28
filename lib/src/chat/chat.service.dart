@@ -69,7 +69,7 @@ class ChatService {
   /// Before the  user join the Group Chat Room
   ///
   /// You can intercept/do something before the user join the group chat room.
-  Future<void> Function(ChatRoom room)? beforeGroupChatRoomJoin;
+  Future<void> Function(ChatRoom room)? beforeGroupChatRoomJoinOrInvite;
 
   /// init
   /// [chatRoomSettings] give chat room settings to enable verification and gender option
@@ -81,7 +81,7 @@ class ChatService {
         beforeMessageSent,
     Function(ChatMessage)? afterMessageSent,
     Future<void> Function(String)? beforeSingleChatRoomCreate,
-    Future<void> Function(ChatRoom)? beforeGroupChatRoomJoin,
+    Future<void> Function(ChatRoom)? beforeGroupChatRoomJoinOrInvite,
   }) {
     // dog('--> ChatService.init()');
     this.chatRoomSettings = chatRoomSettings ?? this.chatRoomSettings;
@@ -91,7 +91,7 @@ class ChatService {
     this.beforeMessageSent = beforeMessageSent;
 
     this.beforeSingleChatRoomCreate = beforeSingleChatRoomCreate;
-    this.beforeGroupChatRoomJoin = beforeGroupChatRoomJoin;
+    this.beforeGroupChatRoomJoinOrInvite = beforeGroupChatRoomJoinOrInvite;
   }
 
   Future createRoom({
