@@ -144,7 +144,7 @@ class T {
   };
 
   static Json groupChat = {
-    'en': 'Group chat',
+    'en': 'Group',
     'ko': '그룹 채팅',
   };
 
@@ -1263,6 +1263,16 @@ class T {
     'ko': "댓글에 알림"
   };
 
+  static Json pushNotificationsOnCommentEnable = {
+    'en': "Enable push notifications on comment",
+    'ko': "댓글 푸시 알림 활성화"
+  };
+
+  static Json pushNotificationsOnCommentDisable = {
+    'en': "Disable push notifications on comment",
+    'ko': "댓글 푸시 알림 비활성화"
+  };
+
   /// Basic
 
   static const Json inputName = {
@@ -2193,5 +2203,66 @@ class T {
   static const Json otherUserNotVerified = {
     'en': 'The user has not yet been verified.',
     'ko': '사용자가 아직 확인되지 않았습니다.',
+  };
+
+  static const Json userAuthentication = {
+    'en': 'User Authentication',
+    'ko': '사용자 인증',
+  };
+
+  static const Json userHasBeenAuthenticated = {
+    'en': 'User has been authenticated.',
+    'ko': '인증이 완료된 사용자입니다.',
+  };
+
+  static const Json authenticateUser = {
+    'en': 'Not authenticated. Do you want to switch to authenticated user?',
+    'ko': '인증되지 않았습니다. 인증된 사용자로 전환 하시겠습니까?',
+  };
+
+  static const Json complete = {
+    'en': 'Complete',
+    'ko': '완료',
+  };
+
+  static const Json removed = {
+    'en': 'Removed',
+    'ko': '해제',
+  };
+
+  static const Json success = {
+    'en': 'Success',
+    'ko': '완료되었습니다.',
+  };
+
+  static const Json confirmBlockThisUser = {
+    'en': 'Do you want to block this user?',
+    'ko': '이 사용자를 차단하시겠습니까?',
+  };
+
+  static const Json confirmUnblockThisUser = {
+    'en': 'Blocked. Do you want to unblock this user?',
+    'ko': '막힌. 이 사용자의 차단을 해제하시겠습니까?',
+  };
+
+  static const Json adminSetting = {
+    'en': 'Admin Setting',
+    'ko': '관리자 설정',
+  };
+
+  static const Json confirmRemoveAdminPrevilege = {
+    'en': 'Do you want to remove administrator privileges?',
+    'ko': '관리자 권한을 제거하시겠습니까?',
+  };
+
+  static const Json confirmSetAdminPrevilege = {
+    'en': 'Do you want to set administrator privileges?',
+    'ko': '관리자 권한을 설정하시겠습니까?',
+  };
+
+  static const Json adminSetupMessage = {
+    'en':
+        'Administrator settings must be set directly in the /admins path of RTDB. Please refer to the administrator settings document.',
+    'ko': '관리자 설정은 RTDB 의 /admins 경로에서 직접 설정해야 합니다. 관리자 설정 문서를 참고하세요',
   };
 }

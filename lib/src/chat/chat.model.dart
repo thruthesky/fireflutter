@@ -137,8 +137,11 @@ class ChatModel {
     /// Warning! This data does not represent the actual data in the database. It is a temporary data
     /// made for the purpose of manipulating the chat message data before saving it.
     if (ChatService.instance.beforeMessageSent != null) {
-      chatMessageData =
-          await ChatService.instance.beforeMessageSent!(chatMessageData, this);
+      chatMessageData = await ChatService.instance.beforeMessageSent!(
+        data: chatMessageData,
+        chat: this,
+        force: force,
+      );
     }
 
     /// 1:1 채팅방이면, 상대방의 이름과 사진을 내 채팅방 정보에 저장한다.

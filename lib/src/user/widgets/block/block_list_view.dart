@@ -41,13 +41,15 @@ class BlockListView extends StatelessWidget {
                   builder: (user) {
                     return ListTile(
                       title: Text(user.displayName),
-                      // subtitle: Text(user.uid),
                       leading: Avatar(photoUrl: user.photoUrl.orAnonymousUrl),
                       trailing: IconButton(
                         key: Key('blockListTileDeleteBtn${user.uid}'),
                         onPressed: () {
-                          UserService.instance
-                              .block(context: context, otherUserUid: user.uid);
+                          UserService.instance.block(
+                            context: context,
+                            otherUserUid: user.uid,
+                            ask: true,
+                          );
                         },
                         icon: const Icon(Icons.delete),
                       ),
