@@ -106,8 +106,8 @@ class Report {
     required String review,
   }) async {
     final ref = acceptedRef.child(report.ref.key!);
-    print('ref: ${ref.path}');
-    print('report: ${report.toJson()}');
+    // print('ref: ${ref.path}');
+    // print('report: ${report.toJson()}');
     await ref.set(report.toJson());
     await report.ref.remove();
   }

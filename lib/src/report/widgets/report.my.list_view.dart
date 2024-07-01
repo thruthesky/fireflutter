@@ -153,11 +153,14 @@ class ReportMyListView extends StatelessWidget {
                     },
                   );
                 } else if (report.isChatRoom) {
-                  dog('${report.chatRoomId} ${report.otherUserUid} ');
+                  dog(' report.isChatRoom::  ${report.chatRoomId} ${report.otherUserUid} ');
 
                   final room = ChatRoom.fromRoomdId(report.chatRoomId!);
                   return chatBuilder?.call(report, func) ??
                       ListTile(
+                        leading: room.isSingleChat
+                            ? UserAvatar(uid: room.otherUserUid!)
+                            : ChatRoomAvatar(room: room),
                         title: Text(report.reason),
                         subtitle: Row(
                           children: [
@@ -183,7 +186,13 @@ class ReportMyListView extends StatelessWidget {
                                     // Explanation: Name is null because chat room can be a single
                                     //              Chat Room, which doesn't usually have Chat
                                     //              Room Name.
-                                    return Text(v ?? T.noChatRoomName.tr);
+                                    return Expanded(
+                                      child: Text(
+                                        v ?? T.noChatRoomName.tr,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.clip,
+                                      ),
+                                    );
                                   }),
                             },
                             Text(' ${report.createdAt.toShortDate}'),

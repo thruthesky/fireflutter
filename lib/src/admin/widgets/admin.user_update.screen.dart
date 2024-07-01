@@ -23,33 +23,38 @@ class _AdminUserUpdateScreenState extends State<AdminUserUpdateScreen> {
           return Column(
             children: [
               ListTile(
-                title: Text("이름: ${user.displayName}"),
+                title: Text("${T.name.tr}: ${user.displayName}"),
                 subtitle: Text("UID: ${user.uid}"),
               ),
               CheckboxListTile(
                 value: user.isVerified,
-                title: const Text('사용자 인증'),
-                subtitle: Text(user.isVerified
-                    ? '인증이 완료된 사용자입니다.'
-                    : '인증되지 않았습니다. 인증된 사용자로 전환 하시겠습니까?'),
+                title: Text(T.userAuthentication.tr),
+                subtitle: Text(
+                  user.isVerified
+                      ? T.userHasBeenAuthenticated.tr
+                      : T.authenticateUser.tr,
+                ),
                 onChanged: (value) async {
                   await user.update(isVerified: value);
                   await user.reload();
                   if (context.mounted) {
-                    error(
+                    alert(
                       context: context,
-                      title: '사용자 인증 ${user.isVerified == true ? '완료' : '해제'}',
+                      title: T.userAuthentication.tr,
                       message:
-                          '사용자 인증 ${user.isVerified == true ? '완료되었습니다.' : '해제되었습니다.'}',
+                          '${T.userAuthentication.tr} ${user.isVerified == true ? T.complete.tr : T.removed.tr}',
                     );
                   }
                 },
               ),
               CheckboxListTile(
                 value: user.isDisabled,
-                title: const Text('사용자 차단'),
+                title: Text(T.blockUser.tr),
                 subtitle: Text(
-                    user.isDisabled ? '차단되었습니다. 차단을 해제하시겠습니까?' : '차단하시겠습니까?'),
+                  user.isDisabled
+                      ? T.confirmUnblockThisUser.tr
+                      : T.confirmBlockThisUser.tr,
+                ),
                 onChanged: (value) async {
                   if (user.isDisabled == true) {
                     await user.enable();
@@ -60,18 +65,21 @@ class _AdminUserUpdateScreenState extends State<AdminUserUpdateScreen> {
                   if (context.mounted) {
                     error(
                       context: context,
-                      title: '사용자 차단 ${user.isDisabled == true ? '완료' : '해제'}',
+                      title: T.blockUser.tr,
                       message:
-                          '사용자 차단 ${user.isDisabled == true ? '완료되었습니다.' : '해제되었습니다.'}',
+                          '${T.blockUser.tr} ${user.isDisabled == true ? T.complete.tr : T.removed.tr}',
                     );
                   }
                 },
               ),
               CheckboxListTile(
                 value: AdminService.instance.checkAdmin(user.uid),
-                title: const Text('관리자 설정'),
+                title: Text(T.adminSetting.tr),
                 subtitle: Text(
-                    isAdmin ? '관리자입니다. 관리자 권한을 해제하시겠습니까?' : '관리자로 설정하시겠습니까?'),
+                  AdminService.instance.checkAdmin(user.uid)
+                      ? T.confirmRemoveAdminPrevilege.tr
+                      : T.confirmSetAdminPrevilege.tr,
+                ),
                 onChanged: (value) async {
                   // await user.update(isAdmin: value);
                   // await user.reload();
@@ -86,9 +94,8 @@ class _AdminUserUpdateScreenState extends State<AdminUserUpdateScreen> {
                   // }
                   alert(
                     context: context,
-                    title: '관리자 설정 알림',
-                    message:
-                        '관리자 설정은 RTDB 의 /admins 경로에서 직접 설정해야 합니다. 관리자 설정 문서를 참고하세요',
+                    title: T.adminSetting.tr,
+                    message: T.adminSetupMessage.tr,
                   );
                 },
               ),

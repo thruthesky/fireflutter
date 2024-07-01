@@ -317,6 +317,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
 
                 /// add notifications on and off
                 if (cannotJoin == false) ...[
+                  // if (iHave.blocked(chat.room.otherUserUid!) == false)
                   IconButton(
                     onPressed: () async {
                       await chat.room.toggleNotifications();
@@ -370,7 +371,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
                               child: MyDoc(
                                 builder: (my) => my == null
                                     ? const SizedBox.shrink()
-                                    // : T.block.orBlocked(chat.room.otherUserUid!, T.unblock.tr),
                                     : Text(!my.blocked(chat.room.otherUserUid!)
                                         ? T.block.tr
                                         : T.unblock.tr),
@@ -413,11 +413,13 @@ class _ChatRoomState extends State<ChatRoomBody> {
                               room: chat.room,
                             );
                           } else if (v == 'block') {
-                            /// 1:1 채팅 방의 경우, 차단 & 해제
-                            // final re =
+                            /// ask before blocking the user and set state to refresh the screen
                             await UserService.instance.block(
-                                context: context,
-                                otherUserUid: chat.room.otherUserUid!);
+                              context: context,
+                              otherUserUid: chat.room.otherUserUid!,
+                              ask: true,
+                            );
+                            setState(() {});
                           } else if (v == 'report') {
                             final re = await input(
                               context: context,

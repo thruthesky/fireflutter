@@ -51,6 +51,9 @@ class ChatService {
   /// [message] is the message that is going to be sent. It has text, url, etc. You can modify it and return it.
   ///
   /// [chatModel] is the chat model that contains the room id, my uid, etc. You can now who you are chatting with with this.
+  ///
+  /// [force] is a bool options means that it was triggered by a method to force send the message.
+  ///
   Future<Map<String, dynamic>> Function({
     required Map<String, dynamic> data,
     required ChatModel chat,
@@ -67,6 +70,9 @@ class ChatService {
   /// You can intercept/do something before the user create the single chat room.
   ///
   /// [otherUid] is the other user uid the user is trying to chat with.
+  ///
+  /// [forceJoin] is a bool option means that it was triggered by a method with forceJoin.
+  ///
   Future<void> Function({
     required String otherUid,
     required bool forceJoin,
@@ -75,6 +81,11 @@ class ChatService {
   /// Before the  user join the Group Chat Room
   ///
   /// You can intercept/do something before the user join the group chat room.
+  ///
+  /// [room] is the current chatroom
+  ///
+  /// [forceJoin] is a bool option means that it was triggered by a method with forceJoin.
+  ///
   Future<void> Function({
     required ChatRoom room,
     required bool forceJoin,

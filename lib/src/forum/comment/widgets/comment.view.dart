@@ -353,8 +353,6 @@ class _CommentViewState extends State<CommentView> {
     );
   }
 
-
-
   /// 세로 라인을 긋는다.
   ///
   /// [depth] 는 코멘트의 깊이를 나타내는 것으로,
