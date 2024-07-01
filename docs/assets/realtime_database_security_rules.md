@@ -83,6 +83,33 @@
          ".write": true
        }
     },
+
+
+    // Friends
+    "friends": {
+      ".read": true,
+      "$myUid": {
+        "$friendUid": {
+          ".write": "$myUid == auth.uid || $friendUid == auth.uid"
+        }
+      }
+    },
+    "friends-sent": {
+      ".read": true,
+      "$senderUid": {
+        "$receiverUid": {
+          ".write": "$senderUid == auth.uid || $receiverUid == auth.uid"
+        }
+      }
+    },
+    "friends-received": {
+      ".read": true,
+      "$receiverUid": {
+        "$senderUid": {
+          ".write": "$senderUid == auth.uid || $receiverUid == auth.uid"
+        }
+      }
+    },
     // Fireship - users who have profile photos. To display users who has profile photo.
     "user-profile-photos": {
       ".read": true,
