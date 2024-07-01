@@ -399,6 +399,11 @@ class T {
     'ko': '친구',
   };
 
+  static Json friends = {
+    'en': 'Friends',
+    'ko': '친구',
+  };
+
   static Json gallery = {
     'en': 'Gallery',
     'ko': '사진첩',
@@ -1333,6 +1338,131 @@ class T {
     'ko': '북마크가 없습니다.',
   };
 
+// Friends
+  static const Json myReceivedFriendRequests = {
+    'en': 'My Received Requests',
+    'ko': '내가 받은 친구 요청',
+  };
+
+  static const Json mySentFriendRequests = {
+    'en': 'My Sent Requests',
+    'ko': '내가 보낸 친구 요청',
+  };
+
+  static const Json respondFriendRequests = {
+    'en': 'Respond Friend Requests',
+    'ko': '친구 요청 응답',
+  };
+
+  static const Json youAreFriendsAlready = {
+    'en': 'You are friends already.',
+    'ko': '이미 친구입니다.',
+  };
+
+  static const Json youHaveRequestedAlready = {
+    'en': 'You have requested already.',
+    'ko': '이미 친구 요청을 보냈습니다.',
+  };
+
+  static const Json youHaveSentAFriendRequest = {
+    'en': 'You have sent a friend request.',
+    'ko': '친구 요청을 보냈습니다.',
+  };
+
+  static const Json youHaveAcceptedAFriendRequest = {
+    'en': 'You have accepted a friend request.',
+    'ko': '친구 요청을 수락했습니다.',
+  };
+
+  static const Json youHaveRejectedAFriendRequest = {
+    'en': 'You have rejected a friend request.',
+    'ko': '친구 요청을 거절했습니다.',
+  };
+
+  static const Json youHaveCancelledAFriendRequest = {
+    'en': 'You have cancelled a friend request.',
+    'ko': '친구 요청을 취소했습니다.',
+  };
+
+  static const Json alreadyRejected = {
+    'en': 'Already Rejected',
+    'ko': '이미 거절했습니다.',
+  };
+
+  static const Json alreadyAccepted = {
+    'en': 'Already Accepted',
+    'ko': '이미 수락했습니다.',
+  };
+
+  static const Json alreadyRequested = {
+    'en': 'Already Requested',
+    'ko': '이미 요청했습니다.',
+  };
+
+  static const Json alreadyRequestedCancelRequestInsteadConfirmMessage = {
+    'en':
+        "You have already requested this user. Do you want to cancel the request instead?",
+    'ko': "이 사용자의 요청을 이미 보냈습니다. 그 요청을 대신 취소하시겠습니까?",
+  };
+
+  static const Json requested = {
+    'en': 'Requested',
+    'ko': '요청',
+  };
+
+  static const Json alreadyRejectedAcceptRequestInsteadConfirmMessage = {
+    'en':
+        "You have already rejected this user. Do you want to accept the request instead?",
+    'ko': "이 사용자의 요청을 이미 거절했습니다. 그 요청을 대신 수락하시겠습니까?",
+  };
+
+  static const Json friendRequest = {
+    'en': 'Friend Request',
+    'ko': '친구 요청',
+  };
+
+  static const Json respondRequest = {
+    'en': 'Respond Request',
+    'ko': '친구 요청 응답',
+  };
+
+  static const Json youCantAddYourselfAsFriend = {
+    'en': 'You can\'t add yourself as friend.',
+    'ko': '자신을 친구로 추가할 수 없습니다.',
+  };
+
+  static const Json accept = {
+    'en': 'Accept',
+    'ko': '수락',
+  };
+
+  static const Json reject = {
+    'en': 'Reject',
+    'ko': '거절',
+  };
+
+  static const Json noReceivedRequestYet = {
+    'en': 'No received request yet.',
+    'ko': '받은 요청이 없습니다.',
+  };
+
+  static const Json noSentRequestYet = {
+    'en': 'No sent request yet.',
+    'ko': '보낸 요청이 없습니다.',
+  };
+
+  static const Json noFriendYet = {
+    'en': 'No friend yet.',
+    'ko': '친구가 없습니다.',
+  };
+
+  static const Json thisUserWantsToAddYouAsFriend = {
+    'en': 'This user wants to add you as a friend.',
+    'ko': '이 사용자는 당신을 친구로 추가하고 싶습니다.',
+  };
+
+  // ----> Friends
+
   // static const String inputTitle = 'Input title';
   static const Json inputTitle = {
     'en': 'Input title',
@@ -2053,5 +2183,15 @@ class T {
   static const Json manageMeetup = {
     'en': 'Manage Meetup',
     'ko': '모임 관리',
+  };
+
+  static const Json loadingPost = {
+    'en': 'Loading post...',
+    'ko': '포스트 로딩중...',
+  };
+
+  static const Json otherUserNotVerified = {
+    'en': 'The user has not yet been verified.',
+    'ko': '사용자가 아직 확인되지 않았습니다.',
   };
 }

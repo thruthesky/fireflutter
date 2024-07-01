@@ -384,6 +384,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Momcafe - ASUS J8AXB761J32888A release",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "J8AXB761J32888A",
+      "flutterMode": "release",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - Chrome",
       "request": "launch",
       "type": "dart",
@@ -406,6 +415,42 @@
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone sm black",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone 15 Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone 15 Plus",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Plus",
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.dart"

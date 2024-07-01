@@ -54,11 +54,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
         }
       }
     });
-    // scheduleMicrotask(() async {
-    //   final result = await Post.field(
-    //       category: post.category, id: post.id, field: 'likes');
-    //   final t = result as List<String>?;
-    // });
   }
 
   @override
@@ -70,7 +65,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
             textStyle: Theme.of(context).textTheme.labelMedium,
             visualDensity: const VisualDensity(
               horizontal: -3,
-              // vertical: -2,
             ),
           ),
         ),

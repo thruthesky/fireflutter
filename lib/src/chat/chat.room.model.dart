@@ -104,6 +104,18 @@ class ChatRoom {
   /// [hasPassword] tells whether a password is set for the group chat room
   bool hasPassword;
 
+  /// There might be an instance when you are using same firebase database for  two project and
+  ///  you want to only display the open chat separately for instance you want to show
+  /// all the chat list on open chat A and hide the open chat list B. you can use the field below
+  ///
+  /// [domain] domain of the chat room eg. app-test, my-app
+  String? domain;
+
+  /// [domainChatOrder] order of the chat room in the domain. domainChatOrder is same order with
+  /// openChatOrder. This field is only exist if you set a `domain` in `chatRoomSettings` in
+  /// `ChatService.instance.init()`
+  String? domainChatOrder;
+
   ChatRoom({
     required this.ref,
     required this.key,
@@ -129,6 +141,8 @@ class ChatRoom {
     this.noOfUsers,
     this.blockedUsers = const [],
     this.hasPassword = false,
+    this.domain,
+    this.domainChatOrder,
   });
 
   /// [fromSnapshot] It creates a [ChatRoom] from a [DataSnapshot].
@@ -201,6 +215,8 @@ class ChatRoom {
           ? []
           : List<String>.from((json['blockedUsers'] as Map).keys.toList()),
       hasPassword: json['hasPassword'] ?? false,
+      domain: json['domain'] as String?,
+      domainChatOrder: json['domainChatOrder'] ?? '',
     );
   }
   Map<String, dynamic> toJson() {
@@ -227,6 +243,8 @@ class ChatRoom {
       'noOfUsers': noOfUsers,
       'blockedUsers': blockedUsers,
       'hasPassword': hasPassword,
+      'domain': domain,
+      'domainChatOrder': domainChatOrder,
     };
   }
 
@@ -334,6 +352,8 @@ class ChatRoom {
     blockedUsers = room.blockedUsers;
 
     hasPassword = room.hasPassword;
+    domain = room.domain;
+    domainChatOrder = room.domainChatOrder;
 
     return this;
   }
@@ -404,6 +424,11 @@ class ChatRoom {
       } else {
         ref = ChatService.instance.roomsRef.child(roomId);
       }
+
+      final String? chatSettingDomain =
+          ChatService.instance.chatRoomSettings.domain;
+
+      dog('$chatSettingDomain');
       final data = {
         Field.name: name,
         Field.iconUrl: iconUrl,
@@ -415,7 +440,25 @@ class ChatRoom {
         Field.isVerifiedOnly: isVerifiedOnly,
         Field.gender: gender,
         Field.master: myUid!,
+        Field.domain: chatSettingDomain,
       };
+
+      /// domain is only set once when the group chat is created
+      /// domain is set in `ChatService.intance.init(chatRoomSettings)`
+      ///
+      /// domainChatOrder is a String combination of the domain by a large
+      /// number minus the current time in milliseconds. so they can be order since it's a string
+      ///
+      if (isOpenGroupChat == true) {
+        data[Field.domainChatOrder] = chatSettingDomain != null
+            ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
+            : null;
+      } else {
+        data[Field.domainChatOrder] = null;
+      }
+
+      dog('test : $data');
+
       await ref.update(data);
     }
     return fromReference(ref);
@@ -445,6 +488,18 @@ class ChatRoom {
       Field.hasPassword: hasPassword,
       Field.gender: gender,
     };
+
+    final String? chatSettingDomain =
+        ChatService.instance.chatRoomSettings.domain;
+    // update domain chat order when the chatroom is updated
+    if (isOpenGroupChat == true) {
+      data[Field.domainChatOrder] = chatSettingDomain != null
+          ? '$chatSettingDomain${9999999999999 - DateTime.now().millisecondsSinceEpoch}'
+          : null;
+    } else {
+      data[Field.domainChatOrder] = null;
+    }
+
     return ref.update(data);
   }
 
@@ -511,46 +566,54 @@ class ChatRoom {
   /// 채팅방에 사용자를 초대하면, 채팅방 목록에 사용자가 나타나지 않을 수 있다. 그래서, 채팅방 목록을 다시 읽어야 한다.
   ///
   Future<String?> invite(String uid, {bool forceJoin = false}) async {
-    /// 채팅방 설정이 인증 회원 전용 입장 체크
-    ///
-    /// 인증 회원이 아니면 Issue 발생.
-    /// 단, master 는 인증 안되어도 그냥 통과.
-    if (master != uid && // 마스터가 아니고,
-            isVerifiedOnly // 인증 회원 전용 옵션이 켜져 있는 경우,
-        ) {
-      bool verified = false;
-      if (uid == myUid) {
-        verified = my!.isVerified;
-      } else {
-        verified = await User.getField(uid, Field.isVerified) ?? false;
-      }
-      if (verified == false) {
-        throw FireFlutterException(
-          Code.chatRoomNotVerified,
-          T.chatRoomIsForVerifiedUsersOnly.tr,
-        );
-      }
-    }
-
-    // if gender is specified check if the join/invite user has valid gender
-    if (gender.isNotEmpty) {
-      String userGender = '';
-      if (uid == myUid) {
-        userGender = my!.gender;
-      } else {
-        userGender = await User.getField(uid, Field.gender) ?? '';
+    if (isGroupChat) {
+      /// 채팅방 설정이 인증 회원 전용 입장 체크
+      ///
+      /// 인증 회원이 아니면 Issue 발생.
+      /// 단, master 는 인증 안되어도 그냥 통과.
+      if (master != uid && // 마스터가 아니고,
+              isVerifiedOnly // 인증 회원 전용 옵션이 켜져 있는 경우,
+          ) {
+        bool verified = false;
+        if (uid == myUid) {
+          verified = my!.isVerified;
+        } else {
+          verified = await User.getField(uid, Field.isVerified) ?? false;
+        }
+        if (verified == false) {
+          throw FireFlutterException(
+            Code.chatRoomNotVerified,
+            T.chatRoomIsForVerifiedUsersOnly.tr,
+          );
+        }
       }
 
-      if (gender != userGender) {
-        throw FireFlutterException(
-          Code.chatRoomUserGenderNotAllowed,
-          gender == 'M'
-              ? T.chatRoomMaleOnlyChatRoom.tr
-              : gender == 'F'
-                  ? T.chatRoomFemaleOnlyChatRoom.tr
-                  : T.chatRoomYourGenderIsNotAllowed.tr,
-        );
+      // if gender is specified check if the join/invite user has valid gender
+      if (gender.isNotEmpty) {
+        String userGender = '';
+        if (uid == myUid) {
+          userGender = my!.gender;
+        } else {
+          userGender = await User.getField(uid, Field.gender) ?? '';
+        }
+
+        if (gender != userGender) {
+          throw FireFlutterException(
+            Code.chatRoomUserGenderNotAllowed,
+            gender == 'M'
+                ? T.chatRoomMaleOnlyChatRoom.tr
+                : gender == 'F'
+                    ? T.chatRoomFemaleOnlyChatRoom.tr
+                    : T.chatRoomYourGenderIsNotAllowed.tr,
+          );
+        }
       }
+
+      /// hook before the user joins the group chat or user invites to group chat
+      await ChatService.instance.beforeGroupChatRoomJoinOrInvite?.call(this);
+    } else if (isSingleChat) {
+      /// hook before the user create a chat room with other user uid
+      await ChatService.instance.beforeSingleChatRoomCreate?.call(uid);
     }
 
     /// 내가 이미 방에 들어가 있는 상태이면, 에러 코드를 리턴, 즉, 계속해서 다음 코드가 실행된다.

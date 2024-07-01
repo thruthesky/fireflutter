@@ -12,8 +12,26 @@ class FriendListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const Icon(Icons.people),
-      title: Text('Friends: ${friend.uid}'),
+      onTap: () {
+        UserService.instance.showPublicProfileScreen(
+          context: context,
+          uid: friend.uid,
+        );
+      },
+      leading: UserAvatar(
+        uid: friend.uid,
+        cacheId: friend.uid,
+      ),
+      title: UserDisplayName(
+        uid: friend.uid,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      subtitle: UserDoc(
+        uid: friend.uid,
+        builder: (user) {
+          return Text(user.stateMessage);
+        },
+      ),
     );
   }
 }

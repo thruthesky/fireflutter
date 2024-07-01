@@ -45,9 +45,11 @@ class Field {
   static const String order = 'order';
   static const String deleted = 'deleted';
 
+  static const String domain = 'domain';
   static const String singleChatOrder = 'singleChatOrder';
   static const String groupChatOrder = 'groupChatOrder';
   static const String openGroupChatOrder = 'openGroupChatOrder';
+  static const String domainChatOrder = 'domainChatOrder';
   static const String newMessage = 'newMessage';
   static const String hasPassword = 'hasPassword';
 
@@ -82,4 +84,7 @@ class Field {
 
   static const String postId = 'postId';
   static const String senderUid = 'senderUid';
+
+  static const String rejectedAt = 'rejectedAt';
+  static const String acceptedAt = 'acceptedAt';
 }

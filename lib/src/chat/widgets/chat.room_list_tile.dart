@@ -56,14 +56,15 @@ class ChatRoomListTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
-            room.updatedAt != 0
-                ? dateTimeShort(
-                    DateTime.fromMillisecondsSinceEpoch(room.updatedAt!))
-                : "",
-            style:
-                Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
-          ),
+          if (room.updatedAt! > 0)
+            Text(
+              dateTimeShort(
+                  DateTime.fromMillisecondsSinceEpoch(room.updatedAt!)),
+              style: Theme.of(context)
+                  .textTheme
+                  .labelSmall!
+                  .copyWith(fontSize: 10),
+            ),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
