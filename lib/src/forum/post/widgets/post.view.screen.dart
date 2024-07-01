@@ -242,6 +242,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                               );
                               if (re == null || re == '') return;
                               await Report.create(
+                                context: context,
                                 postId: post.id,
                                 category: post.category,
                                 reason: re,

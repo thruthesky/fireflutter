@@ -51,8 +51,11 @@ class ChatService {
   /// [message] is the message that is going to be sent. It has text, url, etc. You can modify it and return it.
   ///
   /// [chatModel] is the chat model that contains the room id, my uid, etc. You can now who you are chatting with with this.
-  Future<Map<String, dynamic>> Function(
-      Map<String, dynamic> message, ChatModel chatModel)? beforeMessageSent;
+  Future<Map<String, dynamic>> Function({
+    required Map<String, dynamic> data,
+    required ChatModel chat,
+    required bool force,
+  })? beforeMessageSent;
   Function(ChatMessage)? afterMessageSent;
 
   /// gives chatroomsetting option
@@ -64,12 +67,18 @@ class ChatService {
   /// You can intercept/do something before the user create the single chat room.
   ///
   /// [otherUid] is the other user uid the user is trying to chat with.
-  Future<void> Function(String otherUid)? beforeSingleChatRoomCreate;
+  Future<void> Function({
+    required String otherUid,
+    required bool forceJoin,
+  })? beforeSingleChatRoomCreate;
 
   /// Before the  user join the Group Chat Room
   ///
   /// You can intercept/do something before the user join the group chat room.
-  Future<void> Function(ChatRoom room)? beforeGroupChatRoomJoinOrInvite;
+  Future<void> Function({
+    required ChatRoom room,
+    required bool forceJoin,
+  })? beforeGroupChatRoomJoinOrInvite;
 
   /// init
   /// [chatRoomSettings] give chat room settings to enable verification and gender option
@@ -77,11 +86,20 @@ class ChatService {
   init({
     ChatRoomSettings? chatRoomSettings,
     ChatCustomize? customize,
-    Future<Map<String, dynamic>> Function(Map<String, dynamic>, ChatModel)?
+    Future<Map<String, dynamic>> Function(
+            {required Map<String, dynamic> data,
+            required ChatModel chat,
+            required bool force})?
         beforeMessageSent,
     Function(ChatMessage)? afterMessageSent,
-    Future<void> Function(String)? beforeSingleChatRoomCreate,
-    Future<void> Function(ChatRoom)? beforeGroupChatRoomJoinOrInvite,
+    Future<void> Function({
+      required String otherUid,
+      required bool forceJoin,
+    })? beforeSingleChatRoomCreate,
+    Future<void> Function({
+      required ChatRoom room,
+      required bool forceJoin,
+    })? beforeGroupChatRoomJoinOrInvite,
   }) {
     // dog('--> ChatService.init()');
     this.chatRoomSettings = chatRoomSettings ?? this.chatRoomSettings;
