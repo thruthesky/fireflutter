@@ -11,7 +11,7 @@ import 'package:example/screens/meetup/meetup.screen.dart';
 import 'package:example/screens/password_reset/password_reset.screen.dart';
 import 'package:example/screens/user/user.search.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+// import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -60,82 +60,77 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: const Text('Sign Out'),
                       ),
-                      // ElevatedButton(
-                      //   onPressed: () => context.push(ChatScreen.routeName),
-                      //   child: const Text('Chat'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () => context.push(OpenChatScreen.routeName),
-                      //   child: const Text('Open Chat'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () => context.push(ForumScreen.routeName),
-                      //   child: const Text('Forum'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () =>
-                      //       context.push(PostListByGroupScreen.routeName),
-                      //   child: const Text('Post list by group'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () =>
-                      //       context.push(LatestPostsScreen.routeName),
-                      //   child: const Text('Latest Posts'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () =>
-                      //       context.push(ForumSearchScreen.routeName),
-                      //   child: const Text('Forum Search'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () => context.push(MeetupScreen.routeName),
-                      //   child: const Text('Meetup'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () =>
-                      //       context.push(BuyAndSellScreen.routeName),
-                      //   child: const Text('Buy & Sell'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () => AdminService.instance
-                      //       .showDashboard(context: context),
-                      //   child: const Text('Admin dashboard'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: () =>
-                      //       context.push(UserSearchScreen.routeName),
-                      //   child: const Text('User Search'),
-                      // ),
+                      ElevatedButton(
+                        onPressed: () => context.push(ChatScreen.routeName),
+                        child: const Text('Chat'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => context.push(OpenChatScreen.routeName),
+                        child: const Text('Open Chat'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => context.push(ForumScreen.routeName),
+                        child: const Text('Forum'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(PostListByGroupScreen.routeName),
+                        child: const Text('Post list by group'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(LatestPostsScreen.routeName),
+                        child: const Text('Latest Posts'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(ForumSearchScreen.routeName),
+                        child: const Text('Forum Search'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => context.push(MeetupScreen.routeName),
+                        child: const Text('Meetup'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(BuyAndSellScreen.routeName),
+                        child: const Text('Buy & Sell'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => AdminService.instance
+                            .showDashboard(context: context),
+                        child: const Text('Admin dashboard'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(UserSearchScreen.routeName),
+                        child: const Text('User Search'),
+                      ),
                       // ElevatedButton(
                       //   onPressed: () {
                       //     _backfillSearchValue();
                       //   },
                       //   child: const Text("Backfill Search Value"),
                       // ),
-                      // ElevatedButton(
-                      //   onPressed: () =>
-                      //       context.push(PasswordResetScreen.routeName),
-                      //   child: const Text("Reset password"),
-                      // ),
                       ElevatedButton(
-                        onPressed: () => FriendService.instance
-                            .showListScreen(context: context),
-                        child: const Text("Friend List"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => FriendService.instance
-                            .showReceivedListScreen(context: context),
-                        child: const Text("My Friend Requests (received)"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => FriendService.instance
-                            .showSentListScreen(context: context),
-                        child: const Text("My Friend Requests (sent)"),
+                        onPressed: () =>
+                            context.push(PasswordResetScreen.routeName),
+                        child: const Text("Reset password"),
                       ),
                       // ElevatedButton(
                       //   onPressed: () => FriendService.instance
-                      //       .showFriendScreen(context: context),
-                      //   child: const Text("Friend Reject list for Requester"),
+                      //       .showListScreen(context: context),
+                      //   child: const Text("Friend List"),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () => FriendService.instance
+                      //       .showReceivedListScreen(context: context),
+                      //   child: const Text("My Friend Requests (received)"),
+                      // ),
+                      // ElevatedButton(
+                      //   onPressed: () => FriendService.instance
+                      //       .showSentListScreen(context: context),
+                      //   child: const Text("My Friend Requests (sent)"),
                       // ),
                       ElevatedButton(
                         onPressed: () =>
