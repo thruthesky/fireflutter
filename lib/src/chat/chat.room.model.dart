@@ -610,10 +610,16 @@ class ChatRoom {
       }
 
       /// hook before the user joins the group chat or user invites to group chat
-      await ChatService.instance.beforeGroupChatRoomJoinOrInvite?.call(this);
+      await ChatService.instance.beforeGroupChatRoomJoinOrInvite?.call(
+        room: this,
+        forceJoin: forceJoin,
+      );
     } else if (isSingleChat) {
       /// hook before the user create a chat room with other user uid
-      await ChatService.instance.beforeSingleChatRoomCreate?.call(uid);
+      await ChatService.instance.beforeSingleChatRoomCreate?.call(
+        otherUid: uid,
+        forceJoin: forceJoin,
+      );
     }
 
     /// 내가 이미 방에 들어가 있는 상태이면, 에러 코드를 리턴, 즉, 계속해서 다음 코드가 실행된다.

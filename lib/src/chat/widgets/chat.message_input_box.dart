@@ -48,13 +48,14 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
   @override
   Widget build(BuildContext context) {
     /// If it's 1:1 chat, and if you have blocked the other user, then show nothing.
-    /// TODO: it should show something. At least a message that "you have blocked the user"
+    /// Blocked message will be shown in the chat body so hide Input widget
     if (widget.chat.room.isSingleChat &&
         iHave.blocked(widget.chat.room.otherUserUid!)) {
       return const SizedBox.shrink();
     }
 
-    // / If the master set the gender and the gender is not same as mine, then show a warning message.
+    /// Hide Input Widget If the master set the gender and the gender is not same as mine.
+    /// It will show a alert message that user is not allowed to enter this chat.
     if (widget.chat.room.gender.isNotEmpty &&
         widget.chat.room.gender != my!.gender) {
       return const SizedBox.shrink();

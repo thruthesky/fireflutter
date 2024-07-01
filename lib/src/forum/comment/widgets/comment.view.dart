@@ -285,15 +285,11 @@ class _CommentViewState extends State<CommentView> {
                                 );
                                 if (re == null || re == '') return;
                                 await Report.create(
+                                  context: context,
                                   postId: widget.comment.postId,
                                   commentId: widget.comment.id,
                                   reason: re,
                                 );
-                                if (context.mounted) {
-                                  toast(
-                                      context: context,
-                                      message: T.reportReceived.tr);
-                                }
                               } else if (value == 'block') {
                                 await UserService.instance.block(
                                   context: context,
@@ -356,25 +352,6 @@ class _CommentViewState extends State<CommentView> {
       ),
     );
   }
-
-  // TODO review, these codes are not used
-  // Widget _shortVerticalLine() {
-  //   return Container(
-  //     width: lineWidth,
-  //     height: 6,
-  //     child: Column(
-  //       children: [
-  //         Expanded(
-  //           child: VerticalDivider(
-  //             width: lineWidth,
-  //             color: Colors.red,
-  //             thickness: lineWidth,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   /// 세로 라인을 긋는다.
   ///
