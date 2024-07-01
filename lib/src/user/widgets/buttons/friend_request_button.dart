@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class FriendRequestButton extends StatelessWidget {
+class FriendRequestButton extends StatefulWidget {
   const FriendRequestButton({
     super.key,
     required this.uid,
@@ -10,29 +10,61 @@ class FriendRequestButton extends StatelessWidget {
   final String uid;
 
   @override
+  State<FriendRequestButton> createState() => _FriendRequestButtonState();
+}
+
+class _FriendRequestButtonState extends State<FriendRequestButton> {
+  Friend? myReceivedRequest;
+  Friend? mySentRequest;
+
+  bool get _isAccepted => [myReceivedRequest?.status, mySentRequest?.status]
+      .contains(FriendStatus.accepted);
+  bool get _isRejectedByMe =>
+      myReceivedRequest?.status == FriendStatus.rejected;
+  bool get _isWaitingForMyResponse =>
+      myReceivedRequest?.status == FriendStatus.pending;
+  bool get _isPendingOrRejectedByOther =>
+      mySentRequest?.status == FriendStatus.pending ||
+      mySentRequest?.status == FriendStatus.rejected;
+
+  String get _buttonText {
+    if (_isAccepted) return T.friends.tr;
+    if (_isRejectedByMe) return T.friendRequest.tr;
+    if (_isWaitingForMyResponse) return T.respondRequest.tr;
+    if (_isPendingOrRejectedByOther) return T.requested.tr;
+    return T.friendRequest.tr;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Value(
-      ref: Friend.myReceived(otherUid: uid),
-      builder: (myReceivedRequest) {
-        if (myReceivedRequest != null) {
-          final request = Friend.fromJson(
-            Map<String, dynamic>.from(myReceivedRequest),
-            Friend.myReceived(otherUid: uid),
-          );
-          if (request.isAccepted) {
-            return ElevatedButton(
-              onPressed: () {
+      ref: Friend.myReceived(otherUid: widget.uid),
+      builder: (myReceivedRequestData) => Value(
+        ref: Friend.mySent(otherUid: widget.uid),
+        builder: (mySentRequestData) {
+          myReceivedRequest = myReceivedRequestData != null
+              ? Friend.fromJson(
+                  Map<String, dynamic>.from(myReceivedRequestData),
+                  Friend.myReceived(otherUid: widget.uid),
+                )
+              : null;
+          mySentRequestData = mySentRequestData != null
+              ? Friend.fromJson(
+                  Map<String, dynamic>.from(mySentRequestData),
+                  Friend.mySent(otherUid: widget.uid),
+                )
+              : null;
+          return ElevatedButton(
+            onPressed: () async {
+              // If you are already friends
+              if (_isAccepted) {
                 toast(
                   context: context,
-                  message: "You have been friends already.",
+                  message: "You are friends already.",
                 );
-              },
-              child: Text(T.friends.tr),
-            );
-          }
-          if (request.isRejected) {
-            return ElevatedButton(
-              onPressed: () async {
+              }
+              // If you rejected the received request
+              else if (_isRejectedByMe) {
                 final re = await confirm(
                   context: context,
                   title: T.alreadyRejected.tr,
@@ -40,75 +72,62 @@ class FriendRequestButton extends StatelessWidget {
                       T.alreadyRejectedAcceptRequestInsteadConfirmMessage.tr,
                 );
                 if (re == true) {
-                  Friend.accept(context: context, uid: uid);
+                  Friend.accept(context: context, uid: widget.uid);
                 }
-              },
-              child: Text(T.friendRequest.tr),
-            );
-          }
-          return ElevatedButton(
-            onPressed: () async {
-              final re = await _showRespondRequestDialog(context);
-              if (re == true) {
-                await Friend.accept(context: context, uid: uid);
-              } else if (re == false) {
-                await Friend.reject(context: context, uid: uid);
+              }
+              // If the other person has sent you a request, and the status is still pending.
+              else if (_isWaitingForMyResponse) {
+                final re = await _showRespondRequestDialog(context);
+                if (re == true) {
+                  await Friend.accept(context: context, uid: widget.uid);
+                } else if (re == false) {
+                  await Friend.reject(context: context, uid: widget.uid);
+                }
+              }
+              // If there is a pending friend request or the other person has rejected the request
+              // We are not showing if the user is rejected.
+              else if (_isPendingOrRejectedByOther) {
+                final re = await confirm(
+                  context: context,
+                  title: T.alreadyRequested.tr,
+                  message:
+                      T.alreadyRequestedCancelRequestInsteadConfirmMessage.tr,
+                );
+                if (re == true) {
+                  await Friend.cancel(context: context, uid: widget.uid);
+                }
+              }
+              // Else means there is no friend request yet
+              else {
+                if (widget.uid == myUid) {
+                  errorToast(
+                    context: context,
+                    message: T.youCantAddYourselfAsFriend.tr,
+                  );
+                  return;
+                }
+                await Friend.request(context: context, uid: widget.uid);
               }
             },
-            child: Text(T.respondRequest.tr),
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  if (_isAccepted) ...[
+                    const WidgetSpan(
+                      child: Icon(
+                        Icons.check,
+                        size: 16,
+                      ),
+                    ),
+                    const TextSpan(text: "  "),
+                  ],
+                  TextSpan(text: _buttonText),
+                ],
+              ),
+            ),
           );
-        }
-        return Value(
-          ref: Friend.mySent(otherUid: uid),
-          builder: (mySentRequest) {
-            if (mySentRequest == null) {
-              return ElevatedButton(
-                onPressed: () async {
-                  if (uid == myUid) {
-                    errorToast(
-                      context: context,
-                      message: T.youCantAddYourselfAsFriend.tr,
-                    );
-                    return;
-                  }
-                  await Friend.request(context: context, uid: uid);
-                },
-                child: Text(T.friendRequest.tr),
-              );
-            } else {
-              final request = Friend.fromJson(
-                Map<String, dynamic>.from(mySentRequest),
-                Friend.myReceived(otherUid: uid),
-              );
-              if (request.isAccepted) {
-                return ElevatedButton(
-                  onPressed: () {
-                    toast(
-                      context: context,
-                      message: "You have been friends already.",
-                    );
-                  },
-                  child: Text(T.friends.tr),
-                );
-              }
-              return ElevatedButton(
-                onPressed: () async {
-                  final re = await confirm(
-                    context: context,
-                    title: T.alreadyRequested.tr,
-                    message:
-                        T.alreadyRequestedCancelRequestInsteadConfirmMessage.tr,
-                  );
-                  if (re == true) {
-                    await Friend.cancel(context: context, uid: uid);
-                  }
-                },
-                child: Text(T.requested.tr),
-              );
-            }
-          },
-        );
-      },
+        },
+      ),
     );
   }
 

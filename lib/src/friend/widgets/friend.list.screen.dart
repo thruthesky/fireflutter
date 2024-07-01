@@ -6,9 +6,11 @@ class FriendListScreen extends StatelessWidget {
   const FriendListScreen({
     super.key,
     this.title,
+    this.uid,
   });
 
   final String? title;
+  final String? uid;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class FriendListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(title ?? T.friends.tr),
       ),
-      body: const FriendListView(),
+      body: FriendListView(uid: uid),
     );
   }
 }

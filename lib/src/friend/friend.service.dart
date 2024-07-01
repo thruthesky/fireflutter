@@ -9,16 +9,21 @@ class FriendService {
 
   FriendService._();
 
-  Future<void> showFriendScreen({
+  /// Shows Friend List Screen
+  ///
+  Future<void> showListScreen({
     required BuildContext context,
+    String? uid,
   }) {
     return showGeneralDialog(
       context: context,
-      pageBuilder: ($, $$, $$$) => const FriendListScreen(),
+      pageBuilder: ($, $$, $$$) => FriendListScreen(
+        uid: uid,
+      ),
     );
   }
 
-  Future<void> showReceivedRequestScreen({
+  Future<void> showReceivedListScreen({
     required BuildContext context,
   }) {
     return showGeneralDialog(
@@ -27,7 +32,7 @@ class FriendService {
     );
   }
 
-  Future<void> showSentRequestScreen({
+  Future<void> showSentListScreen({
     required BuildContext context,
   }) {
     return showGeneralDialog(

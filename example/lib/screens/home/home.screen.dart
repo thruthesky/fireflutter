@@ -119,17 +119,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       // ),
                       ElevatedButton(
                         onPressed: () => FriendService.instance
-                            .showFriendScreen(context: context),
+                            .showListScreen(context: context),
                         child: const Text("Friend List"),
                       ),
                       ElevatedButton(
                         onPressed: () => FriendService.instance
-                            .showReceivedRequestScreen(context: context),
+                            .showReceivedListScreen(context: context),
                         child: const Text("My Friend Requests (received)"),
                       ),
                       ElevatedButton(
                         onPressed: () => FriendService.instance
-                            .showSentRequestScreen(context: context),
+                            .showSentListScreen(context: context),
                         child: const Text("My Friend Requests (sent)"),
                       ),
                       // ElevatedButton(

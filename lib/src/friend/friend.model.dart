@@ -2,6 +2,12 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+enum FriendStatus {
+  pending,
+  accepted,
+  rejected,
+}
+
 class Friend {
   // Nodes. for the database.
   static const String friends = 'friends';
@@ -97,6 +103,17 @@ class Friend {
 
   bool get isRejected => rejectedAt != null;
   bool get isAccepted => acceptedAt != null;
+  bool get isPending => rejectedAt == null && acceptedAt == null;
+
+  FriendStatus get status {
+    if (isRejected) {
+      return FriendStatus.rejected;
+    } else if (isAccepted) {
+      return FriendStatus.accepted;
+    } else {
+      return FriendStatus.pending;
+    }
+  }
 
   Friend({
     required this.ref,
@@ -209,9 +226,11 @@ class Friend {
       otherSentToMe(otherUid: uid).child(Field.order).path: minusTime,
       // Set the other person as my friend in my friend list
       myListRef.child(uid).child(Field.createdAt).path: ServerValue.timestamp,
+      myListRef.child(uid).child(Field.order).path: minusTime,
       // Set myself to the other person's friend list
       listRef(uid).child(myUid!).child(Field.createdAt).path:
           ServerValue.timestamp,
+      listRef(uid).child(myUid!).child(Field.createdAt).path: minusTime,
     };
     await rootRef.update(update);
     if (!context.mounted) return;
