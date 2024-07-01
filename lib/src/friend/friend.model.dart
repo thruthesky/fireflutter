@@ -173,12 +173,11 @@ class Friend {
       return;
     }
 
-    final int minusTimeTimes10 = DateTime.now().millisecondsSinceEpoch * -10;
+    final int minusTimeTimes2 = DateTime.now().millisecondsSinceEpoch * -2;
 
-    // TODO make it one transaction
     final requestData = {
       Field.createdAt: ServerValue.timestamp,
-      Field.order: minusTimeTimes10,
+      Field.order: minusTimeTimes2,
     };
     await mySent(otherUid: uid).set(requestData);
     await otherReceivedFromMe(otherUid: uid).set(requestData);
@@ -198,8 +197,6 @@ class Friend {
     required BuildContext context,
     required String uid,
   }) async {
-    // TODO make it one transaction
-
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
     await myReceived(otherUid: uid)
         .child(Field.acceptedAt)
@@ -214,7 +211,6 @@ class Friend {
 
     final newFriendData = {
       Field.createdAt: ServerValue.timestamp,
-      // FriendField.name: '',
     };
     // Set the other person as my friend in my friend list
     await myListRef.child(uid).set(newFriendData);
@@ -234,13 +230,19 @@ class Friend {
     required String uid,
   }) async {
     const String rejectedAt = 'rejectedAt';
-    // TODO make it one transaction
+
+    final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
+
     await otherSentToMe(otherUid: uid)
         .child(rejectedAt)
         .set(ServerValue.timestamp);
+    await otherSentToMe(otherUid: uid).child(Field.order).set(minusTime);
+
     await myReceived(otherUid: uid)
         .child(rejectedAt)
         .set(ServerValue.timestamp);
+    await myReceived(otherUid: uid).child(Field.order).set(minusTime);
+
     if (!context.mounted) return;
     toast(
       context: context,

@@ -68,7 +68,7 @@ class FriendRequestListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseQueryBuilder(
-        query: _query.orderByChild(Field.createdAt),
+        query: _query.orderByChild(Field.order),
         builder: (context, snapshot, widget) {
           if (snapshot.isFetching) {
             return const Center(child: CircularProgressIndicator.adaptive());
