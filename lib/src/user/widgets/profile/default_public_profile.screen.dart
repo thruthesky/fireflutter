@@ -81,8 +81,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                         child: Text("Respond Friend Requests"),
                       ),
                       const PopupMenuItem(
-                        value: 'checkPendingRequests',
-                        child: Text("Check Pending Friend Requests"),
+                        value: 'pendingRequests',
+                        child: Text("Pending Friend Requests"),
                       ),
                     ],
                   ];
@@ -103,7 +103,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                   } else if (value == 'respondFriendRequests') {
                     FriendService.instance
                         .showReceivedListScreen(context: context);
-                  } else if (value == 'checkPendingRequests') {
+                  } else if (value == 'pendingRequests') {
                     FriendService.instance.showSentListScreen(context: context);
                   }
                 },

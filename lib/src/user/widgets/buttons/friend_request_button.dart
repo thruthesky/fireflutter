@@ -48,7 +48,7 @@ class _FriendRequestButtonState extends State<FriendRequestButton> {
                   Friend.myReceived(otherUid: widget.uid),
                 )
               : null;
-          mySentRequestData = mySentRequestData != null
+          mySentRequest = mySentRequestData != null
               ? Friend.fromJson(
                   Map<String, dynamic>.from(mySentRequestData),
                   Friend.mySent(otherUid: widget.uid),

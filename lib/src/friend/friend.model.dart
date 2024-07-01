@@ -215,22 +215,24 @@ class Friend {
     required String uid,
   }) async {
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
+    final myReceivedRequestRef = myReceived(otherUid: uid);
+    final otherSentToMeRef = otherSentToMe(otherUid: uid);
     final update = {
       // Accept the request from the other person by updating my received request
-      myReceived(otherUid: uid).child(Field.acceptedAt).path:
-          ServerValue.timestamp,
-      myReceived(otherUid: uid).child(Field.order).path: minusTime,
+      myReceivedRequestRef.child(Field.acceptedAt).path: ServerValue.timestamp,
+      myReceivedRequestRef.child(Field.order).path: minusTime,
+      myReceivedRequestRef.child(Field.rejectedAt).path: null,
       // Accept the request from the other person by updating the other person's sent request
-      otherSentToMe(otherUid: uid).child(Field.acceptedAt).path:
-          ServerValue.timestamp,
-      otherSentToMe(otherUid: uid).child(Field.order).path: minusTime,
+      otherSentToMeRef.child(Field.acceptedAt).path: ServerValue.timestamp,
+      otherSentToMeRef.child(Field.order).path: minusTime,
+      otherSentToMeRef.child(Field.rejectedAt).path: null,
       // Set the other person as my friend in my friend list
       myListRef.child(uid).child(Field.createdAt).path: ServerValue.timestamp,
       myListRef.child(uid).child(Field.order).path: minusTime,
       // Set myself to the other person's friend list
       listRef(uid).child(myUid!).child(Field.createdAt).path:
           ServerValue.timestamp,
-      listRef(uid).child(myUid!).child(Field.createdAt).path: minusTime,
+      listRef(uid).child(myUid!).child(Field.order).path: minusTime,
     };
     await rootRef.update(update);
     if (!context.mounted) return;
