@@ -27,6 +27,15 @@
       "program": "lib/main.dart",
     },
     {
+      "name": "Buy & Sell - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "apps/buyandsell",
+      "program": "lib/main.dart",
+    },
+    {
       "name": "Buy & Sell - iPhone sm black (2)",
       "request": "launch",
       "type": "dart",
