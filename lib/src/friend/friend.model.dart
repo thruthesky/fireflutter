@@ -158,7 +158,7 @@ class Friend {
   /// - Check if the login user has been rejected by the friend.
   /// ---> If rejected, then show a message of "You have reuqested already".
   /// ---> NOT the message of "You have been rejected".
-  /// - Check if the login user has already reqeusted the friend.
+  /// - Check if the login user has already requested the friend.
   /// ---> then show a message of "You have requested already".
   static Future request({
     required BuildContext context,
@@ -172,16 +172,16 @@ class Friend {
       );
       return;
     }
-
     final int minusTimeTimes2 = DateTime.now().millisecondsSinceEpoch * -2;
-
     final requestData = {
       Field.createdAt: ServerValue.timestamp,
       Field.order: minusTimeTimes2,
     };
-    await mySent(otherUid: uid).set(requestData);
-    await otherReceivedFromMe(otherUid: uid).set(requestData);
-
+    Map<String, dynamic> update = {
+      mySent(otherUid: uid).path: requestData,
+      otherReceivedFromMe(otherUid: uid).path: requestData,
+    };
+    await rootRef.update(update);
     if (!context.mounted) return;
     toast(
       context: context,
@@ -198,25 +198,22 @@ class Friend {
     required String uid,
   }) async {
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
-    await myReceived(otherUid: uid)
-        .child(Field.acceptedAt)
-        .set(ServerValue.timestamp);
-    await myReceived(otherUid: uid).child(Field.order).set(minusTime);
-
-    await otherSentToMe(otherUid: uid)
-        .child(Field.acceptedAt)
-        .set(ServerValue.timestamp);
-
-    await otherSentToMe(otherUid: uid).child(Field.order).set(minusTime);
-
-    final newFriendData = {
-      Field.createdAt: ServerValue.timestamp,
+    final update = {
+      // Accept the request from the other person by updating my received request
+      myReceived(otherUid: uid).child(Field.acceptedAt).path:
+          ServerValue.timestamp,
+      myReceived(otherUid: uid).child(Field.order).path: minusTime,
+      // Accept the request from the other person by updating the other person's sent request
+      otherSentToMe(otherUid: uid).child(Field.acceptedAt).path:
+          ServerValue.timestamp,
+      otherSentToMe(otherUid: uid).child(Field.order).path: minusTime,
+      // Set the other person as my friend in my friend list
+      myListRef.child(uid).child(Field.createdAt).path: ServerValue.timestamp,
+      // Set myself to the other person's friend list
+      listRef(uid).child(myUid!).child(Field.createdAt).path:
+          ServerValue.timestamp,
     };
-    // Set the other person as my friend in my friend list
-    await myListRef.child(uid).set(newFriendData);
-    // Set myself to the other person's friend list
-    await listRef(uid).child(myUid!).set(newFriendData);
-
+    await rootRef.update(update);
     if (!context.mounted) return;
     toast(
       context: context,
@@ -229,20 +226,16 @@ class Friend {
     required BuildContext context,
     required String uid,
   }) async {
-    const String rejectedAt = 'rejectedAt';
-
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
-
-    await otherSentToMe(otherUid: uid)
-        .child(rejectedAt)
-        .set(ServerValue.timestamp);
-    await otherSentToMe(otherUid: uid).child(Field.order).set(minusTime);
-
-    await myReceived(otherUid: uid)
-        .child(rejectedAt)
-        .set(ServerValue.timestamp);
-    await myReceived(otherUid: uid).child(Field.order).set(minusTime);
-
+    final update = {
+      otherSentToMe(otherUid: uid).child(Field.rejectedAt).path:
+          ServerValue.timestamp,
+      otherSentToMe(otherUid: uid).child(Field.order).path: minusTime,
+      myReceived(otherUid: uid).child(Field.rejectedAt).path:
+          ServerValue.timestamp,
+      myReceived(otherUid: uid).child(Field.order).path: minusTime,
+    };
+    await rootRef.update(update);
     if (!context.mounted) return;
     toast(
       context: context,
@@ -255,9 +248,11 @@ class Friend {
     required BuildContext context,
     required String uid,
   }) async {
-    await mySent(otherUid: uid).set(null);
-    await otherReceivedFromMe(otherUid: uid).set(null);
-
+    final update = {
+      mySent(otherUid: uid).path: null,
+      otherReceivedFromMe(otherUid: uid).path: null,
+    };
+    await rootRef.update(update);
     if (!context.mounted) return;
     toast(
       context: context,

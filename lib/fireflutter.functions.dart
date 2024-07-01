@@ -219,6 +219,7 @@ ScaffoldFeatureController toast({
           if (hideCloseButton == false)
             TextButton(
               onPressed: () {
+                if (!mayBeGlobalContext.mounted) return;
                 ScaffoldMessenger.of(mayBeGlobalContext).hideCurrentSnackBar();
               },
               child: Text(
