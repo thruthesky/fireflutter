@@ -57,11 +57,11 @@ class DefaultPublicProfileScreen extends StatelessWidget {
               onPressed: () => Navigator.of(context).pop(),
             ),
             actions: [
-              if (userUid == myUid)
-                PopupMenuButton(
-                  icon: const Icon(Icons.settings, color: Colors.white),
-                  itemBuilder: (context) {
-                    return [
+              PopupMenuButton(
+                icon: const Icon(Icons.settings, color: Colors.white),
+                itemBuilder: (context) {
+                  return [
+                    if (userUid == myUid) ...[
                       PopupMenuItem(
                         value: 'edit',
                         child: Text(T.profileUpdate.tr),
@@ -70,21 +70,44 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                         value: 'backgroundImage',
                         child: Text(T.backgroundUpdate.tr),
                       ),
-                    ];
-                  },
-                  onSelected: (value) {
-                    if (value == 'edit') {
-                      UserService.instance
-                          .showProfileUpdateScreen(context: context);
-                    } else if (value == 'backgroundImage') {
-                      StorageService.instance.uploadAt(
-                        context: context,
-                        path:
-                            "${User.node}/$userUid/${Field.profileBackgroundImageUrl}",
-                      );
-                    }
-                  },
-                ),
+                    ],
+                    const PopupMenuItem(
+                      value: 'seeFriends',
+                      child: Text("See Friends"),
+                    ),
+                    if (userUid == myUid) ...[
+                      PopupMenuItem(
+                        value: 'respondFriendRequests',
+                        child: Text(T.respondFriendRequests.tr),
+                      ),
+                      PopupMenuItem(
+                        value: 'pendingRequests',
+                        child: Text(T.mySentFriendRequests.tr),
+                      ),
+                    ],
+                  ];
+                },
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    UserService.instance
+                        .showProfileUpdateScreen(context: context);
+                  } else if (value == 'backgroundImage') {
+                    StorageService.instance.uploadAt(
+                      context: context,
+                      path:
+                          "${User.node}/$userUid/${Field.profileBackgroundImageUrl}",
+                    );
+                  } else if (value == 'seeFriends') {
+                    FriendService.instance
+                        .showListScreen(context: context, uid: userUid);
+                  } else if (value == 'respondFriendRequests') {
+                    FriendService.instance
+                        .showReceivedListScreen(context: context);
+                  } else if (value == 'pendingRequests') {
+                    FriendService.instance.showSentListScreen(context: context);
+                  }
+                },
+              ),
               const SizedBox(width: 8),
             ],
           ),
@@ -101,6 +124,24 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
+                ),
+                Value(
+                  ref: Friend.myListRef.child(userUid),
+                  builder: (
+                    friend,
+                  ) {
+                    if (friend != null) {
+                      return Text(
+                        'Friends',
+                        style:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
                 UserStateMessage.sync(
                   uid: userUid,

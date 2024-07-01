@@ -271,7 +271,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      "args": [
+        "--dart-define",
+        "MODE=test"
+      ]
     },
     {
       "name": "Momcafe - iPhone SE",
@@ -353,7 +356,6 @@
         "MODE=test"
       ]
     },
-    
     {
       "name": "Momcafe - Emulator release",
       "request": "launch",
@@ -395,6 +397,42 @@
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone sm black",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone 15 Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone 15 Plus",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Plus",
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.dart"
@@ -1169,7 +1207,6 @@
         "MODE=noe"
       ]
     },
-
     {
       "name": "MomCafe (noe)- iPhone 15 Pro Max",
       "request": "launch",
@@ -1178,7 +1215,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "MomCafe (noe)- SM J737S",
@@ -1188,7 +1228,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "MomCafe (noe)- iPhone (2)",
@@ -1198,7 +1241,10 @@
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=noe"]
+      "args": [
+        "--dart-define",
+        "MODE=noe"
+      ]
     },
     {
       "name": "Example (noe)- iPhone 15 Pro Max",

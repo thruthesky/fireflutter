@@ -1,22 +1,24 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class FriendListScreen extends StatefulWidget {
+class FriendListScreen extends StatelessWidget {
   static const String routeName = '/FriendList';
-  const FriendListScreen({super.key});
+  const FriendListScreen({
+    super.key,
+    this.title,
+    this.uid,
+  });
 
-  @override
-  State<FriendListScreen> createState() => _FriendListScreenState();
-}
+  final String? title;
+  final String? uid;
 
-class _FriendListScreenState extends State<FriendListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Friend'),
+        title: Text(title ?? T.friends.tr),
       ),
-      body: const FriendListView(),
+      body: FriendListView(uid: uid),
     );
   }
 }
