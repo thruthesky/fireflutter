@@ -76,13 +76,13 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                       child: Text("See Friends"),
                     ),
                     if (userUid == myUid) ...[
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'respondFriendRequests',
-                        child: Text("Respond Friend Requests"),
+                        child: Text(T.respondFriendRequests.tr),
                       ),
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'pendingRequests',
-                        child: Text("Pending Friend Requests"),
+                        child: Text(T.mySentFriendRequests.tr),
                       ),
                     ],
                   ];

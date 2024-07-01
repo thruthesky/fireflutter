@@ -1349,6 +1349,16 @@ class T {
     'ko': '내가 보낸 친구 요청',
   };
 
+  static const Json respondFriendRequests = {
+    'en': 'Respond Friend Requests',
+    'ko': '친구 요청 응답',
+  };
+
+  static const Json youAreFriendsAlready = {
+    'en': 'You are friends already.',
+    'ko': '이미 친구입니다.',
+  };
+
   static const Json youHaveRequestedAlready = {
     'en': 'You have requested already.',
     'ko': '이미 친구 요청을 보냈습니다.',

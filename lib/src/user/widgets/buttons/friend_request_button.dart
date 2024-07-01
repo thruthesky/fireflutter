@@ -60,7 +60,7 @@ class _FriendRequestButtonState extends State<FriendRequestButton> {
               if (_isAccepted) {
                 toast(
                   context: context,
-                  message: "You are friends already.",
+                  message: T.youAreFriendsAlready.tr,
                 );
               }
               // If you rejected the received request
