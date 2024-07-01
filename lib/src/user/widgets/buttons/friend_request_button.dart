@@ -20,7 +20,15 @@ class FriendRequestButton extends StatelessWidget {
             Friend.myReceived(otherUid: uid),
           );
           if (request.isAccepted) {
-            return const SizedBox.shrink();
+            return ElevatedButton(
+              onPressed: () {
+                toast(
+                  context: context,
+                  message: "You have been friends already.",
+                );
+              },
+              child: Text(T.friends.tr),
+            );
           }
           if (request.isRejected) {
             return ElevatedButton(
@@ -73,7 +81,15 @@ class FriendRequestButton extends StatelessWidget {
                 Friend.myReceived(otherUid: uid),
               );
               if (request.isAccepted) {
-                return const SizedBox.shrink();
+                return ElevatedButton(
+                  onPressed: () {
+                    toast(
+                      context: context,
+                      message: "You have been friends already.",
+                    );
+                  },
+                  child: Text(T.friends.tr),
+                );
               }
               return ElevatedButton(
                 onPressed: () async {
