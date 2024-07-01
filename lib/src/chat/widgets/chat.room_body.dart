@@ -414,12 +414,12 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             );
                           } else if (v == 'block') {
                             /// ask before blocking the user and set state to refresh the screen
-                            await UserService.instance.block(
+                            bool? re = await UserService.instance.block(
                               context: context,
                               otherUserUid: chat.room.otherUserUid!,
                               ask: true,
                             );
-                            setState(() {});
+                            if (re == true) setState(() {});
                           } else if (v == 'report') {
                             final re = await input(
                               context: context,

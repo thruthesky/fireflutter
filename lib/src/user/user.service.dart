@@ -452,6 +452,6 @@ class UserService {
         message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
       );
     }
-    return null;
+    return true;
   }
 }
