@@ -11,7 +11,6 @@ import 'package:example/screens/meetup/meetup.screen.dart';
 import 'package:example/screens/password_reset/password_reset.screen.dart';
 import 'package:example/screens/user/user.search.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
