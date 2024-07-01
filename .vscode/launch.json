@@ -366,6 +366,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Momcafe - ASUS J8AXB761J32888A release",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "J8AXB761J32888A",
+      "flutterMode": "release",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - Chrome",
       "request": "launch",
       "type": "dart",

@@ -89,6 +89,17 @@ It has helper method to open most of the accessible meetup screens
 - To show meetup blocked members screen you can call
   - `MeetupService.instance.showBlockedMembersScreen()`
 
+
+for intance the app is need to `verify` the user  and you only want to allow user who is verified to join the meetup, by default meetup has display option for this kind of scenario. but if your app is does not need or does not support verification you can hide the verification option like below,
+
+```dart
+MeetupService.intance.init(
+  meetupSettings: MeetupSettings(
+    enableVerifiedUserOption: false,
+  ),
+)
+```
+
 ### MeetupEventService
 
 `MeetupEventService` is the main service for meetup event. To use it you can all the instance like `MeetupEventService.instance.showViewScreen()`

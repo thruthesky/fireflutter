@@ -1,5 +1,6 @@
 import 'package:example/screens/buyandsell/buyandsell.screen.dart';
 import 'package:example/screens/chat/chat.screen.dart';
+import 'package:example/screens/chat/open_chat.domain.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
 import 'package:example/screens/forum/forum.screen.dart';
@@ -136,6 +137,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       //       .showFriendScreen(context: context),
                       //   child: const Text("Friend Reject list for Requester"),
                       // ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(OpenChatDomainScreen.routeName),
+                        child: const Text("Open Chat Domain Screen"),
+                      ),
                     ],
                   ),
                 ],

@@ -2174,4 +2174,14 @@ class T {
     'en': 'Manage Meetup',
     'ko': '모임 관리',
   };
+
+  static const Json loadingPost = {
+    'en': 'Loading post...',
+    'ko': '포스트 로딩중...',
+  };
+
+  static const Json otherUserNotVerified = {
+    'en': 'The user has not yet been verified.',
+    'ko': '사용자가 아직 확인되지 않았습니다.',
+  };
 }

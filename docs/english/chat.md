@@ -21,6 +21,54 @@
 
 - `blocks`: Administrators manage the block list of chat rooms here. Users whose UIDs added here cannot enter the chat room. Additionally, they are automatically ejected from the chat room. (**TODO: Functionality not implemented as of 2024-02-22.**)
 
+#### Chat Room hook
+
+Hooks available before joining group chat or creating single chat room
+
+- beforeSingleChatRoomCreate
+- beforeGroupChatRoomJoin
+
+You can use the `beforeSingleChatRoomCreate` hook to do something before the room is created.
+You can use this hook if you have a condition like the dont let the room be created if current/other User is not verified.
+You can also intercept the creation of the room by throwing an exception.
+
+```dart
+    ChatService.instance.init(
+      beforeSingleChatRoomCreate: (String otherUid) async {
+        if(iam.notVerified) {
+          await error(
+            context: context,
+            title: 'Not Verified',
+            message: 'Not verified user.....',
+          );
+          throw T.iamNotVerified.tr;
+        }
+        User? otherUser = await User.get(otherUid);
+        if (otherUser == null) {
+          // show error message
+          throw T.noUserFound.tr;
+        }
+        if (otherUser.notVerified) {
+          // show error message
+          throw T.otherUserNotVerified.tr;
+        }
+      },
+    )
+```
+
+You can also use `beforeGroupChatRoomJoin` hook to do something before joining a group.
+But since group master already have restriction setting,
+You can use this hook if you have special condition before joining the group.
+You can also Intercept the joining of the room by throwing an exception.
+
+```dart
+    ChatService.instance.init(
+      beforeGroupChatRoomJoin: (ChatRoom room) async {
+        /// do something before the current user id will be inserted into the chatroom users
+      },
+    )
+```
+
 ### Structure of Chat Messages
 
 - uid: The UID of the user who sent the message.
@@ -339,11 +387,42 @@ ChatRoomListView(
   chatRoomList: ChatRoomList.group,
 ),
 
-// Listong of all open group chat rooms (whether the user is joined or not)
+// Listing of all open group chat rooms (whether the user is joined or not)
 ChatRoomListView(
   chatRoomList: ChatRoomList.open,
 ),
+
+
+// Listing of all open group chat rooms base on the domain set in `ChatService.intance.chatRoomSettings.domain`
+ChatRoomListView(
+  chatRoomList: ChatRoomList.domain,
+),
 ```
+
+You can display chat rooms of a specific domain. by Using the widget `ChatRoomListView()` 
+
+```dart
+ChatRoomListView(
+  chatRoomList: ChatRoomList.domain,
+)
+```
+or 
+```dart
+FirebaseDatabaseQueryBuilder(
+  query: ChatService.instance.joinsRef
+      .child(myUid!)
+      .orderByChild(Field.domainChatOrder)
+      .startAt('my-domain'),
+      .endAt('my-domain\uf8ff')
+  pageSize: 50,
+  builder: (context, snapshot, _) {
+    ...
+  },
+);
+```
+
+
+
 
 #### Querying Specific Type of Chat Rooms
 
@@ -376,6 +455,12 @@ The `Field.order` is the same with 'order'. This can be used to get all the grou
    - All single chat room
 3. `Field.groupChatOrder` - same as 'groupChatOrder'.
    - All group chat room
+4. `Field.openChatOrder` - same as 'openChatOrder'.
+   - All open chat room 
+4. `Field.domainChatOrder` - same as 'domainChatOrder'.
+   - All open chat room base on the domain set in `ChatService.intance.chatRoomSettings.domain`
+
+
 
 ##### Chat Rooms not Necessarily Joined by the Currently Logged in User (roomsRef)
 
@@ -443,6 +528,21 @@ IconButton(
 ),
 
 ```
+
+#### ChatRoomEditDialog
+By Default chat edit dialog display all the options including name, description, and password and verification options. and for instance your app does not support verification and gender option things you can hide the options by doing the code below. 
+
+```dart
+ChatService.instance.init(
+  chatRoomSettings: ChatRoomSettings(
+    enebaleVerifiedUserOption:false,
+    enableGenderOption: false,
+    domain: 'my-app'
+  )
+)
+```
+
+for instance you have two apps and using one database projects as your project
 
 Automatically, creator of the room will join to the newly created room after submitting.
 
@@ -535,23 +635,7 @@ TextButton(
 
 - You can use the default admin screen. Just call `AdminService.instance.showDashboard()`.
 
-## Changing logic before sending chat messages
 
-If you want to add logic before sending chat messages (or photos), you can use `testBeforeSendMessage`.
-
-For example, if you don't want to send a chat message if the member doesn't have a photo or name, you can do the following.
-
-```dart
-ChatService.instance.init(testBeforeSendMessage: (chat) {
-  if (my!.photoUrl.isEmpty || my!.displayName.isEmpty) {
-    error(
-        context: context,
-        title: 'Incomplete Profile',
-        message: 'Please fill in all missing profile information.');
-    throw 'The profile is incomplete.';
-  }
-});
-```
 
 ## Chat Message Sent Hook
 
@@ -579,6 +663,26 @@ void initChatService() {
     },
   );
 }
+```
+
+## Changing logic before sending chat messages
+
+If you want to add logic before sending chat messages (or photos), you can use `beforeMessageSent`.
+
+For example, if you don't want to send a chat message if the member doesn't have a photo or name, you can do the following.
+
+```dart
+ChatService.instance.init(
+  beforeMessageSent: (Map<String, dynamic> data, ChatModel chat) {
+  if (my!.photoUrl.isEmpty || my!.displayName.isEmpty) {
+    error(
+      context: context,
+      title: 'Incomplete Profile',
+      message: 'Please fill in all missing profile information.',
+    );
+    throw 'The profile is incomplete.';
+  }
+});
 ```
 
 ## Blocking users

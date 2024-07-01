@@ -5,7 +5,9 @@ import 'package:flutter/widgets.dart';
 
 class MeetupService {
   static MeetupService? _instance;
-  static MeetupService get instance => _instance ?? MeetupService._();
+  static MeetupService get instance => _instance ??= MeetupService._();
+
+  MeetupService._();
 
   Query get recommendedQuery => Meetup.col
       .where('hasPhoto', isEqualTo: true)
@@ -15,7 +17,15 @@ class MeetupService {
       .where('users', arrayContains: myUid)
       .orderBy('createdAt', descending: true);
 
-  MeetupService._();
+  /// [meetupSettings] you can use meetupSettings to enable meetup options like
+  /// [enableVerifiedUserOption]
+  MeetupSettings meetupSettings = const MeetupSettings();
+
+  init({
+    MeetupSettings? meetupSettings,
+  }) {
+    this.meetupSettings = meetupSettings ?? this.meetupSettings;
+  }
 
   showViewScreen({
     required BuildContext context,
@@ -43,11 +53,13 @@ class MeetupService {
     required Meetup meetup,
   }) {
     showGeneralDialog(
-      context: context,
-      pageBuilder: (context, animation, secondaryAnimation) => MeetupEditScreen(
-        meetup: meetup,
-      ),
-    );
+        context: context,
+        pageBuilder: (context, animation, secondaryAnimation) {
+          dog('from show update screen${meetupSettings.enableVerifiedUserOption}');
+          return MeetupEditScreen(
+            meetup: meetup,
+          );
+        });
   }
 
   showMembersScreen({

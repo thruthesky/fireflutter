@@ -1,5 +1,6 @@
 import 'package:example/screens/buyandsell/buyandsell.screen.dart';
 import 'package:example/screens/chat/chat.screen.dart';
+import 'package:example/screens/chat/open_chat.domain.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
 import 'package:example/screens/forum/forum.screen.dart';
@@ -82,6 +83,10 @@ final router = GoRouter(
     GoRoute(
       path: PasswordResetScreen.routeName,
       builder: (context, state) => const PasswordResetScreen(),
+    ),
+    GoRoute(
+      path: OpenChatDomainScreen.routeName,
+      builder: (context, state) => const OpenChatDomainScreen(),
     ),
   ],
 );

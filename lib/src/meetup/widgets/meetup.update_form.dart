@@ -24,7 +24,7 @@ class _MeetupUpdateFormState extends State<MeetupUpdateForm> {
   @override
   void initState() {
     super.initState();
-
+    dog('${MeetupService.instance.meetupSettings.enableVerifiedUserOption}');
     nameController.text = meetup.name;
     descriptionController.text = meetup.description ?? '';
     isVerifiedOnly = meetup.isVerifiedOnly;
@@ -110,19 +110,22 @@ class _MeetupUpdateFormState extends State<MeetupUpdateForm> {
             maxLines: 5,
           ),
           const SizedBox(height: 24),
-          SwitchListTile(
-            value: isVerifiedOnly,
-            onChanged: (v) => setState(() => isVerifiedOnly = v),
-            title: Text(
-              T.verifiedMembersOnly.tr,
-              style: Theme.of(context).textTheme.bodySmall,
+          if (MeetupService
+              .instance.meetupSettings.enableVerifiedUserOption) ...{
+            SwitchListTile(
+              value: isVerifiedOnly,
+              onChanged: (v) => setState(() => isVerifiedOnly = v),
+              title: Text(
+                T.verifiedMembersOnly.tr,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              subtitle: Text(
+                T.onlyVerifiedMembersCanJoinChat.tr,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
             ),
-            subtitle: Text(
-              T.onlyVerifiedMembersCanJoinChat.tr,
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-          ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
+          },
           Align(
             child: OutlinedButton(
               onPressed: () async {
