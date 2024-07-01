@@ -1,0 +1,2317 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../chat/">
+      
+      
+        <link rel="next" href="../comment/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>클라우드 함수 - Fireship</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fireship" class="md-header__button md-logo" aria-label="Fireship" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fireship
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              클라우드 함수
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fireship" class="md-nav__button md-logo" aria-label="Fireship" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Fireship
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fireship
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../location/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    위치, 위치 기반 검색
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Assets
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Assets
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/firestore_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Firestore security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/realtime_database_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Realtime database security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/storage_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    English
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            English
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/action_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Action Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/activity_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Activity Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/bookmark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bookmark
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/building_blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Building Blocks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/chat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chat
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/cloud_functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/comments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/country_picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Country Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/dynamic_link/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Link
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/extensions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Extensions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/forum/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Forum
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/friend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Friend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/meetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Meetup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/messaging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Push Notifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/report/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/theme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Theme Design
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/todo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TODO
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/translation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Text
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/typesense/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Typesense
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../english/widgets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Widgets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Korean
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Korean
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../action_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    액션 로그
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../activity_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    활동 로그
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    관리자
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bookmark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    북마크
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building_blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    빌딩 블록
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    채팅
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    클라우드 함수
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    클라우드 함수
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      푸시 알림
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="푸시 알림">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      각 채팅 메시지에 푸시 알림 보내기
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      포럼 카테고리 구독자에게 푸시 알림 보내기
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typesense" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typesense 클라우드 함수
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Typesense 클라우드 함수">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typesense_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typesense에 사용자 데이터 색인화
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typesense_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typesense에 게시물 데이터 색인화
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typesense_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typesense에 댓글 데이터 색인화
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      게시물 생성/업데이트/삭제 시 게시물 요약 정보
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="게시물 생성/업데이트/삭제 시 게시물 요약 정보">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#managepostsallsummary" class="md-nav__link">
+    <span class="md-ellipsis">
+      managePostsAllSummary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      사용자 클라우드 함수
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      전화번호 가입
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      함수 테스트
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    코멘트
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../country_picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    국가 정보 선택
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    데이터베이스
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    디자인
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic_link/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    다이나믹 링크
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../error_handling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    에러 핸들링
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extensions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    익스텐션
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fireflutter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter 설정
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../forum/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    게시판
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../friend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    친구
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fireship 에서 제공하는 함수들
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    설치
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../like/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    좋아요
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../meetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Meetup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    푸시 알림
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../packages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    패키지 목록
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../post/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    글
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    빠르게 시작하기
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../report/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    신고
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    스토리지
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    테스트
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    테마 디자인
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../translation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    언어 번역
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../trouble_shooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    오류 발생 시 문제 해결
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../typesense/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Typesense 풀텍스트 검색
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    사용자
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    사용자 설정
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../widgets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    위젯
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_37" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_37" id="__nav_5_37_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Address
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_37_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_37">
+            <span class="md-nav__icon md-icon"></span>
+            Address
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../address/korean_address/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    한국 주소 관련 기능
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      푸시 알림
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="푸시 알림">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      각 채팅 메시지에 푸시 알림 보내기
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      포럼 카테고리 구독자에게 푸시 알림 보내기
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typesense" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typesense 클라우드 함수
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Typesense 클라우드 함수">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typesense_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typesense에 사용자 데이터 색인화
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typesense_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typesense에 게시물 데이터 색인화
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typesense_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typesense에 댓글 데이터 색인화
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      게시물 생성/업데이트/삭제 시 게시물 요약 정보
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="게시물 생성/업데이트/삭제 시 게시물 요약 정보">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#managepostsallsummary" class="md-nav__link">
+    <span class="md-ellipsis">
+      managePostsAllSummary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      사용자 클라우드 함수
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      전화번호 가입
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      함수 테스트
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="_1">클라우드 함수</h1>
+<p>I thought that I will not use Firebase cloud functions since it is a bit difficult to maintain the code. And we already have all the neccessary code in Flutter. But the code in the Flutter is not efficient. For instance, sending push notifications for a group chat from the Flutter app can downgrade the performance seriously. Even if the work is done in isolated, still it will consume a hugh resource. I am expecing that there are more than 1,000 uesrs who are chatting a lot every day. That's what acctually happens. And every time a user send a message, the push message ... (I will not explain it details.)</p>
+<p>So, the app should not do this work from the Flutter app. You may send the push notification from client only if it will not consume a lot of resource.</p>
+<p>And here comes the cloud functions</p>
+<p>성능을 향상시키기 위해 Fireflutter는 클라우드 함수를 사용합니다.</p>
+<h2 id="_2">푸시 알림</h2>
+<p><code>sendPushNotifications</code> 클라우드 함수를 사용하여 사용자에게 푸시 알림을 보낼 수 있습니다.</p>
+<h3 id="_3">각 채팅 메시지에 푸시 알림 보내기</h3>
+<p>각 채팅 메시지에 푸시 알림을 보내는 클라우드 함수의 이름은 sendMessagesToChatRoomSubscribers입니다. 이 함수는 채팅방에 참여한 모든 사용자에게 푸시 알림을 보냅니다.</p>
+<h3 id="_4">포럼 카테고리 구독자에게 푸시 알림 보내기</h3>
+<p>각 채팅 메시지에 대해 푸시 알림을 보내는 클라우드 함수의 이름은 sendMessagesToCategorySubbscribers입니다. 이 함수는 포럼 카테고리를 구독한 모든 사용자에게 푸시 알림을 보냅니다.</p>
+<h2 id="typesense">Typesense 클라우드 함수</h2>
+<h3 id="typesense_1">Typesense에 사용자 데이터 색인화</h3>
+<p>사용자 데이터를 Typesense에 색인화하는 클라우드 함수의 이름은 <code>typesenseUserIndexing</code>입니다. 사용자 데이터가 생성, 업데이트 또는 삭제될 때 Typesense에 사용자 데이터를 색인화합니다.</p>
+<h3 id="typesense_2">Typesense에 게시물 데이터 색인화</h3>
+<p>게시물 데이터를 Typesense에 색인화하는 클라우드 함수의 이름은 <code>typesensePostIndexing</code>입니다. 게시물 데이터가 생성, 업데이트 또는 삭제될 때 Typesense에 게시물 데이터를 색인화합니다.</p>
+<h3 id="typesense_3">Typesense에 댓글 데이터 색인화</h3>
+<p>댓글 데이터를 Typesense에 색인화하는 클라우드 함수의 이름은 <code>typesenseCommentIndexing</code>입니다. 댓글 데이터가 생성, 업데이트 또는 삭제될 때 Typesense에 댓글 데이터를 색인화합니다.</p>
+<h2 id="_5">게시물 생성/업데이트/삭제 시 게시물 요약 정보</h2>
+<ul>
+<li><code>posts</code>에서 게시물이 생성/업데이트/삭제될 때마다 <code>post-all-summaries</code>와 <code>post-summaries</code>를 업데이트하는 클라우드 함수가 있습니다.</li>
+</ul>
+<h3 id="managepostsallsummary">managePostsAllSummary</h3>
+<p>이 클라우드 함수는 <code>posts</code>를 기반으로 <code>post-all-summaries</code>와 <code>post-summaries</code>를 업데이트합니다.</p>
+<p>게시물 요약 정보에는 첫 번째 URL만 저장한다는 점을 유의하십시오.</p>
+<h2 id="_6">사용자 클라우드 함수</h2>
+<p>참고, <a href="../user/">사용자 문서</a> 를 문서를 참고한다.
+참고, <code>user.functions.ts</code> 를 살펴 본다.</p>
+<p>클라우드 함수는 사용자 기능을 좀 더 보강하기 위해서 여러가지 함수를 제공하고 있으며, 필요한 것만 설치를 해서 사용하면 된다.</p>
+<ul>
+<li>
+<p><code>userLike</code> 는 A 가 B 를 좋아요 할 때, B 가 A 를 좋아요 하고 있다고 알려주어야 하며, 총 좋아요 갯 수도 증/감 시켜 주어야 한다. 이러한 잡다한 일을 <code>userLike</code> 가 해 준다.</p>
+</li>
+<li>
+<p><code>userMirror</code> 는 rtdb 의 <code>/users</code> 노드 값을 firestore 의 <code>/users</code> 컬렉션으로 이동 시켜준다. 이렇게 하므로서, 사용자 검색을 보다 복잡하게 할 필요가 있는 경우, firestore 를 통해서 필터링해서 화면에 보여주면 된다. 이 때, 한가지 주의 할 점은 <code>noOfLikes</code> 필드는 mirror 하지 않는데 그 이유는 사용자 목록에서 좋아요/좋아요취소 를 하는 경우, rtdb 의 <code>/users/&lt;uid&gt;/noOfLikes</code> 가 증/감하면 firestore 의 <code>/users</code> 데이터 값이 변경된다. 만약, FirestoreListView 와 같이 쿼리를 통해서 사용자 필터링을 하는 경우, 사용자의 문서가 하나 변경되면, 모든 목록(검색되는 아이템)이 다시 그려져야하는데, 이 때 화면 반짝임이 발생하기 때문이다.</p>
+</li>
+</ul>
+<h2 id="_7">전화번호 가입</h2>
+<p>전화번호 가입을 하는 함수는 다음과 같은 이유로 만들어 졌다.</p>
+<pre><code class="language-txt">노인들을 위한 앱을 만드는데, 노인들은 회원 가입을 매우 어려워한다. 전화번호 인증을 하면 문자를 확인해서 입력하기 어렵고, 비밀번호를 지정하면 비밀번호를 만드는것과 외우지 못해서 나중에 까먹어 버리는 경우가 발생한다. 그래서, 전화번호만 입력하면 곧 바로 가입이 되게 하는 것이다. 만약, 전화번호가 이미 가입되어져 있는데, 가입을 하려면 그때에는 전화번호 인증을 하게 한다. 즉, 첫번째 로그인은 문자 인증 없이 가입. 두번째 로그인은 문자 인증을 해서 가입을 하는 것이다.
+</code></pre>
+<p>요청을 할 때에는 <code>phoneNumber</code> 에 가입할 전화번호를 입력하면 된다. 전화번호가 입력되지 않거나, 너무 짧거나, 긴 경우는 함수에서 에러를 낸다. 그 외에는 Firebase 에서 에러를 낸다.
+전화번호는 국제 전화번호 포멧에 맞아야 한다.</p>
+<ul>
+<li>요청: <code>?phoneNumber=12345</code><ul>
+<li>결과: <code>{ code: 'auth/invalid-phone-number', message: '...' }</code></li>
+</ul>
+</li>
+<li>요청: <code>?phoneNumber=1234567890123456</code><ul>
+<li>결과: <code>{ code: 'auth/invalid-phone-number', message: '...' }</code></li>
+</ul>
+</li>
+<li>
+<p>요청: <code>/?phoneNumber=1234567890</code></p>
+<ul>
+<li>결과: <code>{ code: 'auth/invalid-phone-number', message: '...' }</code></li>
+</ul>
+</li>
+<li>
+<p>전화번호가 존재하는 경우, <code>{ code: 'auth/phone-number-already-exists', message: '...' }</code> 와 같이 에러가 나온다.</p>
+</li>
+<li>
+<p>성공하는 경우</p>
+<ul>
+<li>결과: <code>{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }</code></li>
+</ul>
+</li>
+</ul>
+<p>참고로, 클라우드 함수 호출이 속도가 좀 느린편이다. 그나마 맨 처음 (새로운) 전화번호를 입력해서 가입을 할 때에는 Firebase Phone Sign-in 과정이 없어서 조금은 빨리 로그인이 되지만, 두번째 로그인을 할 때에는 Phone Sign-in 을 해야 해서 로그인 속도가 좀 더 느릴 수 있다.</p>
+<p>다음은, 전화번호로 처음 가입하면 인증 문자 없이 바로 가입하는 화면이다.</p>
+<pre><code class="language-dart">phoneNumber = '+82$tmpNumber';
+
+/// 임시 로그인 번호이면, SMS 입력 창을 바로 보여 주기.
+if (isRealTestPhoneNumber) {
+  return setState(() =&gt; showSmsCodeInput = true);
+}
+
+Dio dio = Dio();
+
+setState(() =&gt; progressVerifyPhoneNumber = true);
+final response =
+    await dio.post(Config.cloudFunctionsApi, data: {
+  'phoneNumber': phoneNumber,
+});
+
+if (response.data?['code'] != null) {
+  handleFirebaseAuthError(response.data!['code']);
+  return;
+}
+
+// 처음 로그인을 하는 경우,
+try {
+  // final userCredential =
+  await FirebaseAuth.instance
+      .signInWithCustomToken(response.data!['customToken']!);
+  // print(&quot;Sign-in successful. ${userCredential.user?.uid}&quot;);
+  signinSuccess(firstLogin: true);
+} on FirebaseAuthException catch (e) {
+  handleFirebaseAuthError(e.code);
+} finally {
+  setState(() =&gt; progressVerifyPhoneNumber = false);
+}
+</code></pre>
+<h2 id="_8">함수 테스트</h2>
+<p><a href="../test/">테스트 문서</a>를 참고한다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>

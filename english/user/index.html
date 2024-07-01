@@ -1,0 +1,3081 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../typesense/">
+      
+      
+        <link rel="next" href="../widgets/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>User - Fireship</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#user" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fireship" class="md-header__button md-logo" aria-label="Fireship" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fireship
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              User
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fireship" class="md-nav__button md-logo" aria-label="Fireship" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Fireship
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fireship
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../location/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    위치, 위치 기반 검색
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Assets
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Assets
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/firestore_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Firestore security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/realtime_database_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Realtime database security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/storage_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    English
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            English
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../action_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Action Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../activity_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Activity Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bookmark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bookmark
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building_blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Building Blocks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chat
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../country_picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Country Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic_link/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Link
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extensions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Extensions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../forum/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Forum
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../friend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Friend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../meetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Meetup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Push Notifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../report/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Theme Design
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../todo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TODO
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../translation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Text
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../typesense/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Typesense
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#user-database-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      User database structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-user-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing User UI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customizing User UI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#login-error-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login Error UI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-profile-update-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      User profile update screen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User profile update screen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defaultprofileupdateform" class="md-nav__link">
+    <span class="md-ellipsis">
+      DefaultProfileUpdateForm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simpleprofileupdateform" class="md-nav__link">
+    <span class="md-ellipsis">
+      SimpleProfileUpdateForm
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-information-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Information Reference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-my-logged-in-users-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing My (Logged-in User's) Information
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Accessing My (Logged-in User's) Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#displaying-admin-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Displaying Admin Widgets
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-information-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Information Update
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#displaying-user-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Displaying user data
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Displaying user data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#userdoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserDoc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mydoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      MyDoc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#userdisplayname" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserDisplayName
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useravatar" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserAvatar
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-and-unblock" class="md-nav__link">
+    <span class="md-ellipsis">
+      Block and unblock
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Widgets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Widgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updatebirthdayfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      UpdateBirthdayField
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usertile" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserTile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#userlistview" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserListView
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-likes" class="md-nav__link">
+    <span class="md-ellipsis">
+      User likes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-information-listening" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Information Listening
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Information Listening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-require-users-to-input-a-photo-or-name-if-they-havent" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Require Users to Input a Photo or Name if They Haven't
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profile-editing-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profile Editing Screen
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-public-profile-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Public Profile Screen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Public Profile Screen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sending-push-notifications-to-the-other-member-when-viewing-user-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sending Push Notifications to the Other Member when Viewing User Profiles
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firestore-mirroring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Firestore Mirroring
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distance-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distance Search
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#likes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Likes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#likes-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      Likes List
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-user-login-and-user-document-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checking User Login and User Document Preparation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checking User Login and User Document Preparation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authready" class="md-nav__link">
+    <span class="md-ellipsis">
+      AuthReady
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mydocready" class="md-nav__link">
+    <span class="md-ellipsis">
+      MyDocReady
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Blocking
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-app-specific-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating App Specific Value
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../widgets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Widgets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Korean
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Korean
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/action_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    액션 로그
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/activity_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    활동 로그
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    관리자
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/bookmark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    북마크
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/building_blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    빌딩 블록
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/chat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    채팅
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/cloud_functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    클라우드 함수
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/comment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    코멘트
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/country_picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    국가 정보 선택
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    데이터베이스
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    디자인
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/dynamic_link/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    다이나믹 링크
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/error_handling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    에러 핸들링
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/extensions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    익스텐션
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/fireflutter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter 설정
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/forum/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    게시판
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/friend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    친구
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fireship 에서 제공하는 함수들
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    설치
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/like/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    좋아요
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/meetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Meetup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/messaging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    푸시 알림
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/packages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    패키지 목록
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/post/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    글
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/quick_start/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    빠르게 시작하기
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/report/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    신고
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    스토리지
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    테스트
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/theme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    테마 디자인
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/translation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    언어 번역
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/trouble_shooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    오류 발생 시 문제 해결
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/typesense/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Typesense 풀텍스트 검색
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    사용자
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/user_settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    사용자 설정
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/widgets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    위젯
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_37" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_37" id="__nav_5_37_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Address
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_37_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_37">
+            <span class="md-nav__icon md-icon"></span>
+            Address
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/address/korean_address/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    한국 주소 관련 기능
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#user-database-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      User database structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-user-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing User UI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customizing User UI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#login-error-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login Error UI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-profile-update-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      User profile update screen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User profile update screen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defaultprofileupdateform" class="md-nav__link">
+    <span class="md-ellipsis">
+      DefaultProfileUpdateForm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simpleprofileupdateform" class="md-nav__link">
+    <span class="md-ellipsis">
+      SimpleProfileUpdateForm
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-information-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Information Reference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-my-logged-in-users-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing My (Logged-in User's) Information
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Accessing My (Logged-in User's) Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#displaying-admin-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Displaying Admin Widgets
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-information-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Information Update
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#displaying-user-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Displaying user data
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Displaying user data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#userdoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserDoc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mydoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      MyDoc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#userdisplayname" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserDisplayName
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useravatar" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserAvatar
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-and-unblock" class="md-nav__link">
+    <span class="md-ellipsis">
+      Block and unblock
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Widgets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Widgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updatebirthdayfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      UpdateBirthdayField
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usertile" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserTile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#userlistview" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserListView
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-likes" class="md-nav__link">
+    <span class="md-ellipsis">
+      User likes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-information-listening" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Information Listening
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Information Listening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-require-users-to-input-a-photo-or-name-if-they-havent" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Require Users to Input a Photo or Name if They Haven't
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profile-editing-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profile Editing Screen
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-public-profile-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Public Profile Screen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Public Profile Screen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sending-push-notifications-to-the-other-member-when-viewing-user-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sending Push Notifications to the Other Member when Viewing User Profiles
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firestore-mirroring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Firestore Mirroring
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distance-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distance Search
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#likes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Likes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#likes-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      Likes List
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-user-login-and-user-document-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checking User Login and User Document Preparation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checking User Login and User Document Preparation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authready" class="md-nav__link">
+    <span class="md-ellipsis">
+      AuthReady
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mydocready" class="md-nav__link">
+    <span class="md-ellipsis">
+      MyDocReady
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Blocking
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-app-specific-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating App Specific Value
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="user">User</h1>
+<p>Fireship includes basic functionalities for managing user information, so it's recommended to reuse its widgets or logic. Particularly, customizing the provided widgets by copying them is encouraged.</p>
+<h2 id="user-database-structure">User database structure</h2>
+<ul>
+<li>User information is recorded in the <code>/users/&lt;uid&gt;</code> path of the realtime database.</li>
+</ul>
+<p><code>displayName</code> is the name of the user. FireFlutter, including all the widgets, will always use <code>displayName</code> to display the user's name. This can be either a real name or a nickname. If you want to store the user's name in a different format such as <code>firstName</code>, <code>middleName</code>, <code>lastName</code>, you can do so in your app. You may retrieve the user's real name and save it in the name field in your app.</p>
+<p><code>createdAt</code> indicates the time of the first login. This is the account creation time.</p>
+<p>The user's real name or a name not displayed on the screen is stored in the <code>name</code> field. The displayed name is saved in the <code>displayName</code> field.</p>
+<p><code>isVerified</code> is a field that only administrators can modify. Even though it's included in the user document, users cannot modify it. Administrators manually verify identity documents and conduct video calls. Afterward, they can set <code>isVerified</code> to true.</p>
+<p><code>gender</code> can have values of <code>M</code> or <code>F</code> and may be null (no field). Note that the gender information can only be trusted when <code>isVerified</code> is true. In other words, if <code>isVerified</code> is not true, the gender information may not be true.</p>
+<p><code>blocks</code> stores a list of blocked users. Only users can perform blocking. Additionally, while users can perform actions like liking posts, comments, or chats, as well as bookmarking items such as posts, comments, etc., blocking is a one-sided action.</p>
+<p>Regarding <code>likes</code>, it's essential for both parties to know who has liked whom. This necessitates a more complex data structure, hence the separate storage in <code>/user-likes</code>. However, with <code>blocks</code>, there's no need to inform others about whom a user has blocked. Therefore, it's stored directly in <code>/users</code>.</p>
+<p>When values are stored in <code>latitude</code> and <code>longitude</code>, GeoHash strings of 4/5/6/7 characters are automatically saved in <code>geohash4</code>, <code>geohash5</code>, <code>geohash6</code>, and <code>geohash7</code>, respectively. This means that when using the Location or GeoLocator package in the app, setting permissions, obtaining Lat/Lon values, and saving them with <code>UserModel.update()</code>, GeoHash strings are automatically stored. For more details, refer to the section on <a href="#distance-search">Distance Search</a>.</p>
+<h2 id="customizing-user-ui">Customizing User UI</h2>
+<h3 id="login-error-ui">Login Error UI</h3>
+<p>When attempting to access a page that requires login without logging in, <code>DefaultLoginFirstScreen</code> can be used. Here's how you can customize it:</p>
+<pre><code class="language-dart">UserService.instance.init(
+  customize: UserCustomize(
+    loginFirstScreen: const Text('Please login first!'),
+  ...
+  ),
+)
+</code></pre>
+<p><code>loginFirstScreen</code> is not a builder. Therefore, you can simply create a static widget, and if you wrap it in a Scaffold, it will work fine.</p>
+<h3 id="user-profile-update-screen">User profile update screen</h3>
+<p>Fireflutter provides a few widgets to update user's profile information like below</p>
+<h4 id="defaultprofileupdateform">DefaultProfileUpdateForm</h4>
+<p><code>DefaultProfileUpdateForm</code> provides with the options below</p>
+<ul>
+<li>state image (profile background image)</li>
+<li>profile photo</li>
+<li>name</li>
+<li>state message</li>
+<li>birthday picker</li>
+<li>gender</li>
+<li>nationality selector</li>
+<li>region selector(for Korean nation only)</li>
+<li>job</li>
+</ul>
+<p><code>DefaultProfileUpdateForm</code> also provides more optoins.</p>
+<p>You you can call <code>UserService.instance.showProfileScreen(context)</code> mehtod which shows the <code>DefaultProfileUpdateForm</code> as dialog.</p>
+<p>It is important to know that Fireflutter uses <code>UserService.instance.showProfileScreen()</code> to display the login user's profile update screen. So, if you want to customize everything by yourself, you need to copy the code and make it your own widget. then conect it to <code>UserService.instance.init(customize: UserCustomize(showProfile: ... ))</code>.</p>
+<h4 id="simpleprofileupdateform">SimpleProfileUpdateForm</h4>
+<p>This is very simple profile update form widget and we don't recommend it for you to use it. But this is good to learn how to write the user update form.</p>
+<pre><code class="language-dart">Scaffold(
+  appBar: AppBar(
+    title: const Text('Profile'),
+  ),
+  body: Padding(
+    padding: const EdgeInsets.all(md),
+    child: Theme(
+      data: bigButtonTheme(context),
+      child: SimpleProfileUpdateForm(
+        onUpdate: () =&gt; toast(
+          context: context,
+          message: context.ke('업데이트되었습니다.', 'Profile updated.'),
+        ),
+      ),
+    ),
+  ),
+);
+</code></pre>
+<h2 id="user-information-reference">User Information Reference</h2>
+<p>You can use the UserDoc widget. For details, refer to the <a href="#userdoc">widget documentation</a>.</p>
+<h2 id="accessing-my-logged-in-users-information">Accessing My (Logged-in User's) Information</h2>
+<p><code>UserService.instance.user</code> is a variable that holds the user document values from the database as a model. It is abbreviated as <code>my</code> for convenience. When the value in the database changes, the value of this variable is also updated (synchronized) in real-time. Therefore, after changing a value in the database, you can verify that the value is correctly stored in the <code>my</code> variable (after a short pause). For example, you can save form field values immediately upon change and then confirm them by pressing the submit button.</p>
+<p>To reference the information of the logged-in user (yourself), you can use <code>MyDoc</code>. While using <code>UserDoc</code> is acceptable, using <code>MyDoc</code> is more effective.</p>
+<p>In FireFlutter, whenever the data of the logged-in user changes, <code>UserService.instance.myDataChanges</code> automatically triggers the <code>myDataChanges</code> event, which is a BehaviorSubject. MyDoc widgets respond to this event, eliminating the need for additional DB access.</p>
+<pre><code class="language-dart">MyDoc(builder: (my) =&gt; Text(&quot;isAdmin: ${my?.isAdmin}&quot;))
+</code></pre>
+<p>An example of displaying a widget if the user is an administrator:</p>
+<pre><code class="language-dart">MyDoc(builder: (my) =&gt; isAdmin ? Text('I am admin') : Text('I am not admin'))
+</code></pre>
+<p>If you are going to watch(listen) a value of a field, then you can use <code>MyDoc.field</code>.</p>
+<pre><code class="language-dart">MyDoc.field('${Field.blocks}/$uid', builder: (v) {
+  return Text(v == null ? T.block.tr : T.unblock.tr);
+})
+</code></pre>
+<h3 id="displaying-admin-widgets">Displaying Admin Widgets</h3>
+<p>To check if a user is an administrator, you can simply do as follows:</p>
+<pre><code class="language-dart">Admin( builder: () =&gt; Text('I am an admin') );
+</code></pre>
+<h2 id="user-information-update">User Information Update</h2>
+<p>You can modify user information using <code>UserModel.update()</code>. However, the UserModel object holds the value before being stored in the database. Therefore, to use the updated value in the database, you can use <code>UserModel.reload()</code>.</p>
+<pre><code class="language-dart">await user.update(displayName: 'Banana');
+await user.reload();
+print(user.displayName);
+</code></pre>
+<h2 id="displaying-user-data">Displaying user data</h2>
+<ul>
+<li>You can use <code>UserDoc</code> or <code>MyDoc</code> to display user data.</li>
+<li>The most commonly used user properties are name and photos. Fireflutter provides <code>UserDisplayName</code> and <code>UserAvatar</code> for your convinience.</li>
+</ul>
+<h3 id="userdoc">UserDoc</h3>
+<p>The <code>UserDoc</code> can be used like this:</p>
+<pre><code class="language-dart">UserDoc(
+  uid: uid,
+  builder: (data) {
+    if (data == null) return const SizedBox.shrink();
+    final user = UserModel.fromJson(data, uid: uid);
+    return Text( user.displayName ?? 'No name' );
+  },
+),
+</code></pre>
+<h3 id="mydoc">MyDoc</h3>
+<p>The <code>MyDoc</code> can be used like this:</p>
+<pre><code class="language-dart">MyDoc(
+  builder: (my) {
+    return Text( user.displayName ?? 'No name');
+  }
+),
+
+</code></pre>
+<h3 id="userdisplayname">UserDisplayName</h3>
+<p>The <code>UserDisplayName</code> widget can be used like this:</p>
+<pre><code class="language-dart">UserDisplayName(uid: uid),
+</code></pre>
+<p>This will show <code>displayName</code>, not <code>name</code> of the user.</p>
+<h3 id="useravatar">UserAvatar</h3>
+<p>The <code>UserAvatar</code> widget can be used like this:</p>
+<pre><code class="language-dart">UserAvatar(uid: uid, size: 100, radius: 40),
+</code></pre>
+<h2 id="block-and-unblock">Block and unblock</h2>
+<p>You can block or unblock other user like below.</p>
+<pre><code class="language-dart">final re = await my?.block(chat.room.otherUserUid!);
+</code></pre>
+<p>You may want to let the user know if the other user has blocked or unblocked.</p>
+<pre><code class="language-dart">final re = await my?.block(chat.room.otherUserUid!);
+toast(
+  context: context,
+  title: re == true ? 'Blocked' : 'Unblocked',
+  message: re == true ? 'You have blocked this user' : 'You have unblocked this user',
+);
+</code></pre>
+<h2 id="widgets">Widgets</h2>
+<h3 id="updatebirthdayfield">UpdateBirthdayField</h3>
+<p>Easily modify member birthdate information using the <code>UpdateBirthday</code> widget. You can use this widget to display birthday and let user to update his birthday in profile screen.</p>
+<h3 id="usertile">UserTile</h3>
+<p>Use this widget to display the user information in a list.
+<code>onTap</code> is optional and if it is not specified, the widget does not capture the tap event.</p>
+<pre><code class="language-dart">FirebaseDatabaseListView(
+  query: Ref.users,
+  itemBuilder: (_, snapshot) =&gt; UserTile(
+    user: UserModel.fromSnapshot(snapshot),
+    trailing: const Column(
+      children: [
+        FaIcon(FontAwesomeIcons.solidCheck),
+        spaceXxs,
+        Text('인증완료'),
+      ],
+    ),
+    onTap: (user) {
+      user.update(isVerified: true);
+    },
+  ),
+),
+</code></pre>
+<p>You can use <code>trailing</code> to add your own buttons intead of using <code>onTap</code>.</p>
+<h3 id="userlistview">UserListView</h3>
+<p>Fireflutter provides a widget to display user list. We can use this if we don't have to customize the view.</p>
+<pre><code class="language-dart">UserListView()
+</code></pre>
+<h2 id="user-likes">User likes</h2>
+<ul>
+<li>User likes are saved under <code>/user-likes</code> and <code>/user-who-i-like</code>.<ul>
+<li>If A likes U, then A is saved under <code>/user-likes/U {A: true}</code> and U is saved under <code>/user-who-i-like/A { U: true}</code>.</li>
+</ul>
+</li>
+<li>
+<p>The fireflutter client code needs to save <code>/user-likes/U {A: true}</code> only. The cloud function <code>userLike</code> will take action and it will save the counter part <code>/user-who-i-like</code> data and update the <code>noOfLikes</code> on the user's node.</p>
+</li>
+<li>
+<p>The data structure will be like below.</p>
+<ul>
+<li>When A like U,</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-json">/user-likes/U { A: true }
+/user-who-i-like/A { U: true }
+/users/U {noOfLikes: 1}
+</code></pre>
+<ul>
+<li>When A, B likes U,</li>
+</ul>
+<pre><code class="language-json">/user-likes/U { A: true, B: true}
+/user-who-i-like/A {U: true}
+/user-who-i-like/B {U: true}
+/users/U {noOfLikes: 2}
+</code></pre>
+<ul>
+<li>When B unlinke U,</li>
+</ul>
+<pre><code class="language-json">/user-likes/U { A: true }
+/user-who-i-like/A { U: true }
+/users/U {noOfLikes: 1}
+</code></pre>
+<ul>
+<li>When A likes U, W</li>
+</ul>
+<pre><code class="language-json">/user-likes/U { A: true }
+/user-likes/W { A: true }
+/user-who-i-like/A { U: true, W: true }
+/users/U {noOfLikes: 1}
+/users/W {noOfLikes: 1}
+</code></pre>
+<p>You can use the <code>like</code> method to perform a like and unlike user like bellow.</p>
+<pre><code class="language-dart">IconButton(
+  onPressed: () async {
+     await my?.like(uid);
+  },
+  icon: const FaIcon(FontAwesomeIcons.heart),
+),
+</code></pre>
+<h2 id="user-information-listening">User Information Listening</h2>
+<p><code>UserService.instance.myDataChanges</code> is executed once when <code>UserService.instance.init()</code> is called for the first time, and it triggers an event whenever the value of <code>/users/&lt;my-uid&gt;</code> is changed.</p>
+<p>As it operates in a BehaviorSubject manner, the initial value may be null, and then the value is loaded from the realtime database shortly after. After that, it is called whenever the data value changes. Leveraging this feature, you can code appropriately based on changes in the logged-in user's information.</p>
+<pre><code class="language-dart">UserService.instance.myDataChanges.listen((user) {
+  if (user == null) {
+    print('User data is null. Not ready.');
+  } else {
+    print('User data is loaded. Ready. ${user.data}');
+  }
+});
+</code></pre>
+<p>If you want to take action only once when user data is loaded (or when the data changes), you can do the following:</p>
+<pre><code class="language-dart">StreamSubscription? listenRequiredField;
+listenRequiredField = UserService.instance.myDataChanges.listen((user) {
+  if (user != null) {
+    checkUserData(user); // 프로필이 올바르지 않으면 새창을 띄우거나 등의 작업
+    listenRequiredField?.cancel(); // 그리고 listenning 을 해제 해 버린다.
+  }
+});
+</code></pre>
+<h3 id="how-to-require-users-to-input-a-photo-or-name-if-they-havent">How to Require Users to Input a Photo or Name if They Haven't</h3>
+<p>You can check the value of <code>UserService.instance.myDataChanges</code> and if there is no name or photo, you can redirect them to a specific page.</p>
+<pre><code class="language-dart">class _HomeScreenState extends State&lt;MainScreen&gt; {
+  StreamSubscription? subscribeMyData;
+
+  @override
+  void initState() {
+    super.initState();
+
+    subscribeMyData = UserService.instance.myDataChanges.listen((my) {
+      if (my == null) return;
+      // If the user is logged in but has no name or photo, redirect them to a screen where they can input the required fields.
+      if (my.displayName.trim().isEmpty || my.photoUrl.isEmpty) {
+        context.go(InputRequiredFieldScreen.routeName);
+        // Cancel listening after executing once.
+        subscribeMyData?.cancel();
+      }
+    });
+  }
+}
+</code></pre>
+<h2 id="profile-editing-screen">Profile Editing Screen</h2>
+<p>The profile editing screen is a page where logged-in users can view and edit their own information. To open the profile update screen for the login user, you must call <code>UserService.instance.showProfileScreen</code>.</p>
+<h2 id="user-public-profile-screen">User Public Profile Screen</h2>
+<p>The user public profile screen is a page that can be viewed by every users.</p>
+<p>The user profile screen can be displayed in various places. For example, when clicking on a user's name or icon in user lists, posts, comments, or chats, the user public profile screen opens. To make development easier, calling <code>UserService.instance.showPublicProfileScreen</code> triggers <code>DefaultPublicProfileScreen</code> to be displayed. If you want to customize the design, you can modify it in <code>UserService.instance.init(custom: ...)</code>. Customizing the design is recommended, and you can reuse small widgets used in the public profile.</p>
+<p>Example - Customizing the public profile screen design through initialization.</p>
+<pre><code class="language-dart">UserService.instance.init(
+  customize: UserCustomize(
+    publicProfileScreen: (uid) =&gt; PublicProfileScreen(uid: uid),
+  ),
+);
+</code></pre>
+<p>By doing this, when the user taps on the profile picture, the <code>PublicProfileScreen</code> appears on the screen. You can either design this widget from scratch or it is recommended to copy and modify the <code>DefaultPublicProfileScreen</code>.</p>
+<h3 id="sending-push-notifications-to-the-other-member-when-viewing-user-profiles">Sending Push Notifications to the Other Member when Viewing User Profiles</h3>
+<p>Refer to the <a href="../messaging/">Push Notification Message Documentation</a> for more information.</p>
+<h2 id="firestore-mirroring">Firestore Mirroring</h2>
+<p>Realtime Database lacks robust search functionality. Therefore, mirroring (backing up) user documents to Firestore allows for search capabilities using Firestore. This mirroring process can be achieved by installing a Cloud Function. Refer to the <a href="../install/">installation documentation</a> for more information.</p>
+<h2 id="distance-search">Distance Search</h2>
+<p>For more detailed distance searches, applying a radius formula from SQL databases, Algolia, Typesense, etc., is necessary. However, with Firebase, conducting radius searches directly through the database dimension is not feasible, whether it's Realtime Database or Firestore.</p>
+<p>If you really need radius search while using Firebase, you can:</p>
+<ol>
+<li>Store location information in a third-party search engine like Algolia.</li>
+<li>Store all user location information within the app (e.g., SQLite) and conduct radius searches internally.</li>
+<li>Utilize Geohash values as explained in the official documentation: <a href="https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=en">Firestore GeoQueries</a>. This involves fetching users with Geohash values corresponding to the desired range and then performing more accurate distance calculations within the app. However, this approach requires consideration of false positives, edge cases, and the cost of fetching unnecessary data.</li>
+</ol>
+<p>Fireflutter provides a convenient method for distance search, although slightly different from the above three methods.</p>
+<ul>
+<li>Upon app startup, the user's latitude and longitude information are stored in the user document fields latitude and longitude.<ul>
+<li>Fireflutter then automatically stores geohash4, geohash5, geohash6, and geohash7.</li>
+<li>Additionally, it can be mirrored in Firestore as needed.</li>
+</ul>
+</li>
+<li>During searches, fetching users within 200 meters of the logged-in user simply involves retrieving users whose geohash7 matches that of the logged-in user in the database.<ul>
+<li>Geohash6 allows searches within 1 km, geohash5 within 5 km, and geohash4 within 20 km.</li>
+</ul>
+</li>
+</ul>
+<h2 id="likes">Likes</h2>
+<p>When displaying as a text button, you can do it as follows. However, since the increase in the number of likes is handled by cloud functions, it may not be displayed in real-time, requiring appropriate handling.</p>
+<pre><code class="language-dart">ElevatedButton(
+  onPressed: () async {
+    await my?.like(uid);
+  },
+  child: Value(
+    path: Path.userField(uid, Field.noOfLikes),
+    builder: (v) =&gt; Text(
+      v == null || v == 0
+          ? T.like.tr
+          : v == 1
+              ? ('${T.like.tr} 1')
+              : '${T.likes.tr} ${v ?? ''}',
+    ),
+  ),
+),
+</code></pre>
+<h2 id="likes-list">Likes List</h2>
+<p>There are two types of likes lists:</p>
+<p>First, the list of people I liked.
+Second, the list of people who liked me.</p>
+<p>You can code as follows:</p>
+<pre><code class="language-dart">import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+
+class LikeScreen extends StatefulWidget {
+  const LikeScreen({super.key});
+
+  @override
+  State&lt;LikeScreen&gt; createState() =&gt; _LikeScreenState();
+}
+
+class _LikeScreenState extends State&lt;LikeScreen&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 0,
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Who Likes Me'),
+              Tab(text: 'Who I Like'),
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            WhoLikeMeListView(),
+            WhoILikeListView(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+</code></pre>
+<h2 id="checking-user-login-and-user-document-preparation">Checking User Login and User Document Preparation</h2>
+<h3 id="authready">AuthReady</h3>
+<p><code>AuthReady</code> allows the builder callback function to be called and display widgets if the user is logged into Firebase. If the user is not logged in, the <code>notLogin</code> callback function is executed. Note that even if the user document in Firebase Realtime Database is not loaded, the builder function of this function is executed.</p>
+<p>It is mainly used to check if the user UID is available after logging in to Firebase.</p>
+<h3 id="mydocready">MyDocReady</h3>
+<p><code>MyDocReady</code> is used to check if the user document has been loaded from the Realtime Database after the user has logged into Firebase.</p>
+<p>Internally, it simply uses the [MyDoc] widget to check if the user document has been loaded. If the user document has been loaded, it executes <code>builder(UserModel)</code> and if not, it displays [loading].</p>
+<p>/// When using [MyDoc], builder(UserModel) may be null, so null check is necessary,
+/// but [MyDocReady] is more convenient to use as builder(UserModel) is not null.</p>
+<h2 id="blocking">Blocking</h2>
+<ul>
+<li>Blocked users can be displayed as a list with <code>BlockListView</code>.</li>
+<li>If you want to display it as a string when blocked, you can use the <code>orBlock()</code> String extension.</li>
+<li>If you need to display it as a widget, use <code>Blocked</code>.</li>
+</ul>
+<p>Example - When displaying pictures in the comment list, if the user is blocked, do not display the picture.</p>
+<pre><code class="language-dart">Blocked(
+  uid: widget.comment.uid,
+  yes: () =&gt; SizedBox.fromSize(),
+  no: () =&gt; DisplayDatabasePhotos(
+    urls: widget.comment.urls,
+    path:
+        '${Path.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+  ),
+),
+</code></pre>
+<p>Refer to the <a href="../widgets/">widget documentation</a> for displaying the block button.</p>
+<h2 id="updating-app-specific-value">Updating App Specific Value</h2>
+<p>In each app, there might be other fields that is required for a User. Use <code>extra</code> upon updating the user.</p>
+<pre><code class="language-dart">final user = User.fromSnapshot(snapshot);
+
+user.update(
+  name: &quot;My Name&quot;;
+  extra: {
+    &quot;favoriteDog&quot;: &quot;Shih Tzu&quot;,
+    &quot;favoriteCat&quot;: &quot;Tabby&quot;,
+  }
+)
+</code></pre>
+<p>To access the extra data, you can code like below,</p>
+<pre><code class="language-dart">user.data['favoriteDog'];
+</code></pre>
+<p>If you add a field name that is already existing in user property like <code>name</code>, then you may get an unexpected result. Do not use the existing field names.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>

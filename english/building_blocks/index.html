@@ -1,0 +1,2405 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../bookmark/">
+      
+      
+        <link rel="next" href="../chat/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>Building Blocks - Fireship</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#building-blocks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fireship" class="md-header__button md-logo" aria-label="Fireship" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fireship
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Building Blocks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fireship" class="md-nav__button md-logo" aria-label="Fireship" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Fireship
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fireship
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../location/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    위치, 위치 기반 검색
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Assets
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Assets
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/firestore_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Firestore security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/realtime_database_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Realtime database security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/storage_security_rules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage security rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    English
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            English
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../action_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Action Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../activity_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Activity Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bookmark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bookmark
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Building Blocks
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Building Blocks
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multilingual-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multilingual Support
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#login-related-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login-Related Widgets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Login-Related Widgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simpleemailpasswordloginform" class="md-nav__link">
+    <span class="md-ellipsis">
+      SimpleEmailPasswordLoginForm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simplephonesignin" class="md-nav__link">
+    <span class="md-ellipsis">
+      SimplePhoneSignIn
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chat-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chat widgets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chat widgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chat-room-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chat room list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-room-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chat room create
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#easy-to-use-convenient-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Easy-to-Use Convenient Widgets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Easy-to-Use Convenient Widgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#labelfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      LabelField
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#display-user-profile-sticker-myprofilesticker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Display User Profile Sticker - MyProfileSticker
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-list-newprofilephotos" class="md-nav__link">
+    <span class="md-ellipsis">
+      User List - NewProfilePhotos
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chat
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../country_picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Country Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic_link/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Link
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extensions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Extensions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../forum/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Forum
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../friend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Friend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../meetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Meetup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Push Notifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../report/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Theme Design
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../todo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TODO
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../translation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Text
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../typesense/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Typesense
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../widgets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Widgets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Korean
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Korean
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/action_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    액션 로그
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/activity_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    활동 로그
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    관리자
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/bookmark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    북마크
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/building_blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    빌딩 블록
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/chat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    채팅
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/cloud_functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    클라우드 함수
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/comment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    코멘트
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/country_picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    국가 정보 선택
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    데이터베이스
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    디자인
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/dynamic_link/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    다이나믹 링크
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/error_handling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    에러 핸들링
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/extensions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    익스텐션
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/fireflutter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FireFlutter 설정
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/forum/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    게시판
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/friend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    친구
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fireship 에서 제공하는 함수들
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    설치
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/like/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    좋아요
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/meetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Meetup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/messaging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    푸시 알림
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/packages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    패키지 목록
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/post/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    글
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/quick_start/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    빠르게 시작하기
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/report/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    신고
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    스토리지
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    테스트
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/theme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    테마 디자인
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/translation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    언어 번역
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/trouble_shooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    오류 발생 시 문제 해결
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/typesense/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Typesense 풀텍스트 검색
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    사용자
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/user_settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    사용자 설정
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/widgets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    위젯
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_37" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_37" id="__nav_5_37_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Address
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_37_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_37">
+            <span class="md-nav__icon md-icon"></span>
+            Address
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../korean/address/korean_address/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    한국 주소 관련 기능
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multilingual-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multilingual Support
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#login-related-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Login-Related Widgets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Login-Related Widgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simpleemailpasswordloginform" class="md-nav__link">
+    <span class="md-ellipsis">
+      SimpleEmailPasswordLoginForm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simplephonesignin" class="md-nav__link">
+    <span class="md-ellipsis">
+      SimplePhoneSignIn
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chat-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chat widgets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chat widgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chat-room-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chat room list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-room-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chat room create
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#easy-to-use-convenient-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Easy-to-Use Convenient Widgets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Easy-to-Use Convenient Widgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#labelfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      LabelField
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#display-user-profile-sticker-myprofilesticker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Display User Profile Sticker - MyProfileSticker
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-list-newprofilephotos" class="md-nav__link">
+    <span class="md-ellipsis">
+      User List - NewProfilePhotos
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="building-blocks">Building Blocks</h1>
+<p>This document explains how to build an app by using basic widgets provided by Fireflutter, assembling them like building blocks. Of course, you can also copy the source code of these basic widgets and modify them to create your own custom widgets.</p>
+<h2 id="error-handling">Error Handling</h2>
+<p>In Fireflutter, widgets or logic may sometimes raise exceptions. Some of these exceptions are not handled internally by Fireflutter, meaning they need to be handled within the app.</p>
+<p>Some widget may throw exception without any handler. Error handling within the app is typically done using the <code>runZoneGuarded</code> method. It is recommended to set global error handler to catch all unhandled exceptions.</p>
+<p>Example:</p>
+<pre><code class="language-dart">runZonedGuarded(
+    () async {
+      runApp(const MyApp());
+      /// Flutter error happens here like Overflow, Unbounded height
+      FlutterError.onError = (FlutterErrorDetails details) {
+        FlutterError.dumpErrorToConsole(details);
+      };
+    },
+    zoneErrorHandler,
+  );
+  zoneErrorHandler(error, stackTrace) {
+    print(&quot;----&gt; runZoneGuarded() : exceptions outside flutter framework.&quot;);
+    print(&quot;---&gt; runtimeType: ${error.runtimeType}&quot;); 
+    if (error is FirebaseAuthException) {
+      if (AppService.instance.smsCodeAutoRetrieval) {
+        if (error.code.contains('session-expired') ||
+            error.code.contains('invalid-verification-code')) {
+          print(&quot;....&quot;);
+          return;
+        }
+      } else {}
+
+      toast(
+          context: context,
+          message: 'Error :  ${error.code} - ${error.message}');
+    } else if (error is FirebaseException) {
+      print(&quot;FirebaseException :  $error }&quot;);
+    } else {
+      print(&quot;Unknown Error :  $error&quot;);
+      // toast(context: context, message: &quot;백엔드 에러 :  ${error.code} - ${error.message}&quot;);
+    }
+    debugPrintStack(stackTrace: stackTrace);
+  }
+</code></pre>
+<h2 id="multilingual-support">Multilingual Support</h2>
+<p>To enable multilingual support on iOS, you need to add the following to your <code>Info.plist</code> file:</p>
+<pre><code class="language-xml"> &lt;key&gt;CFBundleLocalizations&lt;/key&gt;
+ &lt;array&gt;
+  &lt;string&gt;en&lt;/string&gt;
+  &lt;string&gt;ko&lt;/string&gt;
+ &lt;/array&gt;
+</code></pre>
+<p>Furthermore, within the app, configure language settings and set the language for each country in <code>TextService.instance.texts</code>.</p>
+<pre><code class="language-dart">// 아래와 같이 원하는 언어를 추가하고,
+TextService.instance.texts = {
+  ...TextService.instance.texts,
+    'login': systemLanguageCode == 'ko' ? '로그인' : 'Login',
+};
+
+// 아래아 같이 쓰면 된다.
+Text('login'.tr);
+</code></pre>
+<h2 id="login-related-widgets">Login-Related Widgets</h2>
+<h3 id="simpleemailpasswordloginform">SimpleEmailPasswordLoginForm</h3>
+<p>It provides basic email and password login functionality. You can copy and modify the source code of this widget to use it.</p>
+<pre><code class="language-dart">return SimpleEmailPasswordLoginForm(
+    onLogin: () async {
+        // some login logic here
+    },
+    onRegister: () async {
+        // some register logic here
+    },
+);
+</code></pre>
+<h3 id="simplephonesignin">SimplePhoneSignIn</h3>
+<p>It provides basic phone number login functionality.</p>
+<p>Example:</p>
+<pre><code class="language-dart">Scaffold(
+  appBar: AppBar(
+    title: const Text('전화번호 로그인'),
+  ),
+  body: Padding(
+    padding: const EdgeInsets.all(lg),
+    child: SimplePhoneSignIn(
+      emailLogin: true,
+      reviewEmail: Config.reviewEmail,
+      reviewPassword: Config.reviewPassword,
+      reviewPhoneNumber: Config.reviewPhoneNumber,
+      reviewRealPhoneNumber: Config.reviewRealPhoneNumber,
+      reviewRealSmsCode: Config.reviewRealSmsCode,
+      onCompleteNumber: (value) {
+        String number = value.trim();
+        number = number.replaceAll(RegExp(r'[^\+0-9]'), '');
+        number = number.replaceFirst(RegExp(r'^0'), '');
+        number = number.replaceAll(' ', '');
+
+        if (number.startsWith('10')) {
+          return '+82$number';
+        } else if (number.startsWith('9')) {
+          return '+63$number';
+        } else
+        // 테스트 전화번호
+        if (number.startsWith('+1')) {
+          return number;
+        } else if (number == Config.reviewPhoneNumber) {
+          return number;
+        } else {
+          error(
+              context: context,
+              title: '에러',
+              message:
+                  '에러\n한국 전화번호 또는 필리핀 전화번호를 입력하세요.\n예) 010 1234 5678 또는 0917 1234 5678');
+          throw '전화번호가 잘못되었습니다. 숫자만 입력하세요.';
+        }
+      },
+      onSignin: () {
+        context.pop();
+        context.go(HomeScreen.routeName);
+      },
+    ),
+  ),
+);
+</code></pre>
+<h2 id="chat-widgets">Chat widgets</h2>
+<p>Whatever app that has the chat feature has common screens and widgets.</p>
+<h3 id="chat-room-list">Chat room list</h3>
+<p>To list chat rooms that the login user joined, use <code>DefaultChatRoomListView</code> widget. You can use the options to customize. Or simply copy all the code of the widget and customize with your own code.</p>
+<pre><code class="language-dart">return Scaffold(
+  appBar: AppBar(
+    title: const Text('Chat Rooms'),
+  ),
+  body: const DefaultChatRoomListView(),
+);
+</code></pre>
+<h3 id="chat-room-create">Chat room create</h3>
+<p>You can show the <code>DefaultChatRoomEditDialog()</code> to create a chat room. You can also copy and modify the code of the widget to customize as needed.</p>
+<p>You can also use <code>ChatService.instance.showChatRoomCreate()</code> to show the default Chat Room creation dialog.</p>
+<pre><code class="language-dart">IconButton(
+  onPressed: () async {
+    final ChatRoom? room = await ChatService.instance.showChatRoomCreate(context: context);
+    if (!context.mounted) return;
+    if (room == null) return;
+    ChatService.instance.showChatRoom(context: context, room: room);
+  },
+  icon: const Icon(Icons.add),
+),
+</code></pre>
+<h2 id="easy-to-use-convenient-widgets">Easy-to-Use Convenient Widgets</h2>
+<h3 id="labelfield">LabelField</h3>
+<p>A simple text field with label.</p>
+<pre><code class="language-dart">LabelField(
+    label: &quot;Email&quot;,
+    controller: emailController,
+    keyboardType: TextInputType.emailAddress,
+),
+</code></pre>
+<h2 id="display-user-profile-sticker-myprofilesticker">Display User Profile Sticker - MyProfileSticker</h2>
+<p>The user profile sticker is a widget that displays the following elements:</p>
+<ul>
+<li>The photo of the logged-in user on the left side.</li>
+<li>A profile edit button on the right side.</li>
+<li>The user's name displayed at the top center.</li>
+<li>The user's status message displayed at the bottom center.</li>
+</ul>
+<p>Design changes can be made using the Theme widget, and if necessary, you can copy and modify the source code for your own use.</p>
+<p><img alt="my_profile_sticker" src="https://github.com/thruthesky/fireship/blob/main/docs/assets/images/my_profile_sticker.jpg?raw=true" /></p>
+<p>The code below is an example to apply a theme (to change a design). The example uses Sliver but it will depend on your design. In this way, the design can be changed without modifying the source code.</p>
+<pre><code class="language-dart">SliverToBoxAdapter(
+  child: Theme(
+    data: Theme.of(context).copyWith(
+      chipTheme: ChipThemeData(
+        padding:
+            const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+        backgroundColor: context.onSurface.withAlpha(10),
+        side: BorderSide(color: context.onSurface.withAlpha(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        selectedColor: context.primary,
+        labelStyle:
+            Theme.of(context).textTheme.labelMedium!.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: context.onSurface,
+                ),
+      ),
+    ),
+    child: const MyProfileSticker(),
+  ),
+),
+</code></pre>
+<h2 id="user-list-newprofilephotos">User List - NewProfilePhotos</h2>
+<p>When a user changes their photo, its URL is copied to <code>/user-profile-photos/&lt;uid&gt;</code>. The <code>NewProfilePhotos</code> displays the user's photo on the screen based on this value.</p>
+<p><img alt="my_profile_sticker" src="https://github.com/thruthesky/fireship/blob/main/docs/assets/images/new_profile_photos.jpg?raw=true" /></p>
+<p>Example:</p>
+<pre><code class="language-dart">NewProfilePhotos()
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>
