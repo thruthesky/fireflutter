@@ -9,6 +9,7 @@ class ReportButton extends StatelessWidget {
     this.category,
     this.postId,
     this.commentId,
+    this.notify = true,
   });
 
   final String? uid;
@@ -16,6 +17,7 @@ class ReportButton extends StatelessWidget {
   final String? category;
   final String? postId;
   final String? commentId;
+  final bool notify;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +31,14 @@ class ReportButton extends StatelessWidget {
         );
         if (re == null || re == '') return;
         await Report.create(
+          context: context,
           otherUserUid: uid,
           chatRoomId: chatRoomId,
           category: category,
           postId: postId,
           commentId: commentId,
           reason: re,
+          notify: notify,
         );
       },
       child: Text(T.report.tr),

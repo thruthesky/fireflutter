@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/widgets.dart';
 
 class Report {
   /// Paths and Refs
@@ -105,23 +106,25 @@ class Report {
     required String review,
   }) async {
     final ref = acceptedRef.child(report.ref.key!);
-    print('ref: ${ref.path}');
-    print('report: ${report.toJson()}');
+    // print('ref: ${ref.path}');
+    // print('report: ${report.toJson()}');
     await ref.set(report.toJson());
     await report.ref.remove();
   }
 
   static Future<void> create({
+    required BuildContext context,
     String? otherUserUid,
     String? chatRoomId,
     String? category,
     String? postId,
     String? commentId,
     String reason = '',
+    bool notify = true,
   }) async {
     if (notLoggedIn) {
       final re = await UserService.instance.loginRequired!(
-        context: FireFlutterService.instance.globalContext!,
+        context: context,
         action: 'report',
         data: {},
       );
@@ -142,7 +145,7 @@ class Report {
             'category or commentId must be provided when postId is provided');
       }
     }
-    return await unviewedRef.push().set({
+    await unviewedRef.push().set({
       'uid': myUid!,
       'reason': reason,
       'otherUserUid': otherUserUid,
@@ -152,5 +155,14 @@ class Report {
       'chatRoomId': chatRoomId,
       'createdAt': ServerValue.timestamp,
     });
+
+    if (notify && context.mounted) {
+      toast(
+        context: context,
+        title: T.report.tr,
+        message: T.reportReceived.tr,
+      );
+    }
+    return;
   }
 }

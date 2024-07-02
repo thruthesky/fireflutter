@@ -406,6 +406,9 @@ class UserService {
   /// [ask] 이 값이 true 이면 사용자에게 차단할지 말지 물어본다.
   ///
   /// [notify] 이 값이 true 이면, 차단 또는 차단 해제를 했을 때, 사용자에게 차단 또는 차단 해제했다고 화면에 알려준다.
+  ///
+  /// return `true` if everything works normally otherwise return null.
+  ///
   Future<bool?> block({
     required BuildContext context,
     required String otherUserUid,
@@ -452,6 +455,6 @@ class UserService {
         message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
       );
     }
-    return null;
+    return true;
   }
 }

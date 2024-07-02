@@ -15,16 +15,21 @@ class _AdminUserListScreenState extends State<AdminUserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User list'),
+        title: Text(T.fullUserList.tr),
       ),
       body: FirebaseDatabaseListView(
         query: User.usersRef,
         itemBuilder: (context, doc) {
           final user = User.fromSnapshot(doc);
           return ListTile(
-            title: Text(user.displayName),
+            leading: UserAvatar(
+              uid: user.uid,
+            ),
+            title: Text(
+              user.displayName.isNotEmpty ? user.displayName : 'No name',
+            ),
             subtitle: Text(user.uid),
-            trailing: Text(isAdmin ? '관리자' : ''),
+            // trailing: Text(isAdmin ? T.master.tr : ''),
             onTap: () {
               AdminService.instance.showUserUpdate(
                 context: context,
