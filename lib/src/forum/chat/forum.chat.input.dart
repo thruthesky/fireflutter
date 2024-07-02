@@ -18,7 +18,6 @@ class ForumChatInput extends StatefulWidget {
 class _ForumChatInputState extends State<ForumChatInput> {
   final contentController = TextEditingController();
   final FocusNode focusNode = FocusNode();
-  bool isValid = false;
   double? progress;
   bool get inputIsEmpty => contentController.text.isEmpty;
   bool get inputIsNotEmpty => !inputIsEmpty;
@@ -156,7 +155,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   onChanged(String value) {
-    dog("onChanged: $value");
+    // dog("onChanged: $value");
     if (!_checkLogin()) {
       contentController.clear();
       return;
@@ -168,9 +167,6 @@ class _ForumChatInputState extends State<ForumChatInput> {
     if (!_checkLogin()) return;
     if (contentController.text.length <= 30) {
       toast(context: context, message: T.contentIsTooShort.tr);
-      // setState(() {
-      //   isValid = true;
-      // });
       return;
     }
 
@@ -192,8 +188,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   _showLoginRequiredDialog() {
-    // TODO trs
-    error(context: context, message: "Login is required to use this feature.");
+    error(context: context, message: T.loginIsRequiredToUseThisFeature.tr);
   }
 
   Future<void> onUpload() async {
